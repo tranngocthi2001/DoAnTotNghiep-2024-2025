@@ -3,28 +3,30 @@
 return [
 
     'defaults' => [
-        'guard' => 'web', // Guard mặc định
-        'passwords' => 'nhanviens', // Tên provider password (nếu có reset mật khẩu)
+        'guard' => 'nhanvien', // Sử dụng guard 'nhanvien' mặc định
+        'passwords' => 'nhanviens', // Đặt lại passwords nếu cần
     ],
 
     'guards' => [
         'web' => [
-            'driver' => 'session', // Sử dụng session
-            'provider' => 'nhanviens', // Khớp với tên provider
+            'driver' => 'session',
+            'provider' => 'nhanviens', // Đã trỏ đúng provider
         ],
-        'api' => [
-            'driver' => 'token', // Dùng token cho API
-            'provider' => 'nhanviens', // Khớp với tên provider
-            'hash' => false,
+
+        'nhanvien' => [ // Định nghĩa thêm guard 'nhanvien'
+            'driver' => 'session',
+            'provider' => 'nhanviens',
         ],
     ],
 
     'providers' => [
-        'nhanviens' => [ // Tên provider
-            'driver' => 'eloquent', // Dùng Eloquent ORM
-            'model' => App\Models\Nhanvien::class, // Đường dẫn đầy đủ đến model
+        'nhanviens' => [ // Provider cho NhanVien
+            'driver' => 'eloquent',
+            'model' => App\Models\NhanVien::class,
         ],
     ],
+
+
 
 
     'passwords' => [

@@ -30,10 +30,12 @@ class DangKyController extends Controller
             'trangThai' => 1, // Trạng thái mặc định
         ]);
 
-        // Trả về phản hồi JSON
-        return response()->json([
-            'message' => 'Đăng ký thành công',
-            'nhanvien' => $nhanvien
-        ], 201); // Mã 201: Created
+       // Return về view "success" với thông tin nhân viên
+        return view('taikhoans.nhanviens.login', ['nhanvien' => $nhanvien]);
     }
+        public function showRegisterForm()
+    {
+        return view('taikhoans/nhanviens/register');
+    }
+
 }

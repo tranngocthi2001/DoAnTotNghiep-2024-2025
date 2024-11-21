@@ -20,15 +20,25 @@ class DangNhapController extends Controller
         if (Auth::attempt(['tenTaiKhoan' => $credentials['tenTaiKhoan'], 'password' => $credentials['matKhau']])) {
             $nhanvien = Auth::user();
 
-            return response()->json([
-                'message' => 'Đăng nhập thành công',
-                'nhanvien' => $nhanvien,
-            ], 200);
+            // Kiểm tra vai trò của nhân viên
+            if ($nhanvien->vaiTro === 'admin') {
+                // Chuyển hướng đến trang quản lý cho admin
+                return redirect()->route('quanly.dashboard');
+            }
+
+            // Nếu không phải admin, chuyển hướng đến trang khác
+            return redirect()->route('unauthorized'); // Hoặc bất kỳ trang nào khác
         }
 
-        // Thông báo lỗi nếu thông tin không chính xác
-        return response()->json([
+        // Nếu đăng nhập thất bại, trả về trang "login" với lỗi
+        return redirect()->route('login')->withErrors([
             'message' => 'Tên tài khoản hoặc mật khẩu không đúng',
-        ], 401);
+        ]);
     }
+    public function showLoginForm()
+    {
+        return view('taikhoans/nhanviens/login');
+    }
+
+
 }

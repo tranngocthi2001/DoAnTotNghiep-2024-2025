@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-use App\Http\Controllers\TaiKhoan\NhanVien\DangKyController;
-Route::post('/register', [DangKyController::class, 'register']);
+// use App\Http\Controllers\TaiKhoan\NhanVien\DangKyController;
+// Route::post('/register', [DangKyController::class, 'register']);
 
-use App\Http\Controllers\TaiKhoan\NhanVien\DangNhapController;
-Route::post('/login', [DangNhapController::class, 'login']);
+// use App\Http\Controllers\TaiKhoan\NhanVien\DangNhapController;
+// Route::post('/login', [DangNhapController::class, 'login']);
