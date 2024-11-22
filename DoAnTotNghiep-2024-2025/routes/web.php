@@ -49,9 +49,9 @@ use App\Models\Khachhang;
 // });
 Route::prefix('quanlys')->middleware(['auth', 'role:admin'])->group(function () {
     // Group cho các route liên quan đến nhân viên
-    Route::prefix('nhanvien')->middleware(['checkNhanVienStatus'])->group(function () {
+    Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
         // Resource route cho Nhân Viên Controller
-        Route::resource('/', NhanVienController::class)->names([
+        Route::resource('nhanvien', NhanVienController::class)->names([
             'index' => 'quanlys.nhanvien.index',
             'create' => 'quanlys.nhanvien.create',
             'store' => 'quanlys.nhanvien.store',
@@ -71,7 +71,7 @@ use App\Http\Controllers\QuanLy\KhachHangController;
 Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
 
     Route::prefix('khachhang')->middleware(['checkNhanVienStatus'])->group(function () {
-        Route::resource('/', KhachHangcontroller::class)->names([
+        Route::resource('khachhang', KhachHangcontroller::class)->names([
             'index' => 'quanlys.khachhang.index',
             'create' => 'quanlys.khachhang.create',
             'store' => 'quanlys.khachhang.store',
@@ -105,3 +105,21 @@ use App\Http\Controllers\TaiKhoan\KhachHang\DangKyKHController;
 
 Route::get('/khachhang/register', [DangKyKHController::class, 'showRegistrationForm'])->name('dangky.khachhang');
 Route::post('/khachhang/register', [DangKyKHController::class, 'handleRegistration'])->name('dangky.khachhang.submit');
+//
+use App\Http\Controllers\QuanLy\DanhmucController;
+Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+
+    Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
+        Route::resource('danhmuc', DanhMucController::class)->names([
+            'index' => 'quanlys.danhmuc.index',
+            'create' => 'quanlys.danhmuc.create',
+            'store' => 'quanlys.danhmuc.store',
+            'show' => 'quanlys.danhmuc.show',
+            'edit' => 'quanlys.danhmuc.edit',
+            'update' => 'quanlys.danhmuc.update',
+            'destroy' => 'quanlys.danhmuc.destroy',
+        ]);
+    });
+});
+
+

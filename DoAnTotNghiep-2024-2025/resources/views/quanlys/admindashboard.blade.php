@@ -67,7 +67,7 @@
         </div>
         <div class="card">
             <h3>Quản lý danh mục</h3>
-            <a href="/quanlys/danhmuc">Xem chi tiết</a>
+            <a href="{{ route('quanlys.danhmuc.index')}}">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Quản lý sản phẩm</h3>
