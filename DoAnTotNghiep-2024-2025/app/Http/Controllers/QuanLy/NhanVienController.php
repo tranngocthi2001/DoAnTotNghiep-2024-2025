@@ -43,23 +43,30 @@ class NhanVienController extends Controller
         }
 
         // Xác thực dữ liệu
-        $validatedData = $request->validate([
-            'tenTaiKhoan' => 'required|unique:nhanvien,tenTaiKhoan|max:100',
-            'matKhau' => 'required|min:6',
-            'hoTen' => 'required',
-            'email' => 'nullable|email|max:100',
-            'vaiTro' => 'required|in:admin,quanly,nhanvien',
+        $request->validate([
+            'tenTaiKhoan' => 'required|unique:nhanvien,tenTaiKhoan|max:255',
+            'matKhau'     => 'required|min:6',
+            'email'       => 'required|email|unique:nhanvien,email',
+            'sdt'         => 'required|digits:10',
+            'diaChi'      => 'nullable|string',
+            'hoTen'       => 'required|string|max:255',
+            'vaiTro'      => 'required|string',
+            'trangThai'   => 'required|boolean',
         ]);
 
+
         // Lưu dữ liệu
-        NhanVien::create([
+        Nhanvien::create([
             'tenTaiKhoan' => $request->tenTaiKhoan,
-            'matKhau' => bcrypt($request->matKhau),
-            'hoTen' => $request->hoTen,
-            'email' => $request->email,
-            'vaiTro' => $request->vaiTro,
-            'trangThai' => $request->trangThai ?? 1,
+            'matKhau'     => $request->matKhau, // Mã hóa mật khẩu tự động trong model
+            'email'       => $request->email,
+            'sdt'         => $request->sdt,
+            'diaChi'      => $request->diaChi,
+            'hoTen'       => $request->hoTen,
+            'vaiTro'      => $request->vaiTro,
+            'trangThai'   => $request->trangThai,
         ]);
+
 
         // Chuyển hướng về danh sách nhân viên
         return redirect()->route('quanlys.nhanvien.index')->with('success', 'Tạo nhân viên thành công!');
@@ -102,18 +109,25 @@ class NhanVienController extends Controller
 
         $nhanVien = NhanVien::findOrFail($id);
 
+        // Validate dữ liệu
         $request->validate([
-            'hoTen' => 'required',
-            'email' => 'nullable|email|max:100',
-            'vaiTro' => 'required|in:admin,quanly,nhanvien',
-            'trangThai' => 'required|boolean',
+            'tenTaiKhoan' => 'required|max:255|unique:nhanvien,tenTaiKhoan,' . $id,
+            'email'       => 'required|email|unique:nhanvien,email,' . $id,
+            'sdt'         => 'required|digits:10',
+            'diaChi'      => 'nullable|string',
+            'hoTen'       => 'required|string|max:255',
+            'vaiTro'      => 'required|string',
         ]);
 
-        $nhanVien->update([
-            'hoTen' => $request->hoTen,
-            'email' => $request->email,
-            'vaiTro' => $request->vaiTro,
-            'trangThai' => $request->trangThai,
+        // Cập nhật thông tin nhân viên
+        $nhanvien = Nhanvien::findOrFail($id);
+        $nhanvien->update([
+            'tenTaiKhoan' => $request->tenTaiKhoan,
+            'email'       => $request->email,
+            'sdt'         => $request->sdt,
+            'diaChi'      => $request->diaChi,
+            'hoTen'       => $request->hoTen,
+            'vaiTro'      => $request->vaiTro,
         ]);
 
         return redirect()->route('quanlys.nhanvien.index')->with('success', 'Cập nhật nhân viên thành công!');
@@ -133,5 +147,18 @@ class NhanVienController extends Controller
         $nhanVien->delete();
 
         return redirect()->route('quanlys.nhanvien.index')->with('success', 'Xóa nhân viên thành công!');
+    }
+    //cập nhật trạng thái khóa, hoạt động.
+    public function updateStatus($id)
+    {
+        // Tìm nhân viên theo ID
+        $nhanvien = Nhanvien::findOrFail($id);
+
+        // Đổi trạng thái
+        $nhanvien->trangThai = !$nhanvien->trangThai; // Đảo ngược trạng thái (1 -> 0 hoặc 0 -> 1)
+        $nhanvien->save(); // Lưu thay đổi vào cơ sở dữ liệu
+
+        // Chuyển hướng kèm thông báo thành công
+        return redirect()->route('quanlys.nhanvien.index')->with('success', 'Cập nhật trạng thái thành công!');
     }
 }

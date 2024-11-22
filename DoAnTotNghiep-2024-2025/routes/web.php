@@ -29,28 +29,74 @@ Route::post('/login', [DangNhapController::class, 'login'])->name('login.submit'
 
 //Trang quan ly
 Route::get('/quanly', function () {
-    return view('quanlys.quanly'); // Trỏ tới file resources/views/quanlys/quanly.blade.php
+    return view('quanlys.quanlydashboard'); // Trỏ tới file resources/views/quanlys/quanly.blade.php
 })->name('quanly.dashboard');
-//
+//Trang admin
+Route::get('/admin', function () {
+    return view('quanlys.admindashboard'); // Trỏ tới file resources/views/quanlys/quanly.blade.php
+})->name('admin.dashboard');
+//Trang nhan vien
+Route::get('/nhanvien', function () {
+    return view('quanlys.nhanviendashboard'); // Trỏ tới file resources/views/quanlys/quanly.blade.php
+})->name('nhanvien.dashboard');
+
 use App\Http\Controllers\QuanLy\NhanVienController;
+use App\Models\Khachhang;
 
 // Route::prefix('quanlys')->middleware(['auth', 'role:admin'])->group(function () {
 //     Route::get('/nhanvien', [NhanVienController::class, 'index'])->name('nhanvien.index');
 
 // });
 Route::prefix('quanlys')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::resource('nhanvien', NhanVienController::class)->names([
-        'index' => 'quanlys.nhanvien.index',
-        'create' => 'quanlys.nhanvien.create',
-        'store' => 'quanlys.nhanvien.store',
-        'show' => 'quanlys.nhanvien.show',
-        'edit' => 'quanlys.nhanvien.edit',
-        'update' => 'quanlys.nhanvien.update',
-        'destroy' => 'quanlys.nhanvien.destroy', // Tên cho route xoá
-    ]);
+    // Group cho các route liên quan đến nhân viên
+    Route::prefix('nhanvien')->middleware(['checkNhanVienStatus'])->group(function () {
+        // Resource route cho Nhân Viên Controller
+        Route::resource('/', NhanVienController::class)->names([
+            'index' => 'quanlys.nhanvien.index',
+            'create' => 'quanlys.nhanvien.create',
+            'store' => 'quanlys.nhanvien.store',
+            'show' => 'quanlys.nhanvien.show',
+            'edit' => 'quanlys.nhanvien.edit',
+            'update' => 'quanlys.nhanvien.update',
+            'destroy' => 'quanlys.nhanvien.destroy',
+            // Tên cho route xóa
+        ]);
+
+        // Chỉnh sửa trạng thái tài khoản nhân viên
+        Route::post('/{id}/update-status', [NhanVienController::class, 'updateStatus'])->name('quanlys.nhanvien.updateStatus');
+    });
+});
+
+use App\Http\Controllers\QuanLy\KhachHangController;
+Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+
+    Route::prefix('khachhang')->middleware(['checkNhanVienStatus'])->group(function () {
+        Route::resource('/', KhachHangcontroller::class)->names([
+            'index' => 'quanlys.khachhang.index',
+            'create' => 'quanlys.khachhang.create',
+            'store' => 'quanlys.khachhang.store',
+            'show' => 'quanlys.khachhang.show',
+        ]);
+        //chinh sua trang thai tai khoan khach hang
+        Route::post('/khachhang/{id}/update-status', [KhachHangController::class, 'updateStatus'])->name('khachhang.updateStatus');
+    });
 });
 
 
 Route::get('/unauthorized', function () {
     return "Bạn không có quyền truy cập vào trang này.";
 })->name('unauthorized');
+//
+use App\Http\Controllers\TaiKhoan\KhachHang\DangNhapKHController;
+// Route đăng nhập khách hàng
+Route::get('khachhang/login', [DangNhapKHController::class, 'showLoginForm'])->name('khachhang.loginForm');
+Route::post('khachhang/login', [DangNhapKHController::class, 'login'])->name('khachhang.login');
+Route::post('khachhang/logout', [DangNhapKHController::class, 'logout'])->name('khachhang.logout');
+
+// Route dashboard cho khách hàng
+
+Route::middleware('khachhang.dangnhap')->group(function () {
+    Route::get('khachhang/dashboard', function () {
+        return view('trangchus.welcome');
+    })->name('khachhang.dashboard');
+});

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Thêm Nhân Viên</h1>
+    <h1>Thêm Khách Hàng</h1>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -12,7 +12,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('quanlys.nhanvien.store') }}" method="POST">
+    <form action="{{ route('quanlys.khachhang.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="tenTaiKhoan" class="form-label">Tên Tài Khoản</label>
@@ -39,20 +39,13 @@
             <input type="text" class="form-control" id="hoTen" name="hoTen" value="{{ old('hoTen') }}" required>
         </div>
         <div class="mb-3">
-            <label for="vaiTro" class="form-label">Vai Trò</label>
-            <select class="form-control" id="vaiTro" name="vaiTro" required>
-                <option value="quanly">Quản lý</option>
-                <option value="nhanvien">Nhân viên</option>
-            </select>
-        </div>
-        <div class="mb-3">
             <label for="trangThai" class="form-label">Trạng Thái</label>
             <select class="form-control" id="trangThai" name="trangThai" required>
                 <option value="1">Hoạt Động</option>
                 <option value="0">Không Hoạt Động</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Thêm Nhân Viên</button>
+        <button type="submit" class="btn btn-primary">Thêm Khách Hàng</button>
     </form>
 </div>
 @endsection

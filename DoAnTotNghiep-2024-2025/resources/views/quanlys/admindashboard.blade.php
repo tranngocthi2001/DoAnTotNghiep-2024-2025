@@ -63,7 +63,7 @@
 
         <div class="card">
             <h3>Quản lý khách hàng</h3>
-            <a href="/quanlys/khachhang">Xem chi tiết</a>
+            <a href="{{ route('quanlys.khachhang.index')}}">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Quản lý danh mục</h3>

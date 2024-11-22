@@ -23,7 +23,15 @@ class DangNhapController extends Controller
             // Kiểm tra vai trò của nhân viên
             if ($nhanvien->vaiTro === 'admin') {
                 // Chuyển hướng đến trang quản lý cho admin
+                return redirect()->route('admin.dashboard');
+            }
+            else if ($nhanvien->vaiTro === 'quanly') {
+                // Chuyển hướng đến trang quản lý cho admin
                 return redirect()->route('quanly.dashboard');
+            }
+            else if ($nhanvien->vaiTro === 'nhanvien') {
+                // Chuyển hướng đến trang quản lý cho admin
+                return redirect()->route('nhanvien.dashboard');
             }
 
             // Nếu không phải admin, chuyển hướng đến trang khác

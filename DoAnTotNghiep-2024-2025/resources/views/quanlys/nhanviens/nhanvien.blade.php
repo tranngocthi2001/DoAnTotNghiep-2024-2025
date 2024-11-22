@@ -26,7 +26,21 @@
                     <td>{{ $nhanvien->hoTen }}</td>
                     <td>{{ $nhanvien->email }}</td>
                     <td>{{ $nhanvien->vaiTro }}</td>
-                    <td>{{ $nhanvien->trangThai ? 'Kích hoạt' : 'Vô hiệu' }}</td>
+                    <td>
+                        @if ($nhanvien->trangThai)
+                            <span class="badge bg-success">Kích Hoạt</span>
+                        @else
+                            <span class="badge bg-danger">Khóa</span>
+                        @endif
+                    </td>
+                    <td>
+                        <form action="{{ route('quanlys.nhanvien.updateStatus', $nhanvien->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-sm {{ $nhanvien->trangThai ? 'btn-danger' : 'btn-success' }}">
+                                {{ $nhanvien->trangThai ? 'Khóa' : 'Kích Hoạt' }}
+                            </button>
+                        </form>
+                    </td>
                     <td>
                         <a href="{{ route('quanlys.nhanvien.edit', $nhanvien->id) }}">Sửa</a>
                         <form action="{{ route('quanlys.nhanvien.destroy', $nhanvien->id) }}" method="POST" style="display:inline;">
