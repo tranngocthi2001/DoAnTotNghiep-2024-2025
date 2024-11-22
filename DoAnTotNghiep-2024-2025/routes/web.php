@@ -100,3 +100,8 @@ Route::middleware('khachhang.dangnhap')->group(function () {
         return view('trangchus.welcome');
     })->name('khachhang.dashboard');
 });
+//
+use App\Http\Controllers\TaiKhoan\KhachHang\DangKyKHController;
+
+Route::get('/khachhang/register', [DangKyKHController::class, 'showRegistrationForm'])->name('dangky.khachhang');
+Route::post('/khachhang/register', [DangKyKHController::class, 'handleRegistration'])->name('dangky.khachhang.submit');
