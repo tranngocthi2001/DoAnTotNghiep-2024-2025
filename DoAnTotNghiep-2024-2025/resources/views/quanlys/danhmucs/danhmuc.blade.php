@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
     <h2>Danh Sách Danh Mục</h2>
     <a href="{{ route('quanlys.danhmuc.create') }}" class="btn btn-primary mb-3">Thêm Danh Mục</a>
@@ -29,7 +30,7 @@
                     <form action="{{ route('quanlys.danhmuc.destroy', $danhmuc->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Tất cả sản phẩm thuộc danh mục này sẽ bị xóa!!!. Bạn có chắc chắn muốn xóa?')">Xóa</button>
                     </form>
                 </td>
             </tr>

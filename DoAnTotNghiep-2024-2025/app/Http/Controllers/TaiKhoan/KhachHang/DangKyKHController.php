@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Khachhang;
+use App\Events\KhachHangCreated;
 
 class DangKyKHController extends Controller
 {
@@ -26,7 +27,8 @@ class DangKyKHController extends Controller
         ]);
 
         // Tạo khách hàng mới
-        Khachhang::create([
+       // Tạo khách hàng mới và lưu vào biến $khachhang
+        $khachhang = Khachhang::create([
             'tenTaiKhoan' => $request->tenTaiKhoan,
             'matKhau' => Hash::make($request->matKhau),
             'email' => $request->email,
@@ -36,6 +38,10 @@ class DangKyKHController extends Controller
             'trangThai' => 1, // Kích hoạt tài khoản
         ]);
 
-        return redirect()->route('khachhang.loginForm')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
-    }
+        // Kích hoạt event
+        event(new KhachHangCreated($khachhang));
+
+                event(new KhachHangCreated($khachhang));
+                return redirect()->route('khachhang.showLoginForm')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
+            }
 }

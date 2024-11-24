@@ -71,7 +71,7 @@
         </div>
         <div class="card">
             <h3>Quản lý sản phẩm</h3>
-            <a href="/quanlys/sanpham">Xem chi tiết</a>
+            <a href="{{ route('quanlys.sanpham.index')}}">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Mã giảm giá</h3>

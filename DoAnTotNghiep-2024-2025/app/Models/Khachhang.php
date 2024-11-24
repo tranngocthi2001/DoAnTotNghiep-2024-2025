@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Khachhang extends Model
+class Khachhang extends Authenticatable
 {
     use HasFactory;
 
@@ -32,4 +33,22 @@ class Khachhang extends Model
 
     const CREATED_AT = 'ngayTao'; // Cột "ngày tạo"
     const UPDATED_AT = 'ngayCapNhat'; // Cột "ngày cập nhật"
+
+    // Quan hệ 1-1 với giỏ hàng
+    public function giohang()
+    {
+        return $this->hasOne(GioHang::class, 'khachhang_id', 'id');
+    }
+
+     public function getAuthIdentifierName()
+    {
+        return 'tenTaiKhoan'; // Laravel sẽ sử dụng trường này làm khóa đăng nhập
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->matKhau; // Laravel sẽ sử dụng trường này để kiểm tra mật khẩu
+    }
+
+
 }

@@ -65,6 +65,8 @@ class DanhMucController extends Controller
     public function destroy($id)
     {
         $danhmuc = Danhmuc::findOrFail($id);
+        // Xóa tất cả sản phẩm trong danh mục
+        $danhmuc->sanphams()->delete();
         $danhmuc->delete();
 
         return redirect()->route('quanlys.danhmuc.index')->with('success', 'Xóa danh mục thành công!');

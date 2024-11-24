@@ -87,25 +87,46 @@ Route::get('/unauthorized', function () {
     return "Bạn không có quyền truy cập vào trang này.";
 })->name('unauthorized');
 //
+// use App\Http\Controllers\TaiKhoan\KhachHang\DangNhapKHController;
+// // Route đăng nhập khách hàng
+// Route::get('khachhang/login', [DangNhapKHController::class, 'showLoginForm'])->name('khachhang.loginForm');
+// Route::post('khachhang/login', [DangNhapKHController::class, 'login'])->name('khachhang.login');
+// Route::post('khachhang/logout', [DangNhapKHController::class, 'logout'])->name('khachhang.logout');
+
+// // Route dashboard cho khách hàng
+// //Trang chu. lay tat ca danhmuc&sanpham
+// use App\Http\Controllers\TrangChu\HomeController;
+// Route::middleware('khachhang.dangnhap')->group(function () {
+//     Route::get('/home', [HomeController::class, 'index'])->name('khachhang.dashboard');
+// });
+
+
 use App\Http\Controllers\TaiKhoan\KhachHang\DangNhapKHController;
-// Route đăng nhập khách hàng
-Route::get('khachhang/login', [DangNhapKHController::class, 'showLoginForm'])->name('khachhang.loginForm');
-Route::post('khachhang/login', [DangNhapKHController::class, 'login'])->name('khachhang.login');
-Route::post('khachhang/logout', [DangNhapKHController::class, 'logout'])->name('khachhang.logout');
+use App\Http\Controllers\TrangChu\HomeController;
 
-// Route dashboard cho khách hàng
-
-Route::middleware('khachhang.dangnhap')->group(function () {
-    Route::get('khachhang/dashboard', function () {
-        return view('trangchus.welcome');
-    })->name('khachhang.dashboard');
+// Route dành cho đăng nhập, đăng xuất khách hàng
+Route::prefix('khachhang')->group(function () {
+    Route::get('login', [DangNhapKHController::class, 'showLoginForm'])->name('khachhang.showLoginForm');
+    Route::post('login', [DangNhapKHController::class, 'login'])->name('khachhang.login'); // Xử lý đăng nhập
+    Route::post('logout', [DangNhapKHController::class, 'logout'])->name('khachhang.logout'); // Xử lý đăng xuất
 });
-//
+
+// Route dành cho dashboard khách hàng (được bảo vệ bởi middleware)
+Route::middleware('khachhang.dangnhap')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('khachhang.dashboard'); // Trang chủ sau khi đăng nhập
+});
+
+
+//Route dành cho user guest
+Route::get('/homeguest', [HomeController::class, 'guest'])->name('homeguest');
+
+
+// dang kys khach hang
 use App\Http\Controllers\TaiKhoan\KhachHang\DangKyKHController;
 
 Route::get('/khachhang/register', [DangKyKHController::class, 'showRegistrationForm'])->name('dangky.khachhang');
 Route::post('/khachhang/register', [DangKyKHController::class, 'handleRegistration'])->name('dangky.khachhang.submit');
-//
+//quan lys danh  muc
 use App\Http\Controllers\QuanLy\DanhmucController;
 Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
 
@@ -121,5 +142,40 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
         ]);
     });
 });
+//quan ly san pham
+use App\Http\Controllers\QuanLy\SanPhamController;
+
+Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+
+    Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
+        Route::resource('sanpham', SanPhamController::class)->names([
+            'index' => 'quanlys.sanpham.index',
+            'create' => 'quanlys.sanpham.create',
+            'store' => 'quanlys.sanpham.store',
+            'show' => 'quanlys.sanpham.show',
+            'edit' => 'quanlys.sanpham.edit',
+            'update' => 'quanlys.sanpham.update',
+            'destroy' => 'quanlys.sanpham.destroy',
+        ]);
+    });
+});
 
 
+//gio hang cua khach hang
+
+use App\Http\Controllers\TaiKhoan\KhachHang\GioHangController;
+Route::middleware('khachhang.dangnhap')->group(function () {
+    Route::get('/giohang', [GioHangController::class, 'index'])->name('giohang.index');
+    Route::post('/giohang/add', [GioHangController::class, 'add'])->name('giohang.add');
+    Route::delete('/giohang/remove/{id}', [GioHangController::class, 'remove'])->name('giohang.remove');
+});
+
+use App\Http\Controllers\TaiKhoan\KhachHang\ChitietGioHangController;
+
+Route::middleware('khachhang.dangnhap')->group(function () {
+    // Route thêm sản phẩm vào giỏ hàng
+    Route::post('/giohang/chitiet', [ChitietGioHangController::class, 'store'])->name('giohang.chitiet.store');
+
+    // Route xóa sản phẩm khỏi giỏ hàng
+    Route::delete('/giohang/chitiet/{id}', [ChitietGioHangController::class, 'destroy'])->name('giohang.chitiet.destroy');
+});

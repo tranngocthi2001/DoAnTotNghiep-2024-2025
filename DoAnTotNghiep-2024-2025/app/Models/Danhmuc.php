@@ -25,4 +25,8 @@ class Danhmuc extends Model
 
     const CREATED_AT = 'ngayTao'; // Cột "ngày tạo"
     const UPDATED_AT = 'ngayCapNhat'; // Cột "ngày cập nhật"
+    public function sanphams()
+    {
+        return $this->hasMany(Sanpham::class, 'danhmuc_id', 'id');
+    }
 }

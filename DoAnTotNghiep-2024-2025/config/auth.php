@@ -3,28 +3,33 @@
 return [
 
     'defaults' => [
-        'guard' => 'nhanvien', // Sử dụng guard 'nhanvien' mặc định
-        'passwords' => 'nhanviens', // Đặt lại passwords nếu cần
+        'guard' => 'khachhang', // Sử dụng guard 'nhanvien' mặc định
+        'passwords' => 'khachhangs', // Đặt lại passwords nếu cần
     ],
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'nhanviens', // Đã trỏ đúng provider
-        ],
-
-        'nhanvien' => [ // Định nghĩa thêm guard 'nhanvien'
+        'nhanvien' => [
             'driver' => 'session',
             'provider' => 'nhanviens',
         ],
-    ],
-
-    'providers' => [
-        'nhanviens' => [ // Provider cho NhanVien
-            'driver' => 'eloquent',
-            'model' => App\Models\NhanVien::class,
+        'khachhang' => [
+            'driver' => 'session', // Dùng session để lưu trạng thái đăng nhập
+            'provider' => 'khachhangs', // Trỏ tới provider 'khachhangs'
         ],
     ],
+
+
+    'providers' => [
+        'nhanviens' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\NhanVien::class, // Model của nhân viên
+        ],
+        'khachhangs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\KhachHang::class, // Model của khách hàng
+        ],
+    ],
+
 
 
 
