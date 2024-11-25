@@ -78,9 +78,10 @@
             <a href="/quanlys/magiamgia">Xem chi tiết</a>
         </div>
         <div class="card">
-            <h3>Đơn hàng</h3>
-            <a href="/quanlys/donhang">Xem chi tiết</a>
+            <h3>Quản lý đơn hàng</h3>
+            <a href="{{ route('quanlys.donhang.indexAdmin') }}">Xem chi tiết</a>
         </div>
+
         <div class="card">
             <h3>Sửa chữa & bảo trì</h3>
             <a href="/quanlys/baotri">Xem chi tiết</a>

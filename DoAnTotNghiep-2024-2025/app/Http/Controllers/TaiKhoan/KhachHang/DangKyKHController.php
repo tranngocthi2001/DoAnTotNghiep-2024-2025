@@ -40,8 +40,6 @@ class DangKyKHController extends Controller
 
         // Kích hoạt event
         event(new KhachHangCreated($khachhang));
-
-                event(new KhachHangCreated($khachhang));
                 return redirect()->route('khachhang.showLoginForm')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
             }
 }

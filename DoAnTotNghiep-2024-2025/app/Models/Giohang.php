@@ -23,6 +23,7 @@ class Giohang extends Model
     // Quan hệ 1-n với chi tiết giỏ hàng
     public function chitietgiohang()
     {
-        return $this->hasMany(ChitietGiohang::class, 'giohang_id');
+        return $this->hasMany(ChiTietGioHang::class, 'giohang_id', 'id');
     }
+
 }

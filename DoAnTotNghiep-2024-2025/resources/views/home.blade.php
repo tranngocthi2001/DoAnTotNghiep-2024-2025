@@ -17,7 +17,9 @@
 
     </div>
 <div>
-    <a href="{{ route('giohang.index') }}">Giỏ Hàng</a>
+    <a href="{{ route('giohang.index') }}">Giỏ hàng của bạn</a></br>
+    <a href="{{ route('khachhang.donhang.index') }}">Đơn hàng của bạn</a>
+
 
 </div>
     @foreach ($danhmucs as $danhmuc)

@@ -39,7 +39,8 @@ class Sanpham extends Model
     //sanpham và chitietgiohang quan hệ n-n
     public function chitietgiohangs()
     {
-        return $this->belongsToMany(ChitietGiohang::class, 'sanpham_has_chitietgiohang', 'sanpham_id', 'chitietgiohang_id');
+        return $this->belongsToMany(ChitietGiohang::class, 'sanpham_has_chitietgiohang', 'sanpham_id', 'chitietgiohang_id')
+        ->withPivot('soLuong');
     }
 
 }

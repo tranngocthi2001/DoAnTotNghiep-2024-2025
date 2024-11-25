@@ -49,6 +49,10 @@ class Khachhang extends Authenticatable
     {
         return $this->matKhau; // Laravel sẽ sử dụng trường này để kiểm tra mật khẩu
     }
+    public function donhangs()
+    {
+        return $this->hasMany(DonHang::class, 'khachhang_id', 'id');
+    }
 
 
 }

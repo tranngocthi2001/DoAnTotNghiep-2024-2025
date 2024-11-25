@@ -16,37 +16,27 @@ class DangNhapController extends Controller
             'matKhau' => 'required',
         ]);
 
-        // Thử đăng nhập
-        if (Auth::attempt(['tenTaiKhoan' => $credentials['tenTaiKhoan'], 'password' => $credentials['matKhau']])) {
-            $nhanvien = Auth::user();
+        // Thử đăng nhập với guard 'nhanvien'
+        if (Auth::guard('nhanvien')->attempt(['tenTaiKhoan' => $credentials['tenTaiKhoan'], 'password' => $credentials['matKhau']])) {
+            $nhanvien = Auth::guard('nhanvien')->user();
 
             // Kiểm tra vai trò của nhân viên
             if ($nhanvien->vaiTro === 'admin') {
-                // Chuyển hướng đến trang quản lý cho admin
                 return redirect()->route('admin.dashboard');
-            }
-            else if ($nhanvien->vaiTro === 'quanly') {
-                // Chuyển hướng đến trang quản lý cho admin
+            } elseif ($nhanvien->vaiTro === 'quanly') {
                 return redirect()->route('quanly.dashboard');
-            }
-            else if ($nhanvien->vaiTro === 'nhanvien') {
-                // Chuyển hướng đến trang quản lý cho admin
+            } elseif ($nhanvien->vaiTro === 'nhanvien') {
                 return redirect()->route('nhanvien.dashboard');
             }
-
-            // Nếu không phải admin, chuyển hướng đến trang khác
-            return redirect()->route('unauthorized'); // Hoặc bất kỳ trang nào khác
         }
 
-        // Nếu đăng nhập thất bại, trả về trang "login" với lỗi
-        return redirect()->route('login')->withErrors([
-            'message' => 'Tên tài khoản hoặc mật khẩu không đúng',
-        ]);
+        // Nếu đăng nhập thất bại
+        return redirect()->route('login')->withErrors(['message' => 'Tên tài khoản hoặc mật khẩu không đúng.']);
     }
+
     public function showLoginForm()
     {
-        return view('taikhoans/nhanviens/login');
+        return view('taikhoans.nhanviens.login');
     }
-
-
 }
+

@@ -3,7 +3,8 @@
 return [
 
     'defaults' => [
-        'guard' => 'khachhang', // Sử dụng guard 'nhanvien' mặc định
+        'guard' => 'nhanvien',
+        //'guard' => 'khachhang', // Sử dụng guard 'nhanvien' mặc định
         'passwords' => 'khachhangs', // Đặt lại passwords nếu cần
     ],
 
@@ -34,26 +35,16 @@ return [
 
 
 
+
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
+        'nhanviens' => [
+            'provider' => 'nhanviens',
+            'table' => 'password_resets', // Bảng lưu mã đặt lại mật khẩu
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Password Confirmation Timeout
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define the amount of seconds before a password confirmation
-    | times out and the user is prompted to re-enter their password via the
-    | confirmation screen. By default, the timeout lasts for three hours.
-    |
-    */
-
-    'password_timeout' => 10800,
+    'password_timeout' => 10800, // 3 giờ
 
 ];

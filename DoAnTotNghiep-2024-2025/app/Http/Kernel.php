@@ -67,6 +67,8 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\CheckRole::class,
         'checkNhanVienStatus' => \App\Http\Middleware\CheckNhanVienStatus::class,
         'khachhang.dangnhap' => \App\Http\Middleware\KiemTraDangNhapKhachHang::class,
+        'kiemtranhanvien' => \App\Http\Middleware\KiemTraDangNhapNhanVien::class,
+
 
     ];
 }

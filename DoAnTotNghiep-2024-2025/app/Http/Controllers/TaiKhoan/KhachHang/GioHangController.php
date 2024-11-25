@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TaiKhoan\KhachHang;
 use App\Models\Giohang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Khachhang;
 
 class GioHangController extends Controller
 {
@@ -12,16 +13,11 @@ class GioHangController extends Controller
     public function index()
     {
 
+        $khachhang=Khachhang::where('id',auth()->user()->id)->first();
+        //dd($khachhang);
         // Lấy giỏ hàng của khách hàng hiện tại dựa trên ID
         $giohang = Giohang::where('khachhang_id', auth()->user()->id)->first();
-        // Nếu giỏ hàng chưa tồn tại, tạo mới
-        if (!$giohang) {
-            $giohang = Giohang::create([
-                'khachhang_id' => auth()->id(),
-                'tongTien' => 0,
-                'tongSoLuong' => 0,
-            ]);
-        }
+//dd($giohang);
 
         return view('taikhoans.khachhangs.giohang', compact('giohang'));
     }

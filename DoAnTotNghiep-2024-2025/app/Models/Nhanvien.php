@@ -25,6 +25,12 @@ class Nhanvien extends Authenticatable
     protected $hidden = [
         'matKhau',
     ];
+    // Thêm Accessor cho role user->role
+    public function getRoleAttribute()
+    {
+        return $this->attributes['vaiTro'];
+    }
+
     public $timestamps = true; // Bật chế độ tự động cập nhật thời gian
 
     const CREATED_AT = 'ngayTao'; // Tên trường "ngày tạo"

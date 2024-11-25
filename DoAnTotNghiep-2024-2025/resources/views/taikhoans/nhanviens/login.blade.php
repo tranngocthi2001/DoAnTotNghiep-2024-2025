@@ -20,15 +20,14 @@
     @endif
 
     <!-- Form đăng nhập -->
-    <form action="{{ route('login') }}" method="POST">
+    <form method="POST" action="{{ route('login.submit') }}">
         @csrf
-        <label for="tenTaiKhoan">Tên tài khoản:</label>
-        <input type="text" id="tenTaiKhoan" name="tenTaiKhoan" required><br>
-
-        <label for="matKhau">Mật khẩu:</label>
-        <input type="password" id="matKhau" name="matKhau" required><br>
-
+        <label>Tên tài khoản:</label>
+        <input type="text" name="tenTaiKhoan" required>
+        <label>Mật khẩu:</label>
+        <input type="password" name="matKhau" required>
         <button type="submit">Đăng nhập</button>
     </form>
+
 </body>
 </html>
