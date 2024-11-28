@@ -15,8 +15,8 @@
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
-                    <th>Chi tiết</th>
                     <th>Nhân viên xử lý</th>
+                    <th>Chi tiết</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,12 +33,13 @@
                             <select name="trangThai" required>
                                 <option value="Chưa xác nhận" @if($donHang->trangThai == 'Chưa xác nhận') selected @endif>Chưa xác nhận</option>
                                 <option value="Đang xử lý" @if($donHang->trangThai == 'Đang xử lý') selected @endif>Đang xử lý</option>
+                                <option value="Đã giao cho đơn vị vận chuyển" @if($donHang->trangThai == 'Đã giao cho đơn vị vận chuyển') selected @endif>Đã giao cho đơn vị vận chuyển</option>
                                 <option value="Đã hoàn thành" @if($donHang->trangThai == 'Đã hoàn thành') selected @endif>Đã hoàn thành</option>
                                 <option value="Đã hủy" @if($donHang->trangThai == 'Đã hủy') selected @endif>Đã hủy</option>
                             </select>
                             <button type="submit">Cập nhật</button>
                         </form>
-                        <td>{{ $donHang->nhanvien ? $donHang->nhanvien->tenNhanVien : 'Chưa cập nhật' }}</td>
+                        <td>{{ $donHang->nhanVienS ? $donHang->nhanVienS->tenTaiKhoan : 'Chưa cập nhật' }}</td>
 
                     </td>
                     <td>
@@ -62,8 +63,8 @@
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
-                    <th>Chi tiết</th>
                     <th>Nhân viên xử lý</th>
+                    <th>Chi tiết</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,10 +89,11 @@
                         </form>
 
                     </td>
+                    <td>{{ $donHang->nhanVienS ? $donHang->nhanVienS->tenTaiKhoan : 'Chưa cập nhật' }}</td>
+
                     <td>
                         <a href="{{ route('quanlys.donhang.show', $donHang->id) }}"> Xem chi tiết</a>
                     </td>
-                    <td>{{ $donHang->nhanvien ? $donHang->nhanvien->tenTaiKhoan : 'Chưa cập nhật' }}</td>
 
                 </tr>
                 @endforeach

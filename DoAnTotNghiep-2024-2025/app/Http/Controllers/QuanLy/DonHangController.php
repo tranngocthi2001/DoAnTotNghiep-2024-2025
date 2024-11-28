@@ -4,6 +4,7 @@ namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
 use App\Models\DonHang;
+use App\Models\Sanpham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,12 +27,12 @@ class DonHangController extends Controller
         }
 
         // Lấy danh sách đơn hàng kèm thông tin nhân viên xử lý
-        $donHangsMoi = DonHang::with('nhanvien')
+        $donHangsMoi = DonHang::with('nhanViens')
             ->where('trangThai', 'Chưa xác nhận')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
 
-        $donHangsCu = DonHang::with('nhanvien')
+        $donHangsCu = DonHang::with('nhanViens')
             ->where('trangThai', '!=', 'Chưa xác nhận')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
@@ -65,10 +66,18 @@ class DonHangController extends Controller
     // Hiển thị chi tiết đơn hàng
     public function show($id)
     {
-        $donHang = DonHang::findOrFail($id);
+        // Tìm đơn hàng với id
+        $donHang = DonHang::with('chiTietDonHangs')->findOrFail($id);
+        //dd($donHang->chiTietDonHangs);
 
-        return view('quanlys.donhangs.show', compact('donHang'));
+        // Lấy thông tin khách hàng qua quan hệ khachhang_id
+        $khachHang = $donHang->khachHangs;
+        //dd($donHang->khachHangs);
+
+        // Trả về view với thông tin đơn hàng và tên khách hàng
+        return view('quanlys.donhangs.show', compact('donHang', 'khachHang'));
     }
+
 
     // Xác nhận đơn hàng
     public function xacNhanDonHang($id)

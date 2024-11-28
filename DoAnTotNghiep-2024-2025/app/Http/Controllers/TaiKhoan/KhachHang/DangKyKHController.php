@@ -5,8 +5,9 @@ namespace App\Http\Controllers\TaiKhoan\KhachHang;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Khachhang;
+use App\Models\KhachHang;
 use App\Events\KhachHangCreated;
+use Illuminate\Support\Facades\DB;
 
 class DangKyKHController extends Controller
 {
@@ -27,19 +28,22 @@ class DangKyKHController extends Controller
         ]);
 
         // Tạo khách hàng mới
-       // Tạo khách hàng mới và lưu vào biến $khachhang
-        $khachhang = Khachhang::create([
-            'tenTaiKhoan' => $request->tenTaiKhoan,
-            'matKhau' => Hash::make($request->matKhau),
-            'email' => $request->email,
-            'sdt' => $request->sdt,
-            'diaChi' => $request->diaChi,
-            'hoTen' => $request->hoTen,
-            'trangThai' => 1, // Kích hoạt tài khoản
-        ]);
-
+        try {
+            $khachhang = KhachHang::create([
+                'tenTaiKhoan' => $request->tenTaiKhoan,
+                'matKhau' => Hash::make($request->matKhau),
+                'email' => $request->email,
+                'sdt' => $request->sdt,
+                'diaChi' => $request->diaChi,
+                'hoTen' => $request->hoTen,
+                'trangThai' => 1,
+            ]);
+        } catch (\Exception $e) {
+            return back()->withErrors(['msg' => 'Có lỗi xảy ra khi tạo tài khoản. Vui lòng thử lại!']);
+        }
+//dd($khachhang);
         // Kích hoạt event
-        event(new KhachHangCreated($khachhang));
-                return redirect()->route('khachhang.showLoginForm')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
-            }
+         event(new KhachHangCreated($khachhang));
+                 return redirect()->route('khachhang.showLoginForm')->with('success', 'Đăng ký thành công! Vui lòng đăng nhập.');
+    }
 }

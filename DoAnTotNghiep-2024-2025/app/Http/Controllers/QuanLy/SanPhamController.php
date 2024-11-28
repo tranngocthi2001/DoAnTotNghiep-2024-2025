@@ -12,7 +12,7 @@ class SanPhamController extends Controller
     // Hiển thị danh sách sản phẩm
     public function index()
     {
-        $sanphams = Sanpham::with('danhmuc')->get(); // Lấy tất cả sản phẩm cùng danh mục
+        $sanphams = Sanpham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
         return view('quanlys.sanphams.sanpham', compact('sanphams'));
     }
 
@@ -62,7 +62,7 @@ class SanPhamController extends Controller
     // Hiển thị chi tiết một sản phẩm
     public function show($id)
     {
-        $sanpham = Sanpham::with('danhmuc')->findOrFail($id);
+        $sanpham = Sanpham::with('danhMucs')->findOrFail($id);
         return view('quanlys.sanphams.chitietsanpham', compact('sanpham'));
     }
 

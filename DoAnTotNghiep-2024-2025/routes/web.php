@@ -136,6 +136,7 @@ use App\Http\Controllers\TaiKhoan\KhachHang\GioHangController;
 Route::middleware('khachhang.dangnhap')->group(function () {
     Route::get('/giohang', [GioHangController::class, 'index'])->name('giohang.index');
 
+
 });
 
 use App\Http\Controllers\TaiKhoan\KhachHang\ChitietGioHangController;
@@ -152,13 +153,6 @@ Route::middleware('khachhang.dangnhap')->group(function () {
 //Dơn hàng
 use App\Http\Controllers\QuanLy\DonHangController;
 
-
-// Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
-//     Route::get('/donhang', [DonHangController::class, 'indexAdmin'])->name('quanlys.donhang.indexAdmin');
-//     Route::put('/donhang/{id}', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
-//     Route::get('/donhang/{id}', [DonHangController::class, 'show'])->name('quanlys.donhang.show');
-//     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
-// });
 Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
     Route::get('/donhang', [DonHangController::class, 'indexAdmin'])->name('quanlys.donhang.indexAdmin');
     Route::put('/donhang/{id}', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
@@ -166,24 +160,44 @@ Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->gr
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
 });
 
+use App\Http\Controllers\QuanLy\PhieuXuatHangController;
+
+Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+    Route::controller(PhieuXuatHangController::class)->group(function () {
+        Route::get('/phieuxuathang/create/{donHangId}', 'create')->name('quanlys.phieuxuathang.create'); // Tạo phiếu xuất
+        Route::post('/phieuxuathang/store', 'store')->name('phieuxuathangs.store'); // Lưu phiếu xuất
+        Route::get('/phieuxuathang/{id}', 'show')->name('phieuxuathangs.show'); // Xem chi tiết phiếu xuất
+        Route::get('/phieuxuathang/{id}/print', 'print')->name('phieuxuathangs.print'); // In phiếu xuất
+    });
+});
+
 use App\Http\Controllers\TaiKhoan\KhachHang\DonHangKHController;
 
-// //tạo đơn hàng từ phía người dùng
-// Route::post('/donhang/create', [DonHangController::class, 'donHangCreate'])->name('donhang.create');
-// Route::patch('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('donhang.xacnhan');
-// Route::get('/donhang', [DonHangController::class, 'index'])->name('donhang.index');
-// Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
-//     // Hiển thị danh sách đơn hàng của khách hàng
-//     Route::get('/donhang', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
-
-//     // Tạo đơn hàng mới từ giỏ hàng
-//     Route::post('/donhang/create', [DonHangKHController::class, 'donHangCreate'])->name('donhang.create');
-// });
-
-
 Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
+
+    // Route cho trang giỏ hàng của khách hàng để đi đến đơn đặt hàng
+    Route::get('/dondathang', [DonHangKHController::class, 'dondathang'])->name('khachhang.giohang.dondathang');
     Route::post('/donhang/create', [DonHangKHController::class, 'donHangCreate'])->name('khachhang.donhang.create');
     Route::get('/donhang', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
     Route::get('/khachhang/donhang/{id}', [DonHangKHController::class, 'show'])->name('khachhang.donhang.show');
+
+
+});
+
+
+use App\Http\Controllers\TaiKhoan\KhachHang\ThanhToanController;
+Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
+
+    // Route tạo mới thanh toán
+    Route::post('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'store'])->name('thanh-toan.store');
+
+    // Route xem chi tiết thanh toán của đơn hàng
+    Route::get('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'show'])->name('thanh-toan.show');
+
+    // Route cập nhật thanh toán
+    Route::put('thanh-toan/{id}', [ThanhToanController::class, 'update'])->name('thanh-toan.update');
+
+    // Route xóa thanh toán
+    Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
 
 });

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Danhmuc extends Model
+class DanhMuc extends Model
 {
     use HasFactory;
 
@@ -25,7 +25,7 @@ class Danhmuc extends Model
 
     const CREATED_AT = 'ngayTao'; // Cột "ngày tạo"
     const UPDATED_AT = 'ngayCapNhat'; // Cột "ngày cập nhật"
-    public function sanphams()
+    public function sanPhams()
     {
         return $this->hasMany(Sanpham::class, 'danhmuc_id', 'id');
     }

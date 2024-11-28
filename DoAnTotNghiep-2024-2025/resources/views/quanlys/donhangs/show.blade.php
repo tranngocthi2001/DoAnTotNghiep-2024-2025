@@ -5,8 +5,9 @@
     <h1>Chi tiết đơn hàng #{{ $donHang->id }}</h1>
 
     <p><strong>Ngày đặt hàng:</strong> {{ $donHang->ngayDatHang }}</p>
-    <p><strong>Tổng tiền:</strong> {{ number_format($donHang->tongTien, 2) }} VND</p>
+    <p><strong>Tổng tiền:</strong> {{ number_format($donHang->tongTien, 3) }} VND</p>
     <p><strong>Trạng thái:</strong> {{ $donHang->trangThai }}</p>
+    <p><strong>Tên khách hàng:</strong> {{ $khachHang->hoTen }}</p>
     <p><strong>Địa chỉ giao hàng:</strong> {{ $donHang->diaChiGiaoHang }}</p>
     <p><strong>Số điện thoại:</strong> {{ $donHang->sdt }}</p>
     <h2>Sản phẩm trong đơn hàng</h2>
@@ -20,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($donHang->chitietdonhang as $chitiet)
+            @foreach($donHang->chiTietDonHangs as $chitiet)
                 @foreach($chitiet->sanphams as $sanpham)
                     <tr>
                         <td>{{ $sanpham->tenSanPham }}</td>
@@ -46,6 +47,7 @@
         </select>
 
         <button type="submit">Cập nhật</button>
+        <a href="{{ route('quanlys.phieuxuathang.create', ['donHangId' => $donHang->id]) }}">Xem Phiếu xuất hàng</a>
     </form>
 </div>
 @endsection

@@ -3,12 +3,15 @@
 @section('content')
 <div class="container">
     <h1>Chi tiết đơn hàng #{{ $donhang->id }}</h1>
+    <p><strong>Tên khách hàng:</strong> {{ $khachhang->hoTen }}</p>
 
     <p><strong>Ngày đặt hàng:</strong> {{ $donhang->ngayDatHang }}</p>
-    <p><strong>Tổng tiền:</strong> {{ number_format($donhang->tongTien, 2) }} VND</p>
+    <p><strong>Tổng tiền:</strong> {{ number_format($donhang->tongTien, 3) }} VND</p>
     <p><strong>Trạng thái:</strong> {{ $donhang->trangThai }}</p>
     <p><strong>Địa chỉ giao hàng:</strong> {{ $donhang->diaChiGiaoHang }}</p>
     <p><strong>Số điện thoại:</strong> {{ $donhang->sdt }}</p>
+    <p><strong>Phương thức thanh toán:</strong> {{ $donhang->phuongThucThanhToan}}</p>
+
 
     <h2>Sản phẩm trong đơn hàng</h2>
     <table class="table">
@@ -21,13 +24,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($donhang->chitietdonhang as $chitiet)
-                @foreach($chitiet->sanphams as $sanpham)
+            @foreach($donhang->chiTietDonHangs as $chitiet)
+                @foreach($chitiet->sanPhams as $sanpham)
                     <tr>
                         <td>{{ $sanpham->tenSanPham }}</td>
                         <td>{{ $chitiet->soLuong }}</td>
                         <td>{{ number_format($sanpham->gia, 3) }} VND</td>
-                        <td>{{ number_format($chitiet->gia, 3) }} VND</td>
+                        <td>{{ number_format( $chitiet->gia, 3) }} VND</td>
                     </tr>
                 @endforeach
             @endforeach

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ChitietGiohang extends Model
+class ChiTietGioHang extends Model
 {
     use HasFactory;
 
@@ -14,15 +14,15 @@ class ChitietGiohang extends Model
     public $timestamps = false; // Bỏ qua các cột created_at và updated_at
 
     //quan hệ n-n
-    public function sanphams()
+    public function sanPhams()
     {
-        return $this->belongsToMany(Sanpham::class, 'sanpham_has_chitietgiohang', 'chitietgiohang_id', 'sanpham_id')
+        return $this->belongsToMany(SanPham::class, 'sanpham_has_chitietgiohang', 'chitietgiohang_id', 'sanpham_id')
             ->withPivot('soLuong');
     }
 
 
 
-    public function giohang()
+    public function gioHangs()
     {
         return $this->belongsTo(Giohang::class, 'giohang_id');
     }

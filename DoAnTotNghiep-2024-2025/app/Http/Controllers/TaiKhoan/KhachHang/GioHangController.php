@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\TaiKhoan\KhachHang;
 
-use App\Models\Giohang;
+use App\Models\GioHang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Khachhang;
+use App\Models\KhachHang;
 
 class GioHangController extends Controller
 {
@@ -13,10 +13,15 @@ class GioHangController extends Controller
     public function index()
     {
 
-        $khachhang=Khachhang::where('id',auth()->user()->id)->first();
+        $khachhang=KhachHang::where('id',auth()->user()->id)->first();
         //dd($khachhang);
+        $giohang = GioHang::firstOrCreate(
+            ['khachhang_id' => $khachhang->id],
+            ['tongTien' => 0, 'tongSoLuong' => 0]
+        );
+
         // Lấy giỏ hàng của khách hàng hiện tại dựa trên ID
-        $giohang = Giohang::where('khachhang_id', auth()->user()->id)->first();
+        $giohang = GioHang::where('khachhang_id', auth()->user()->id)->first();
 //dd($giohang);
 
         return view('taikhoans.khachhangs.giohang', compact('giohang'));
@@ -25,10 +30,10 @@ class GioHangController extends Controller
     // Xóa giỏ hàng (nếu cần)
     public function destroy()
     {
-        $giohang = Giohang::where('khachhang_id', auth()->id())->first();
+        $giohang = GioHang::where('khachhang_id', auth()->id())->first();
 
         if ($giohang) {
-            $giohang->chitietgiohang()->delete(); // Xóa tất cả chi tiết giỏ hàng
+            $giohang->chiTietGioHangs()->delete(); // Xóa tất cả chi tiết giỏ hàng
             $giohang->delete(); // Xóa giỏ hàng
         }
 

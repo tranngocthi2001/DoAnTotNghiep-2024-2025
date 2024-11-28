@@ -1,24 +1,5 @@
-@extends('layouts.app')
 
-@section('content')
-
-    <div class="container">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <h1>Giỏ Hàng</h1>
-
-        <div class="container mt-5">
-            @if ($giohang && $giohang->chiTietGioHangs->count() > 0)
-                <h2>Giỏ hàng của bạn</h2>
-                @foreach ($giohang->chiTietGioHangs as $item)
+@foreach ($giohang->chiTietGioHangs as $item)
                     @if ($item->sanPhams->count() > 0)
                         @foreach ($item->sanPhams as $sanpham)
                             <div>
@@ -43,13 +24,26 @@
                 @endforeach
                 <p>Tổng số lượng: {{ $giohang->tongSoLuong }}</p>
                 <p>Tổng tiền: {{ number_format($giohang->tongTien, 3) }} VND</p>
-            @else
-                <p>Giỏ hàng trống!</p>
-            @endif
+                <p>Vui lòng nhập địa chỉ giao hàng</p>
+                <form action="{{ route('khachhang.donhang.create') }}" method="POST">
+                    @csrf
 
-            <a href="{{route('khachhang.giohang.dondathang')}}">Đặt hàng</a>
+                    <!-- Địa chỉ giao hàng -->
+                    <label for="diaChi">Địa chỉ giao hàng:</label>
+                    <input type="text" name="diaChi" id="diaChi" value="{{ auth()->user()->diaChi ?? '' }}" required>
 
+                    <!-- Số điện thoại -->
+                    <label for="sdt">Số điện thoại:</label>
+                    <input type="text" name="sdt" id="sdt" value="{{ auth()->user()->sdt ?? '' }}" required></br>
 
-        </div>
-    </div>
-@endsection
+                    <!-- Phương thức thanh toán -->
+                    <label for="phuongThucThanhToan">Chọn phương thức thanh toán:</label>
+                    <select name="phuongThucThanhToan" id="phuongThucThanhToan" required>
+                        <option value="Thanh toán khi nhận hàng (COD)">Thanh toán khi nhận hàng (COD)</option>
+                        <option value="Chuyển khoản ngân hàng">Chuyển khoản ngân hàng</option>
+                        <option value="Thanh toán qua ví điện tử">Thanh toán qua ví điện tử Momo</option>
+                    </select>
+
+                    <!-- Nút Đặt hàng -->
+                    <button type="submit">Đặt hàng</button>
+                </form>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\TaiKhoan\KhachHang;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Khachhang;
+use App\Models\KhachHang;
 use Illuminate\Support\Facades\Hash;
 
 class DangNhapKHController extends Controller
@@ -29,7 +29,7 @@ class DangNhapKHController extends Controller
         ]);
 
         // Tìm khách hàng theo tên tài khoản
-        $khachhang = Khachhang::where('tenTaiKhoan', $request->tenTaiKhoan)->first();
+        $khachhang = KhachHang::where('tenTaiKhoan', $request->tenTaiKhoan)->first();
 
         if (!$khachhang) {
             return redirect()->back()->withErrors(['tenTaiKhoan' => 'Tên tài khoản không tồn tại!']);

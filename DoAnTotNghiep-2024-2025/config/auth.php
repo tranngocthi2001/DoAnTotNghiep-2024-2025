@@ -3,8 +3,8 @@
 return [
 
     'defaults' => [
-        'guard' => 'nhanvien',
-        //'guard' => 'khachhang', // Sử dụng guard 'nhanvien' mặc định
+        //'guard' => 'nhanvien',
+        'guard' => 'khachhang', // Sử dụng guard 'nhanvien' mặc định
         'passwords' => 'khachhangs', // Đặt lại passwords nếu cần
     ],
 

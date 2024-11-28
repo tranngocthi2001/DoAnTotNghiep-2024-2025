@@ -86,10 +86,7 @@
             <h3>Sửa chữa & bảo trì</h3>
             <a href="/quanlys/baotri">Xem chi tiết</a>
         </div>
-        <div class="card">
-            <h3>Phiếu xuất hàng</h3>
-            <a href="/quanlys/phieuxuathang">Xem chi tiết</a>
-        </div>
+
         <div class="card">
             <h3>Thanh toán</h3>
             <a href="/quanlys/thanhtoan">Xem chi tiết</a>

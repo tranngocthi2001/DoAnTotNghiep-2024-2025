@@ -22,13 +22,23 @@ class ChiTietDonHang extends Model
     /**
      * Quan hệ với bảng DonHang
      */
-    public function donhang()
+    public function donHangs()
     {
         return $this->belongsTo(DonHang::class, 'donhang_id', 'id');
     }
-    public function sanphams()
+
+    public function sanPhams()
     {
         return $this->belongsToMany(SanPham::class, 'sanpham_has_chitietdonhang', 'chitietdonhang_id', 'sanpham_id')
             ->withPivot('soLuong');
     }
+
+    // Quan hệ với chi tiết phiếu xuất
+    public function chiTietPhieuXuats()
+    {
+        return $this->hasMany(ChiTietPhieuXuat::class, 'chitietdonhang_id');
+    }
+
+
+
 }
