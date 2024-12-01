@@ -54,10 +54,16 @@ class DangNhapKHController extends Controller
         if (Auth::guard('khachhang')->attempt($credentials)) {
             // Kiểm tra trạng thái tài khoản
             $khachhang = Auth::guard('khachhang')->user();
+//dd($khachhang);
             if ($khachhang->trangThai == 0) {
                 Auth::guard('khachhang')->logout(); // Đăng xuất ngay nếu tài khoản bị khóa
                 return redirect()->back()->withErrors(['error' => 'Tài khoản của bạn đã bị khóa!']);
             }
+             // Thay đổi tên cookie cho guard 'khachhang'
+             config(['session.cookie' => 'khachhang_session']); // Thay đổi tên cookie
+            // Lưu session cho khách hàng
+            session(['khachhang' => $khachhang]);
+
 
             // Đăng nhập thành công, chuyển hướng đến dashboard
             return redirect()->route('khachhang.dashboard')->with('success', 'Đăng nhập thành công!');

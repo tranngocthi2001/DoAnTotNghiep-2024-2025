@@ -24,8 +24,11 @@ class NhanVienController extends Controller
      */
     public function create()
     {
+        $nhanVien = auth()->guard('nhanvien')->user();
+
         // Chỉ admin mới có quyền truy cập
-        if (Auth::user()->vaiTro !== 'admin') {
+        if ($nhanVien->vaiTro !== 'admin') {
+            //dd($nhanVien);
             return redirect()->route('unauthorized');
         }
 
@@ -88,8 +91,12 @@ class NhanVienController extends Controller
      */
     public function edit($id)
     {
+        $nhanVien = Auth::guard('nhanvien')->user();
+        //dd($nhanVien);
+         // Lấy thông tin nhân viên đang đăng nhập
+        //$nhanVien = auth()->guard('nhanvien')->user()
         // Chỉ admin mới có quyền chỉnh sửa nhân viên
-        if (Auth::user()->vaiTro !== 'admin') {
+        if ($nhanVien->vaiTro !== 'admin') {
             return redirect()->route('unauthorized');
         }
 
@@ -102,8 +109,11 @@ class NhanVienController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Chỉ admin mới có quyền cập nhật nhân viên
-        if (Auth::user()->vaiTro !== 'admin') {
+        $nhanVien = auth()->guard('nhanvien')->user();
+        //dd($nhanVien);
+        // Chỉ admin mới có quyền chỉnh sửa nhân viên
+        if ($nhanVien->vaiTro !== 'admin') {
+            //dd($nhanVien);
             return redirect()->route('unauthorized');
         }
 
@@ -138,8 +148,10 @@ class NhanVienController extends Controller
      */
     public function destroy($id)
     {
-        // Chỉ admin mới có quyền xóa nhân viên
-        if (Auth::user()->vaiTro !== 'admin') {
+        $nhanVien = auth()->guard('nhanvien')->user();
+        //dd($nhanVien);
+        // Chỉ admin mới có quyền chỉnh xóa nhân viên
+        if ($nhanVien->vaiTro !== 'admin') {
             return redirect()->route('unauthorized');
         }
 

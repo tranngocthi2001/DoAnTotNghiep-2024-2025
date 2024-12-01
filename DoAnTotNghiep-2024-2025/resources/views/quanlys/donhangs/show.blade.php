@@ -47,7 +47,7 @@
         </select>
 
         <button type="submit">Cập nhật</button>
-        <a href="{{ route('quanlys.phieuxuathang.create', ['donHangId' => $donHang->id]) }}">Xem Phiếu xuất hàng</a>
+        <a href="{{ route('quanlys.phieuxuathang.create', ['donHangId' => $donHang->id]) }}">Tạo Phiếu xuất hàng</a>
     </form>
 </div>
 @endsection

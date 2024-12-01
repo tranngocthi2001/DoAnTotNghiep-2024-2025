@@ -26,7 +26,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $sanpham->tenSanPham }}</h5>
                                         <p class="card-text">{{ $sanpham->moTa }}</p>
-                                        <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 2) }} VND</p>
+                                        <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 3) }} VND</p>
                                         <a href="{{ route('quanlys.sanpham.show', $sanpham->id) }}" class="btn btn-primary btn-sm">Chi tiết</a>
                                     </div>
                                 </div>

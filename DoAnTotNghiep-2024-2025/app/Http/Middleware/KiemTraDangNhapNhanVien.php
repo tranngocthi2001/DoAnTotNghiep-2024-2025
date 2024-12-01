@@ -23,7 +23,7 @@ class KiemTraDangNhapNhanVien
         dd($user, $user->role);
 
         if (!$user || !in_array($user->role, $roles)) {
-            return redirect()->route('login')->withErrors('Bạn không có quyền truy cập.');
+            return redirect()->route('login')->withErrors('Bạn 1không có quyền truy cập.');
         }
 
         return $next($request);

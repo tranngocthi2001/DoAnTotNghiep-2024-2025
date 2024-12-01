@@ -12,6 +12,11 @@ class SanPhamController extends Controller
     // Hiển thị danh sách sản phẩm
     public function index()
     {
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+        if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
+            return redirect()->route('unauthorized');
+        }
         $sanphams = Sanpham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
         return view('quanlys.sanphams.sanpham', compact('sanphams'));
     }

@@ -16,11 +16,18 @@ class DangNhapController extends Controller
             'matKhau' => 'required',
         ]);
 
-        // Thử đăng nhập với guard 'nhanvien'
-        if (Auth::guard('nhanvien')->attempt(['tenTaiKhoan' => $credentials['tenTaiKhoan'], 'password' => $credentials['matKhau']])) {
+         // Thử đăng nhập với guard 'nhanvien'
+         if (Auth::guard('nhanvien')->attempt([
+            'tenTaiKhoan' => $credentials['tenTaiKhoan'],
+            'password' => $credentials['matKhau']
+        ])) {
             $nhanvien = Auth::guard('nhanvien')->user();
 
-            // Kiểm tra vai trò của nhân viên
+             // Thay đổi tên cookie cho guard 'nhanvien'
+             config(['session.cookie' => 'nhanvien_session']); // Thay đổi tên cookie
+            // Kiểm tra vai trò của nhân viên và lưu session cho nhanvien
+            session(['nhanvien' => $nhanvien]); // Lưu nhân viên vào session
+
             if ($nhanvien->vaiTro === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($nhanvien->vaiTro === 'quanly') {

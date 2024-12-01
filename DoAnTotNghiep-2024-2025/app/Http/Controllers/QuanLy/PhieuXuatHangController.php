@@ -25,7 +25,8 @@ class PhieuXuatHangController extends Controller
 
     public function store(Request $request)
     {
-        $nhanVien = Auth::guard('nhanvien')->user(); // Lấy thông tin nhân viên đang đăng nhập
+        //$nhanVien = Auth::guard('nhanvien')->user(); // Lấy thông tin nhân viên đang đăng nhập
+        $nhanVien = auth()->guard('nhanvien')->user();
 
         // Tạo phiếu xuất hàng
         $phieuXuat = PhieuXuatHang::create([

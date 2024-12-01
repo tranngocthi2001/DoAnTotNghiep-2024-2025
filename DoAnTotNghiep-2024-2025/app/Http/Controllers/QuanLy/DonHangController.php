@@ -13,18 +13,15 @@ class DonHangController extends Controller
     // Hiển thị danh sách đơn hàng dành cho nhân viên/admin
     public function indexAdmin()
     {
-        // Kiểm tra nếu người dùng đã đăng nhập với guard 'nhanvien'
-        if (!auth()->guard('nhanvien')->check()) {
-            return redirect()->route('login')->withErrors('Bạn cần đăng nhập để truy cập.');
-        }
-
         // Lấy thông tin người dùng từ guard 'nhanvien'
         $user = auth()->guard('nhanvien')->user();
 //dd($user);
         // Kiểm tra quyền truy cập
-        if (!in_array($user->role, ['admin', 'quanly'])) {
-            return redirect()->route('login')->withErrors('Bạn không có quyền truy cập.');
-        }
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+        if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
+            return redirect()->route('unauthorized');
+       }
 
         // Lấy danh sách đơn hàng kèm thông tin nhân viên xử lý
         $donHangsMoi = DonHang::with('nhanViens')
@@ -45,7 +42,7 @@ class DonHangController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'trangThai' => 'required|in:Chưa xác nhận,Đang xử lý,Đã hoàn thành,Đã hủy',
+            'trangThai' => 'required',
         ]);
 
        // Tìm đơn hàng theo ID

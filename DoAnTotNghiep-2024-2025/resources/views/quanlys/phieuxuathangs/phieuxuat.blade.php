@@ -2,7 +2,7 @@
     @csrf
 
     <h3>Nhân viên xuất hàng</h3>
-    <h3>{{  $donHang->nhanViens->tenTaiKhoan }}</h3>
+    <h3>{{  $donHang->nhanViens->hoTen }}</h3>
     <input type="hidden" name="donhang_id" value="{{ $donHang->id }}">
 
     <div>
@@ -31,6 +31,7 @@
                 @foreach ($donHang->chiTietDonHangs as $index => $chiTiet)
                     @foreach ($chiTiet->sanPhams as $sanPham)
                         @for ($i = 0; $i < $sanPham->pivot->soLuong; $i++) <!-- Lặp qua số lượng -->
+
                             <tr>
                                 <td>
                                     <input type="hidden" name="chiTietDonHangs[{{ $index }}][sanpham_id]" value="{{ $sanPham->id }}">
@@ -40,7 +41,8 @@
                                     <input type="number" name="chiTietDonHangs[{{ $index }}][soLuong]" value="1" required> <!-- Mỗi dòng chỉ có 1 sản phẩm -->
                                 </td>
                                 <td>
-                                    <input type="datetime-local" name="chiTietDonHangs[{{ $index }}][baoHanh]" placeholder="Nhập thông tin bảo hành">
+                                    <input type="datetime-local" name="chiTietDonHangs[{{ $index }}][baoHanh]" >
+
                                 </td>
                                 <td>
                                     <input type="text" name="chiTietDonHangs[{{ $index }}][ghiChu]" placeholder="Nhập ghi chú">

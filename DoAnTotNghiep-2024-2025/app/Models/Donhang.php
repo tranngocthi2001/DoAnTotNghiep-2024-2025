@@ -21,7 +21,8 @@ class DonHang extends Model
         'sdt',
         'ngayDatHang',
         'updated_by',
-        'phuongThucThanhToan'
+        'phuongThucThanhToan',
+        'tenKhachHang'
     ];
 
     const CREATED_AT = 'ngayDatHang'; // Cột "ngày tạo"
@@ -53,4 +54,9 @@ class DonHang extends Model
         // Một đơn hàng sẽ có một thanh toán
         return $this->hasOne(ThanhToan::class, 'donhang_id');
     }
+     // Định nghĩa quan hệ 1-1 với VanChuyen
+     public function vanChuyen()
+     {
+        return $this->hasOne(VanChuyen::class, 'donhang_id');
+     }
 }

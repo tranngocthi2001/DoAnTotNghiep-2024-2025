@@ -19,7 +19,9 @@ class DanhMucController extends Controller
     // Hiển thị form tạo mới danh mục
     public function create()
     {
-        if (Auth::user()->vaiTro !== 'admin'&&Auth::user()->vaiTro !=='quanly') {
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+        if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
             return redirect()->route('unauthorized');
        }
         return view('quanlys.danhmucs.create');

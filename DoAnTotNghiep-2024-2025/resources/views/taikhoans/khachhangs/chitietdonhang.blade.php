@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h1>Chi tiết đơn hàng #{{ $donhang->id }}</h1>
-    <p><strong>Tên khách hàng:</strong> {{ $khachhang->hoTen }}</p>
+    <p><strong>Tên khách hàng:</strong> {{ $donhang->tenKhachHang }}</p>
 
     <p><strong>Ngày đặt hàng:</strong> {{ $donhang->ngayDatHang }}</p>
     <p><strong>Tổng tiền:</strong> {{ number_format($donhang->tongTien, 3) }} VND</p>

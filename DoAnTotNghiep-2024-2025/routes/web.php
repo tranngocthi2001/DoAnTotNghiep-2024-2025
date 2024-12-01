@@ -147,6 +147,7 @@ Route::middleware('khachhang.dangnhap')->group(function () {
     Route::delete('/giohang/chitiet/{id}', [ChitietGioHangController::class, 'destroy'])->name('giohang.chitiet.destroy');
 
     Route::post('/giohang/chitiet/update/{id}', [ChiTietGioHangController::class, 'updateQuantity'])->name('giohang.chitiet.update');
+     //Route::post('/giohang/update', [ChiTietGioHangController::class, 'update'])->name('giohang.update');
 
 });
 
@@ -201,3 +202,18 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
 
 });
+use App\Http\Controllers\QuanLy\VanChuyenController;
+
+Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+    Route::controller(VanChuyenController::class)->group(function () {
+        // Route index (danh sách vận chuyển theo donhang_id)
+        Route::get('vanchuyens/{donhang_id}', [VanChuyenController::class, 'index'])->name('quanlys.vanchuyens.index');
+
+        // Route create (tạo mới vận chuyển)
+        Route::get('vanchuyens/create', [VanChuyenController::class, 'create'])->name('vanchuyens.create');
+
+        // Route store (lưu vận chuyển)
+        Route::post('vanchuyens', [VanChuyenController::class, 'store'])->name('vanchuyens.store');
+    });
+});
+

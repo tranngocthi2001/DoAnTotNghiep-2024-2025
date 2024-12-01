@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Tên khách hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -24,6 +25,7 @@
                     <tr>
 
                         <td>{{ $donhang->id }}</td>
+                        <td>{{ $donhang->tenKhachHang }}</td>
                         <td>{{ $donhang->ngayDatHang }}</td>
                         <td>{{ number_format($donhang->tongTien, 3) }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>

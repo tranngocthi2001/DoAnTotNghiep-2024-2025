@@ -12,15 +12,21 @@ class KhachHangController extends Controller
     //Hiển thị danh sách khách hang
     public function index()
     {
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+        if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
+            return redirect()->route('unauthorized');
+        }
         $khachhangs = Khachhang::all(); // Lấy tất cả khách hàng
         return view('quanlys.khachhangs.khachhang', compact('khachhangs'));
     }
     //khởi tạo khách hàng mới
     public function create()
     {
-        // Chỉ admin mới có quyền truy cập
-        if (Auth::user()->vaiTro !== 'admin'&&Auth::user()->vaiTro !=='quanly') {
-             return redirect()->route('unauthorized');
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+        if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
+            return redirect()->route('unauthorized');
         }
         return view('quanlys.khachhangs.create');
     }
@@ -47,35 +53,6 @@ class KhachHangController extends Controller
 
         return redirect()->route('quanlys.khachhang.index')->with('success', 'Thêm khách hàng thành công!');
     }
-    // //chỉnh sửa
-    // public function edit($id)
-    // {
-    //     $khachhang = Khachhang::findOrFail($id);
-    //     return view('khachhang.edit', compact('khachhang'));
-    // }
-    // //lưu chỉnh sửa
-    // public function update(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'tenTaiKhoan' => 'required|max:100|unique:khachhang,tenTaiKhoan,' . $id,
-    //         'email'       => 'required|email|max:100|unique:khachhang,email,' . $id,
-    //         'sdt'         => 'required|digits:10',
-    //         'hoTen'       => 'required|max:100',
-    //     ]);
-
-    //     $khachhang = Khachhang::findOrFail($id);
-    //     $khachhang->update($request->all());
-
-    //     return redirect()->route('khachhang.index')->with('success', 'Cập nhật khách hàng thành công!');
-    // }
-
-    //     public function destroy($id)
-    // {
-    //     $khachhang = Khachhang::findOrFail($id);
-    //     $khachhang->delete();
-
-    //     return redirect()->route('khachhang.index')->with('success', 'Xóa khách hàng thành công!');
-    // }
 
     //cập nhật trạng thái khóa, hoạt động.
     public function updateStatus($id)
