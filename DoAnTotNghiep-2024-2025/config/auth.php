@@ -15,7 +15,7 @@ return [
         ],
         'khachhang' => [
             'driver' => 'session', // Dùng session để lưu trạng thái đăng nhập
-            'provider' => 'khachhangs', // Trỏ tới provider 'khachhangs'
+            'provider' => 'khachhangs', // Trỏ tới provider 'khachhang'
         ],
     ],
 
@@ -36,11 +36,18 @@ return [
     'passwords' => [
         'nhanviens' => [
             'provider' => 'nhanviens',
-            'table' => 'password_resets', // Bảng lưu mã đặt lại mật khẩu
+            'table' => 'password_resets', // Bảng lưu mã đặt lại mật khẩu cho nhân viên
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'khachhangs' => [
+            'provider' => 'khachhangs',
+            'table' => 'password_resets', // Bảng lưu mã đặt lại mật khẩu cho khách hàng
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
+
 
     'password_timeout' => 10800, // 3 giờ
 

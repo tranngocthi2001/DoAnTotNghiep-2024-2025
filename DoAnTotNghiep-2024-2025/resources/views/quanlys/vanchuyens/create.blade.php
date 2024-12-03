@@ -5,8 +5,9 @@
     <h2>Tạo mới thông tin vận chuyển</h2>
 
     <!-- Form tạo mới vận chuyển -->
-    <form action="{{ route('vanchuyens.store') }}" method="POST">
+    <br><form action="{{ route('vanchuyens.store') }}" method="POST">
         @csrf <!-- CSRF token bảo vệ -->
+        <input type="hidden" name="donhang_id" value="{{ $donhang->id }}">
 
         <div class="form-group">
             <label for="tenVanChuyen">Tên vận chuyển</label>
@@ -33,16 +34,6 @@
             <input type="text" class="form-control" id="maVanChuyen" name="maVanChuyen" required>
         </div>
 
-        <!-- Chọn đơn hàng -->
-        <div class="form-group">
-            <label for="donhang_id">Chọn đơn hàng</label>
-            <select class="form-control" id="donhang_id" name="donhang_id" required>
-                <option value="">-- Chọn đơn hàng --</option>
-                @foreach($donhangs as $donhang)
-                    <option value="{{ $donhang->id }}">{{ $donhang->maDonHang }} - {{ $donhang->tenKhachHang }}</option>
-                @endforeach
-            </select>
-        </div>
 
         <button type="submit" class="btn btn-primary">Lưu thông tin vận chuyển</button>
     </form>

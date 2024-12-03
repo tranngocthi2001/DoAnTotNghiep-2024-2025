@@ -60,7 +60,7 @@ class DangNhapKHController extends Controller
                 return redirect()->back()->withErrors(['error' => 'Tài khoản của bạn đã bị khóa!']);
             }
              // Thay đổi tên cookie cho guard 'khachhang'
-             config(['session.cookie' => 'khachhang_session']); // Thay đổi tên cookie
+             //config(['session.cookie' => 'khachhang_session']); // Thay đổi tên cookie
             // Lưu session cho khách hàng
             session(['khachhang' => $khachhang]);
 

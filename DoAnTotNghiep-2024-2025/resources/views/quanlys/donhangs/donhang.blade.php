@@ -65,7 +65,8 @@
                     <th>Hành động</th>
                     <th>Nhân viên xử lý</th>
                     <th>Chi tiết đơn hàng</th>
-                    <th>Thêm thông tin vận chuyển</th>
+                    <th>Phiếu xuất hàng</th>
+                    <th>Mã vận chuyển</th>
 
                 </tr>
             </thead>
@@ -98,7 +99,15 @@
                         <a href="{{ route('quanlys.donhang.show', $donHang->id) }}"> Xem chi tiết</a>
                     </td>
                     <td>
-                        <a href="{{ route('quanlys.vanchuyens.index', $donHang->id) }}"> Xem/Thêm thông tin vận chuyển</a>
+                        <a href="{{ route('quanlys.phieuxuathang.create', ['donHangId' => $donHang->id]) }}">Tạo Phiếu xuất hàng</a>
+
+                    </td>
+                    <td>
+                        @if ($donHang->maVanChuyen!=null)
+                            <a>{{$donHang->maVanChuyen }}</a>
+                        @else
+                            <a>chưa có</a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

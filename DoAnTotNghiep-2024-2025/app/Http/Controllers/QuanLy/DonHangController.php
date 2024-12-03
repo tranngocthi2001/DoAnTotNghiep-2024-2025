@@ -43,6 +43,8 @@ class DonHangController extends Controller
     {
         $request->validate([
             'trangThai' => 'required',
+            'maVanChuyen' => 'nullable|string|max:50',
+
         ]);
 
        // Tìm đơn hàng theo ID
@@ -55,6 +57,8 @@ class DonHangController extends Controller
         $donhang->update([
             'trangThai' => $request->input('trangThai'),
             'nhanvien_id' => $nhanvienId,
+            'maVanChuyen' => $request->input('maVanChuyen') ?: $donhang->maVanChuyen, // Không ghi đè mã vận chuyển nếu không có giá trị mới
+
         ]);
 
         return redirect()->route('quanlys.donhang.indexAdmin')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
@@ -87,4 +91,7 @@ class DonHangController extends Controller
 
         return redirect()->route('nhanvien.donhang.indexAdmin')->with('success', 'Đơn hàng đã được xác nhận.');
     }
+
+
+
 }

@@ -64,7 +64,8 @@ class DonHangKHController extends Controller
             'sdt' => $request->input('sdt', $giohang->khachHang->sdt),
             'ngayDatHang' => now(),
             'phuongThucThanhToan' => $request->input('phuongThucThanhToan'),
-            'tenKhachHang'=>  $request->input('hoTen', $giohang->khachHang->hoTen)
+            'tenKhachHang'=>  $request->input('hoTen', $giohang->khachHang->hoTen),
+            'maVanChuyen'=>null,
 
         ]);
         // Kiểm tra phương thức thanh toán

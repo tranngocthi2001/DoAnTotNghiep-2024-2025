@@ -34,10 +34,13 @@ return [
 
 
 
-    'cookie' => env(
-        'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
-    ),
+    // 'cookie' => env(
+    //     'SESSION_COOKIE',
+    //     Str::slug(env('APP_NAME', 'laravel'), '_').'_session'
+    // ),
+    // config/session.php
+    //'cookie' => 'nhanvien_session',
+    'cookie' => env('SESSION_COOKIE', 'laravel_session'),
 
 
 

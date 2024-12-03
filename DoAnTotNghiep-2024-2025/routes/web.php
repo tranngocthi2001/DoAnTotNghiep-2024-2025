@@ -31,11 +31,10 @@ Route::middleware('auth:nhanvien')->group(function () {
 });
 
 use App\Http\Controllers\QuanLy\NhanVienController;
-use App\Models\Khachhang;
 
-Route::prefix('quanlys')->middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
     // Group cho các route liên quan đến nhân viên
-    Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
+
         // Resource route cho Nhân Viên Controller
         Route::resource('nhanvien', NhanVienController::class)->names([
             'index' => 'quanlys.nhanvien.index',
@@ -49,9 +48,6 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin'])->group(function () 
         ]);
         // Chỉnh sửa trạng thái tài khoản nhân viên
         Route::post('/{id}/update-status', [NhanVienController::class, 'updateStatus'])->name('quanlys.nhanvien.updateStatus');
-    });
-
-
 });
 
 use App\Http\Controllers\QuanLy\KhachHangController;
@@ -159,6 +155,8 @@ Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->gr
     Route::put('/donhang/{id}', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
     Route::get('/donhang/{id}', [DonHangController::class, 'show'])->name('quanlys.donhang.show');
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
+    // Route thêm mã vận chuyển
+    //Route::put('/donhang/{id}/update', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
 });
 
 use App\Http\Controllers\QuanLy\PhieuXuatHangController;
@@ -169,6 +167,7 @@ Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->gr
         Route::post('/phieuxuathang/store', 'store')->name('phieuxuathangs.store'); // Lưu phiếu xuất
         Route::get('/phieuxuathang/{id}', 'show')->name('phieuxuathangs.show'); // Xem chi tiết phiếu xuất
         Route::get('/phieuxuathang/{id}/print', 'print')->name('phieuxuathangs.print'); // In phiếu xuất
+
     });
 });
 
@@ -201,19 +200,5 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     // Route xóa thanh toán
     Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
 
-});
-use App\Http\Controllers\QuanLy\VanChuyenController;
-
-Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
-    Route::controller(VanChuyenController::class)->group(function () {
-        // Route index (danh sách vận chuyển theo donhang_id)
-        Route::get('vanchuyens/{donhang_id}', [VanChuyenController::class, 'index'])->name('quanlys.vanchuyens.index');
-
-        // Route create (tạo mới vận chuyển)
-        Route::get('vanchuyens/create', [VanChuyenController::class, 'create'])->name('vanchuyens.create');
-
-        // Route store (lưu vận chuyển)
-        Route::post('vanchuyens', [VanChuyenController::class, 'store'])->name('vanchuyens.store');
-    });
 });
 

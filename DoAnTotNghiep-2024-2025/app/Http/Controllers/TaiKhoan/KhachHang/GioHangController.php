@@ -12,6 +12,8 @@ class GioHangController extends Controller
     // Hiển thị giỏ hàng
     public function index()
     {
+        $khachhang = session('khachhang');
+        //dd($khachhang);
 
         $khachhang=KhachHang::where('id',auth()->user()->id)->first();
         //dd($khachhang);

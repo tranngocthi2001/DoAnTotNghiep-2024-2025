@@ -14,8 +14,10 @@ class NhanVienController extends Controller
      */
     public function index()
     {
-
-        $nhanviens = NhanVien::all(); // Lấy danh sách tất cả nhân viên
+        //$nhanvien = session('nhanvien');
+        //dd($nhanvien);
+        $nhanviens = NhanVien::all();
+         //dd($nhanviens); // Lấy danh sách tất cả nhân viên
         return view('quanlys.nhanviens.nhanvien', compact('nhanviens'));
     }
 

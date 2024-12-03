@@ -42,12 +42,20 @@
         <select name="trangThai" id="trangThai" required>
             <option value="Chưa xác nhận" @if($donHang->trangThai == 'Chưa xác nhận') selected @endif>Chưa xác nhận</option>
             <option value="Đang xử lý" @if($donHang->trangThai == 'Đang xử lý') selected @endif>Đang xử lý</option>
+
+            <option value="Đã giao cho đơn vị vận chuyển" @if($donHang->trangThai == 'Đã giao cho đơn vị vận chuyển') selected @endif>Đã giao cho đơn vị vận chuyển</option>
             <option value="Đã hoàn thành" @if($donHang->trangThai == 'Đã hoàn thành') selected @endif>Đã hoàn thành</option>
             <option value="Đã hủy" @if($donHang->trangThai == 'Đã hủy') selected @endif>Đã hủy</option>
         </select>
+        <!-- Input mã vận chuyển -->
+        @if (!$donHang->maVanChuyen)
+            <label for="maVanChuyen_{{ $donHang->id }}">Mã vận chuyển:</label>
+            <input type="text" name="maVanChuyen" id="maVanChuyen{{ $donHang->id }}" placeholder="Nhập mã vận chuyển">
+        @else
+            <p>Mã vận chuyển: {{ $donHang->maVanChuyen }}</p>
+        @endif
 
         <button type="submit">Cập nhật</button>
-        <a href="{{ route('quanlys.phieuxuathang.create', ['donHangId' => $donHang->id]) }}">Tạo Phiếu xuất hàng</a>
     </form>
 </div>
 @endsection

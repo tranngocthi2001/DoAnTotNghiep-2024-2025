@@ -2,37 +2,36 @@
 @extends('layouts.app')
 
 @section('content')
-    @if(session('message'))
-        <p>{{ session('message') }}</p>
-    @endif
-
-    @if($vanchuyens)
-        <!-- Kiểm tra nếu danh sách vận chuyển không rỗng -->
-        <p>Thông tin vận chuyển:</p>
-        <table>
+    @if($vanchuyen)
+        <div class="container">
+        <table class="table table-bordered" border="1">
             <thead>
                 <tr>
-                    <th>Tên vận chuyển</th>
-                    <th>Ngày giao dự kiến</th>
-                    <th>Ngày thực tế</th>
-                    <th>Trạng thái</th>
+                    <td>Tên vận chuyển</td>
+                    <td>Trạng thái vận chuyển</td>
+                    <td>Ngày giao dự kiến</td>
+                    <td>Ngày giao thực tế</td>
+                    <td>Mã vận chuyển</td>
+                    <td>Mã đơn hàng</td>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($vanchuyens as $vanchuyen)
-                    <tr>
-                        <td>{{ $vanchuyen->tenVanChuyen }}</td>
-                        <td>{{ $vanchuyen->ngayGiaoDuKien }}</td>
-                        <td>{{ $vanchuyen->ngayThucTe ?? 'Chưa có' }}</td>  <!-- Thêm kiểm tra cho ngày thực tế -->
-                        <td>{{ $vanchuyen->trangThaiVanChuyen }}</td>
-                    </tr>
-                @endforeach
+                <tr>
+                    <td>{{ $vanchuyen->tenVanChuyen }}</td>
+                    <td>{{ $vanchuyen->trangThaiVanChuyen }}</td>
+                    <td>{{ $vanchuyen->ngayGiaoDuKien }}</td>
+                    <td>{{ $vanchuyen->ngayThucTe }}</td>
+                    <td>{{ $vanchuyen->maVanChuyen }}</td>
+                    <td>{{ $vanchuyen->donhang_id }}</td>
+                </tr>
             </tbody>
+
         </table>
     @else
-        <p>Không có thông tin vận chuyển cho đơn hàng này.</p>
+        <p>{{ $message }}</p>
     @endif
 
     <!-- Liên kết thêm thông tin vận chuyển -->
     <a href="{{ route('vanchuyens.create', ['donhang_id' => $donhang->id]) }}">Thêm thông tin vận chuyển</a>
-@endsection
+</div>
+    @endsection

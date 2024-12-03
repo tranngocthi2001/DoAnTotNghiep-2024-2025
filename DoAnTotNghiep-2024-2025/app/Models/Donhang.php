@@ -22,7 +22,8 @@ class DonHang extends Model
         'ngayDatHang',
         'updated_by',
         'phuongThucThanhToan',
-        'tenKhachHang'
+        'tenKhachHang',
+        'maVanChuyen'
     ];
 
     const CREATED_AT = 'ngayDatHang'; // Cột "ngày tạo"
