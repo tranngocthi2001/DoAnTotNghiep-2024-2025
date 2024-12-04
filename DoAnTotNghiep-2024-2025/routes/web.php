@@ -157,6 +157,8 @@ Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->gr
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
     // Route thêm mã vận chuyển
     //Route::put('/donhang/{id}/update', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
+    Route::get('/don-hang/theo-doi', [DonHangController::class, 'track'])->name('donhang.track');
+
 });
 
 use App\Http\Controllers\QuanLy\PhieuXuatHangController;

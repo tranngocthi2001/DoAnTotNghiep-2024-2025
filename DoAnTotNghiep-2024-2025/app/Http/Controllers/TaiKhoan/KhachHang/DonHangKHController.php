@@ -35,7 +35,8 @@ class DonHangKHController extends Controller
     public function index()
     {
          // Lấy danh sách đơn hàng của khách hàng hiện tại
-        $donhangs = DonHang::where('khachhang_id', auth()->user()->id)->get();
+        $donhangs = DonHang::where('khachhang_id', auth()->user()->id)
+        ->orderBy('ngayDatHang', 'desc')->get();
         //dd($donhangs);
         return view('taikhoans.khachhangs.donhang', compact('donhangs'));
     }

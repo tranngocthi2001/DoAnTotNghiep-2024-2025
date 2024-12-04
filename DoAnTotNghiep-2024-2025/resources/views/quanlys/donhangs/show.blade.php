@@ -52,7 +52,14 @@
             <label for="maVanChuyen_{{ $donHang->id }}">Mã vận chuyển:</label>
             <input type="text" name="maVanChuyen" id="maVanChuyen{{ $donHang->id }}" placeholder="Nhập mã vận chuyển">
         @else
-            <p>Mã vận chuyển: {{ $donHang->maVanChuyen }}</p>
+            <p>
+                Mã vận chuyển: {{ $donHang->maVanChuyen }}
+                <!-- Thêm đường dẫn theo dõi -->
+                <a href="https://donhang.ghn.vn/?order_code={{ $donHang->maVanChuyen }}" target="_blank" style="color: blue; text-decoration: underline;">
+                    Theo dõi đơn hàng
+                </a>
+
+            </p>
         @endif
 
         <button type="submit">Cập nhật</button>

@@ -11,6 +11,8 @@
     <p><strong>Địa chỉ giao hàng:</strong> {{ $donhang->diaChiGiaoHang }}</p>
     <p><strong>Số điện thoại:</strong> {{ $donhang->sdt }}</p>
     <p><strong>Phương thức thanh toán:</strong> {{ $donhang->phuongThucThanhToan}}</p>
+    <p><strong>Mã vận chuyển:</strong> {{ $donhang->maVanChuyen}}</p><br>
+
 
 
     <h2>Sản phẩm trong đơn hàng</h2>
@@ -36,7 +38,13 @@
             @endforeach
         </tbody>
     </table>
-
+    @if ($donhang->maVanChuyen)
+        <a href="https://donhang.ghn.vn/?order_code={{ $donhang->maVanChuyen }}" target="_blank" style="color: blue; text-decoration: underline;">
+            Theo dõi đơn hàng
+        </a>
+    @else
+        <a >Đơn hàng chưa giao cho đơn vị vận chuyển</a>
+    @endif
     <a href="{{ route('khachhang.donhang.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
 </div>
 @endsection

@@ -91,10 +91,7 @@
             <h3>Thanh toán</h3>
             <a href="/quanlys/thanhtoan">Xem chi tiết</a>
         </div>
-        <div class="card">
-            <h3>Vận chuyển</h3>
-            <a href="/quanlys/vanchuyen">Xem chi tiết</a>
-        </div>
+
         <div class="card">
             <h3>Thông báo</h3>
             <a href="/quanlys/thongbao">Xem chi tiết</a>

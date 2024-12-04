@@ -7,6 +7,7 @@ use App\Models\DonHang;
 use App\Models\Sanpham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\GHNService;
 
 class DonHangController extends Controller
 {
@@ -33,8 +34,16 @@ class DonHangController extends Controller
             ->where('trangThai', '!=', 'Chưa xác nhận')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
+        $donHangsHoanThanh = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'đã hoàn thành')
+            ->orderBy('ngayDatHang', 'desc')
+            ->get();
+        $donHangsHuy = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'đã hủy')
+            ->orderBy('ngayDatHang', 'desc')
+            ->get();
 
-        return view('quanlys.donhangs.donhang', compact('donHangsMoi', 'donHangsCu'));
+        return view('quanlys.donhangs.donhang', compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh','donHangsHuy'));
     }
 
 
@@ -60,9 +69,24 @@ class DonHangController extends Controller
             'maVanChuyen' => $request->input('maVanChuyen') ?: $donhang->maVanChuyen, // Không ghi đè mã vận chuyển nếu không có giá trị mới
 
         ]);
+//
+// Nếu mã vận chuyển được cập nhật, gửi đến API GHN để đồng bộ trạng thái
+        if ($donhang->maVanChuyen) {
+            //$ghnService = new GHNService(); // Service xử lý API GHN
+            //$result = $ghnService->trackOrder($donhang->maVanChuyen);
 
+            // Kiểm tra kết quả từ API
+            // if ($result && isset($result['status'])) {
+            //     // Cập nhật trạng thái đơn hàng từ GHN
+            //     $donhang->trangThai = $result['status'];
+            //     $donhang->save();
+            // } else {
+            //     return back()->withErrors(['msg' => 'Không thể lấy trạng thái từ GHN']);
+            // }
+        }
         return redirect()->route('quanlys.donhang.indexAdmin')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
     }
+    protected $ghnService;
 
     // Hiển thị chi tiết đơn hàng
     public function show($id)
@@ -74,6 +98,7 @@ class DonHangController extends Controller
         // Lấy thông tin khách hàng qua quan hệ khachhang_id
         $khachHang = $donHang->khachHangs;
         //dd($donHang->khachHangs);
+        //$orderCode = $donHang->maVanChuyen; // Giả sử bạn có trường mã vận chuyển
 
         // Trả về view với thông tin đơn hàng và tên khách hàng
         return view('quanlys.donhangs.show', compact('donHang', 'khachHang'));
@@ -91,7 +116,6 @@ class DonHangController extends Controller
 
         return redirect()->route('nhanvien.donhang.indexAdmin')->with('success', 'Đơn hàng đã được xác nhận.');
     }
-
-
+//---------
 
 }
