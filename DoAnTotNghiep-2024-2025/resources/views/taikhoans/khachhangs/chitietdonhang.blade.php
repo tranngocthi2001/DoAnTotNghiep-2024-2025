@@ -16,35 +16,56 @@
 
 
     <h2>Sản phẩm trong đơn hàng</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tên sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Giá</th>
-                <th>Tổng</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($donhang->chiTietDonHangs as $chitiet)
-                @foreach($chitiet->sanPhams as $sanpham)
-                    <tr>
-                        <td>{{ $sanpham->tenSanPham }}</td>
-                        <td>{{ $chitiet->soLuong }}</td>
-                        <td>{{ number_format($sanpham->gia, 3) }} VND</td>
-                        <td>{{ number_format( $chitiet->gia, 3) }} VND</td>
-                    </tr>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donhang->chiTietDonHangs as $chitiet)
+                    @foreach($chitiet->sanPhams as $sanpham)
+                        <tr>
+                            <td>{{ $sanpham->tenSanPham }}</td>
+                            <td>{{ $chitiet->soLuong }}</td>
+                            <td>{{ number_format($sanpham->gia, 3) }} VND</td>
+                            <td>{{ number_format( $chitiet->gia, 3) }} VND</td>
+                        </tr>
+                    @endforeach
                 @endforeach
-            @endforeach
-        </tbody>
-    </table>
-    @if ($donhang->maVanChuyen)
-        <a href="https://donhang.ghn.vn/?order_code={{ $donhang->maVanChuyen }}" target="_blank" style="color: blue; text-decoration: underline;">
-            Theo dõi đơn hàng
-        </a>
-    @else
-        <a >Đơn hàng chưa giao cho đơn vị vận chuyển</a>
-    @endif
-    <a href="{{ route('khachhang.donhang.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+            </tbody>
+        </table>
+        @if ($donhang->maVanChuyen)
+            <a href="https://donhang.ghn.vn/?order_code={{ $donhang->maVanChuyen }}" target="_blank" style="color: blue; text-decoration: underline;">
+                Theo dõi đơn hàng
+            </a>
+        @else
+            <a >Đơn hàng chưa giao cho đơn vị vận chuyển</a>
+        @endif
+            <a href="{{ route('khachhang.donhang.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+        @if ($donhang->trangThai === 'Chưa xác nhận')
+            <form action="{{ route('donhang.huy', $donhang->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
+            </form>
+        @endif
+        <a href="{{ route('taikhoans.khachhangs.yeucaudoihang', ['donhang_id' => $donhang->id]) }}" class="btn btn-primary">Đổi hàng</a>
+        <p>
+            <!-- Kiểm tra xem có yêu cầu đổi hàng không -->
+            @if ($yeuCauDoiHang)
+                <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.show', ['id' => $yeuCauDoiHang->id]) }}" class="btn btn-primary">
+                    Xem chi tiết yêu cầu đổi hàng
+                </a>
+            @endif
+
+        </p>
+
+
+
 </div>
 @endsection

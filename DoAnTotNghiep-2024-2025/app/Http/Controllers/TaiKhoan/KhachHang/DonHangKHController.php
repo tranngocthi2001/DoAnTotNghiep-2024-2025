@@ -8,6 +8,7 @@ use App\Models\DonHang;
 use App\Models\GioHang;
 use App\Models\ChiTietDonHang;
 use App\Models\KhachHang;
+use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 
 class DonHangKHController extends Controller
@@ -36,9 +37,28 @@ class DonHangKHController extends Controller
     {
          // Lấy danh sách đơn hàng của khách hàng hiện tại
         $donhangs = DonHang::where('khachhang_id', auth()->user()->id)
+        ->where(function ($query) {
+            $query->where('trangThai', '=', 'đã giao cho đơn vị vận chuyển')
+                  ->orWhere('trangThai', '=', 'đang xử lý')
+                  ->orWhere('trangThai', '=', 'chưa xác nhận');
+        })
+        ->orderBy('ngayDatHang', 'desc')
+        ->get();
+
+        $donhangsHoanThanh = DonHang::where('khachhang_id', auth()->user()->id)
+        ->where('trangThai', '=', 'đã hoàn thành')
+        ->orderBy('ngayDatHang', 'desc')->get();
+
+        $donhangsDoi = DonHang::where('khachhang_id', auth()->user()->id)
+        ->where('trangThai', '=', 'Đổi hàng')
+        ->orderBy('ngayDatHang', 'desc')->get();
+
+        $donhangsHuy = DonHang::where('khachhang_id', auth()->user()->id)
+        ->where('trangThai', '=', 'đã hủy')
         ->orderBy('ngayDatHang', 'desc')->get();
         //dd($donhangs);
-        return view('taikhoans.khachhangs.donhang', compact('donhangs'));
+        return view('taikhoans.khachhangs.donhang',
+         compact('donhangs','donhangsHoanThanh','donhangsHuy','donhangsDoi'));
     }
 
     public function donHangCreate(Request $request)
@@ -120,11 +140,67 @@ class DonHangKHController extends Controller
         $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
         ->where('khachhang_id', auth()->user()->id)
         ->first();
-        $khachhang=$giohang->khachHang;
+        //$khachhang=$giohang->khachHang;
 
-        return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','khachhang'));
+        // Truy vấn yêu cầu đổi hàng bằng donhang_id
+        // $yeuCauDoiHang = YeuCauDoiHang::with('chitietdoihangs')
+        // ->where('id', $donhang->id)->first();
+        // if (!$yeuCauDoiHang) {
+        //     return redirect()->route('taikhoans.khachhangs.yeucaudoihang.show')
+        //     ->with('error', 'Yêu cầu đổi hàng không tồn tại.');
+        // }
+        $yeuCauDoiHang = null;
+        foreach ($donhang->chiTietDonHangs as $chiTietDonHang) {
+            //dd($donHang);
+            foreach ($chiTietDonHang->chiTietPhieuXuats as $chiTietPhieuXuat) {
+                //dd($chiTietDonHang);
+                if ($chiTietPhieuXuat->yeucaudoihang_id) {
+                    //dd($chiTietPhieuXuat);
+                    $yeuCauDoiHang = $chiTietPhieuXuat->yeucaudoihang;  // Lấy yêu cầu đổi hàng từ mối quan hệ
+                    //break 2;  // Dừng vòng lặp khi đã tìm thấy yêu cầu đổi hàng
+                }
+            }//dd($yeuCauDoiHang);
+}            // Trả về view với thông tin đơn hàng và tên khách hàng
+        return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','yeuCauDoiHang'));
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'trangThai' => 'required',
+            'maVanChuyen' => 'nullable|string|max:50',
+
+        ]);
+
+       // Tìm đơn hàng theo ID
+        $donhang = DonHang::findOrFail($id);
+
+
+        // Cập nhật trạng thái đơn hàng và lưu nhân viên thực hiện
+        $donhang->update([
+            'trangThai' => $request->input('trangThai'),
+        ]);
+
+
+    }
+
+    public function huyDonHang($id)
+    {
+        // Tìm đơn hàng
+        $donhang = DonHang::where('id', $id)
+            ->where('khachhang_id', auth()->user()->id)
+            ->where('trangThai', 'Chưa xác nhận') // Chỉ hủy đơn hàng chưa xác nhận
+            ->first();
+
+        if (!$donhang) {
+            return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
+        }
+
+        // Cập nhật trạng thái đơn hàng thành "Đã hủy"
+        $donhang->update(['trangThai' => 'đã hủy']);
+
+        return redirect()->route('taikhoans.khachhangs.donhang')->with('success', 'Đơn hàng đã được hủy.');
+    }
 
 }
 

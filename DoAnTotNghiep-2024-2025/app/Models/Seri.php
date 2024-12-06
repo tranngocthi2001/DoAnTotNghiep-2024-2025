@@ -10,7 +10,12 @@ class Seri extends Model
 
     protected $table = 'seri'; // Tên bảng trong cơ sở dữ liệu
 
-    protected $fillable = ['maSeri', 'chitietphieuxuat_id']; // Các trường có thể gán giá trị
+    protected $fillable = [
+        'maSeri',
+        'chitietphieuxuat_id',
+        'yeucautrahang_id',
+        'yeucaudoihang_id'
+    ]; // Các trường có thể gán giá trị
 
     public $timestamps = false; // Bỏ qua các cột created_at và updated_at
 

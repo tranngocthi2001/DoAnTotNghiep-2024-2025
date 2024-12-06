@@ -5,6 +5,7 @@ namespace App\Http\Controllers\QuanLy;
 use App\Http\Controllers\Controller;
 use App\Models\DonHang;
 use App\Models\Sanpham;
+use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\GHNService;
@@ -42,8 +43,14 @@ class DonHangController extends Controller
             ->where('trangThai', '=', 'đã hủy')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
+        $donHangsDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đổi hàng')
+            ->orderBy('ngayDatHang', 'desc')
+            ->get();
 
-        return view('quanlys.donhangs.donhang', compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh','donHangsHuy'));
+
+        return view('quanlys.donhangs.donhang',
+         compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh','donHangsHuy', 'donHangsDoi'));
     }
 
 
@@ -71,7 +78,7 @@ class DonHangController extends Controller
         ]);
 //
 // Nếu mã vận chuyển được cập nhật, gửi đến API GHN để đồng bộ trạng thái
-        if ($donhang->maVanChuyen) {
+        //if ($donhang->maVanChuyen) {
             //$ghnService = new GHNService(); // Service xử lý API GHN
             //$result = $ghnService->trackOrder($donhang->maVanChuyen);
 
@@ -83,7 +90,7 @@ class DonHangController extends Controller
             // } else {
             //     return back()->withErrors(['msg' => 'Không thể lấy trạng thái từ GHN']);
             // }
-        }
+        //}
         return redirect()->route('quanlys.donhang.indexAdmin')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
     }
     protected $ghnService;
@@ -99,9 +106,21 @@ class DonHangController extends Controller
         $khachHang = $donHang->khachHangs;
         //dd($donHang->khachHangs);
         //$orderCode = $donHang->maVanChuyen; // Giả sử bạn có trường mã vận chuyển
-
-        // Trả về view với thông tin đơn hàng và tên khách hàng
-        return view('quanlys.donhangs.show', compact('donHang', 'khachHang'));
+        // Kiểm tra xem yêu cầu đổi hàng có tồn tại không
+// Kiểm tra xem yêu cầu đổi hàng có tồn tại trong các chi tiết đơn hàng hay không
+        $yeuCauDoiHang = null;
+        foreach ($donHang->chiTietDonHangs as $chiTietDonHang) {
+            //dd($donHang);
+            foreach ($chiTietDonHang->chiTietPhieuXuats as $chiTietPhieuXuat) {
+                //dd($chiTietDonHang);
+                if ($chiTietPhieuXuat->yeucaudoihang_id) {
+                    //dd($chiTietPhieuXuat);
+                    $yeuCauDoiHang = $chiTietPhieuXuat->yeucaudoihang;  // Lấy yêu cầu đổi hàng từ mối quan hệ
+                    //break 2;  // Dừng vòng lặp khi đã tìm thấy yêu cầu đổi hàng
+                }
+            }//dd($yeuCauDoiHang);
+}            // Trả về view với thông tin đơn hàng và tên khách hàng
+        return view('quanlys.donhangs.show', compact('donHang', 'khachHang', 'yeuCauDoiHang'));
     }
 
 

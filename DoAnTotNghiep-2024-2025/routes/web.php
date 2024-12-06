@@ -182,6 +182,7 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     Route::post('/donhang/create', [DonHangKHController::class, 'donHangCreate'])->name('khachhang.donhang.create');
     Route::get('/donhang', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
     Route::get('/khachhang/donhang/{id}', [DonHangKHController::class, 'show'])->name('khachhang.donhang.show');
+    Route::put('/donhang/{id}/huy', [DonHangKHController::class, 'huyDonHang'])->name('donhang.huy');
 
 
 });
@@ -203,4 +204,17 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
 
 });
+
+use App\Http\Controllers\TaiKhoan\KhachHang\YeuCauDoiHangController;
+// Hiển thị danh sách đơn hàng hoàn thành (khách hàng)
+// Chỉ cho phép phương thức POST
+Route::get('khachhang/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'showForm'])->name('taikhoans.khachhangs.yeucaudoihang');
+
+Route::post('khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'create'])->name('taikhoans.khachhangs.yeucaudoihang');
+Route::post('/khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'store'])->name('taikhoans.khachhangs.yeucaudoihang.store');
+//dd("a");
+Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'show'])
+    ->name('taikhoans.khachhangs.yeucaudoihang.show');
+// Route::get('/taikhoans/khachhangs/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'show'])
+//     ->name('taikhoans.khachhangs.yeucaudoihang.show');
 

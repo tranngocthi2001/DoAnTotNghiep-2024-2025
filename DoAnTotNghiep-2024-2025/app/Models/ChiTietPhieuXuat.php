@@ -9,7 +9,13 @@ class ChiTietPhieuXuat extends Model
     use HasFactory;
     protected $table = 'chitietphieuxuat'; // Tên bảng trong cơ sở dữ liệu
 
-    protected $fillable = ['soLuong', 'baoHanh', 'ghiChu', 'chitietdonhang_id', 'phieuxuathang_id'];
+    protected $fillable = [
+        'soLuong',
+        'baoHanh',
+        'ghiChu',
+        'chitietdonhang_id',
+        'phieuxuathang_id'
+    ];
 
     public $timestamps = false; // Bỏ qua các cột created_at và updated_at
 
@@ -29,4 +35,9 @@ class ChiTietPhieuXuat extends Model
     {
         return $this->hasMany(Seri::class, 'chitietphieuxuat_id');
     }
+    public function yeucaudoihang()
+    {
+        return $this->belongsTo(YeuCauDoiHang::class, 'yeucaudoihang_id');
+    }
+
 }
