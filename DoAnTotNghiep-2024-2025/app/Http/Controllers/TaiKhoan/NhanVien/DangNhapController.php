@@ -29,6 +29,8 @@ class DangNhapController extends Controller
             session(['nhanvien' => $nhanvien]); // Lưu nhân viên vào session
 
             if ($nhanvien->vaiTro === 'admin') {
+                //dd(session()->get('nhanvien'));
+
                 return redirect()->route('admin.dashboard');
             } elseif ($nhanvien->vaiTro === 'quanly') {
                 return redirect()->route('quanly.dashboard');
