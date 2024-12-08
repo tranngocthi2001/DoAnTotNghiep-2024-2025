@@ -32,6 +32,20 @@ return [
 
     'lottery' => [2, 100],
 
+    // 'cookie' => function () {
+    //     // Kiểm tra tên route hiện tại để xác định guard
+    //     if (request()->routeIs('nhanvien.*')) {
+    //         return env('SESSION_COOKIE_NHANVIEN', 'nhanvien_session');
+    //     } elseif (request()->routeIs('khachhang.*')) {
+    //         return env('SESSION_COOKIE_KHACHHANG', 'khachhang_session');
+    //     }
+
+    //     // Mặc định
+    //     return env('SESSION_COOKIE', 'laravel_session');
+    // },
+
+    'cookie' => env('SESSION_COOKIE', 'laravel_session'),
+
 
 
     // 'cookie' => env(
@@ -40,7 +54,7 @@ return [
     // ),
     // config/session.php
     //'cookie' => 'nhanvien_session',
-    'cookie' => env('SESSION_COOKIE', 'laravel_session'),
+    // 'cookie' => env('SESSION_COOKIE', 'laravel_session'),
 
 
 

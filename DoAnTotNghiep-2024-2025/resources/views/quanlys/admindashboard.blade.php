@@ -98,7 +98,7 @@
         </div>
         <div class="card">
             <h3>Yêu cầu đổi hàng</h3>
-            <a href="/quanlys/doihang">Xem chi tiết</a>
+            <a href="{{ route('quanlys.donhang.showYeuCauDoiHang') }}">Link đến yêu cầu đổi hàng</a>
         </div>
         <div class="card">
             <h3>Yêu cầu trả hàng</h3>

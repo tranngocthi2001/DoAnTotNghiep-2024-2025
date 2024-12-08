@@ -99,5 +99,39 @@ class YeuCauDoiHangController extends Controller
             return view('taikhoans.khachhangs.ycdoihangshow', compact('yeuCauDoiHang', 'sanPhams'));
         }
 
+        public function showAdmin($id)
+        {
+            $yeuCauDoiHang = YeuCauDoiHang::with('chitietdoihangs')->findOrFail($id); // Lấy yêu cầu đổi hàng cùng các chi tiết
+
+            $sanPhams= SanPham::all();
+
+            if (!$yeuCauDoiHang) {
+                return redirect()->back()->with('error', 'Yêu cầu đổi hàng không tồn tại!');
+            }
+            return view('quanlys.yeucaudoihangs.ycdoihangshow', compact('yeuCauDoiHang', 'sanPhams'));
+        }
+
+        public function updateStatus(Request $request, $id)
+        {
+            // Tìm yêu cầu đổi hàng theo id
+            $yeuCauDoiHang = YeuCauDoiHang::find($id);
+
+            if (!$yeuCauDoiHang) {
+                return redirect()->back()->with('error', 'Yêu cầu đổi hàng không tồn tại!');
+            }
+
+            // Kiểm tra dữ liệu trạng thái
+            $request->validate([
+                'trangThai' => 'required|in:0,1,2', // Trạng thái có thể là 0, 1, hoặc 2 (ví dụ: 0: Chưa xử lý, 1: Đang xử lý, 2: Hoàn tất)
+            ]);
+
+            // Cập nhật trạng thái của yêu cầu đổi hàng
+            $yeuCauDoiHang->trangThai = $request->input('trangThai');
+            $yeuCauDoiHang->save();
+
+
+            return redirect()->route('taikhoans.khachhangs.yeucaudoihang.showAdmin', $yeuCauDoiHang->id)
+                             ->with('success', 'Cập nhật trạng thái thành công!');
+        }
 
 }

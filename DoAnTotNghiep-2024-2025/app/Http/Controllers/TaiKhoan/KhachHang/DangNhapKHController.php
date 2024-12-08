@@ -63,6 +63,7 @@ class DangNhapKHController extends Controller
              //config(['session.cookie' => 'khachhang_session']); // Thay đổi tên cookie
             // Lưu session cho khách hàng
             session(['khachhang' => $khachhang]);
+            //dd(session()->get('khachhang'));
 
 
             // Đăng nhập thành công, chuyển hướng đến dashboard

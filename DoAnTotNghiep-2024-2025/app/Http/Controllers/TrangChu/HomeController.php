@@ -17,7 +17,6 @@ class HomeController extends Controller
         // Lấy tất cả danh mục và sản phẩm liên quan
         $danhmucs = Danhmuc::with('sanphams')->get();
         //dd($danhmucs);
-        dd(session()->get('khachhang '));
         return view('home', compact('danhmucs'));
     }
      // Trang dành cho guest

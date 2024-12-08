@@ -152,12 +152,17 @@ use App\Http\Controllers\QuanLy\DonHangController;
 
 Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
     Route::get('/donhang', [DonHangController::class, 'indexAdmin'])->name('quanlys.donhang.indexAdmin');
+    Route::get('/donhang/yeucaudoihang', [DonHangController::class, 'showYeuCauDoiHang'])->name('quanlys.donhang.showYeuCauDoiHang');
+
     Route::put('/donhang/{id}', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
     Route::get('/donhang/{id}', [DonHangController::class, 'show'])->name('quanlys.donhang.show');
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
     // Route thêm mã vận chuyển
     //Route::put('/donhang/{id}/update', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
     Route::get('/don-hang/theo-doi', [DonHangController::class, 'track'])->name('donhang.track');
+
+    //yeucaudoihang tu admin
+   // dd('a');
 
 });
 
@@ -218,3 +223,10 @@ Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController:
 // Route::get('/taikhoans/khachhangs/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'show'])
 //     ->name('taikhoans.khachhangs.yeucaudoihang.show');
 
+Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
+->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
+
+// Route::get('/taikhoans/khachhangs/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'show'])
+//     ->name('taikhoans.khachhangs.yeucaudoihang.show');
+Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
+    ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');

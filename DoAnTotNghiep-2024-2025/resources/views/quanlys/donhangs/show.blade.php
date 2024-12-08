@@ -68,8 +68,8 @@
     <p>
         <!-- Kiểm tra xem có yêu cầu đổi hàng không -->
         @if ($yeuCauDoiHang)
-            <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.show', ['id' => $yeuCauDoiHang->id]) }}" class="btn btn-primary">
-                Xem chi tiết yêu cầu đổi hàng
+            <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.showAdmin', ['id' => $yeuCauDoiHang->id]) }}" class="btn btn-primary">
+                1Xem chi tiết yêu cầu đổi hàng1
             </a>
         @endif
 

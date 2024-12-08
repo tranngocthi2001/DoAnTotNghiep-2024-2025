@@ -32,7 +32,7 @@ class DonHangController extends Controller
             ->get();
 
         $donHangsCu = DonHang::with('nhanViens')
-            ->where('trangThai', '!=', 'Chưa xác nhận')
+            ->where('trangThai', '!=', 'Đang xử lý')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
         $donHangsHoanThanh = DonHang::with('nhanViens')
@@ -47,10 +47,28 @@ class DonHangController extends Controller
             ->where('trangThai', '=', 'Đổi hàng')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
-
+//dd($donHangsCu);
 
         return view('quanlys.donhangs.donhang',
          compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh','donHangsHuy', 'donHangsDoi'));
+    }
+
+    public function showYeuCauDoiHang()
+    {
+        // Lấy thông tin người dùng từ guard 'nhanvien'
+        $user = auth()->guard('nhanvien')->user();
+//dd($user);
+        // Kiểm tra quyền truy cập
+        $nhanVien = auth()->guard('nhanvien')->user();
+
+
+        $donHangsDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đổi hàng')
+            ->orderBy('ngayDatHang', 'desc')
+            ->get();
+
+
+        return view('quanlys.yeucaudoihangs.yeucaudoihang', compact( 'donHangsDoi'));
     }
 
 
