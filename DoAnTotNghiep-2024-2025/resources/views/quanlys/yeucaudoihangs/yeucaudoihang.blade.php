@@ -1,3 +1,6 @@
+@extends('layouts.layoutquanly')
+
+@section('content')
 <h2>Đơn hàng yêu cầu đổi</h2>
 @if($donHangsDoi->count() > 0)
     <table border="1">
@@ -43,3 +46,4 @@
     <p>Không có đơn hàng đổi.</p>
 @endif
 </div>
+@endsection

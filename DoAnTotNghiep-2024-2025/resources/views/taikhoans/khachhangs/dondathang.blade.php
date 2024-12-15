@@ -1,4 +1,6 @@
+@extends('layouts.layoutkhachhang')
 
+@section('content')
 <H1>Thanh toán</H1>
 @foreach ($giohang->chiTietGioHangs as $item)
                     @if ($item->sanPhams->count() > 0)

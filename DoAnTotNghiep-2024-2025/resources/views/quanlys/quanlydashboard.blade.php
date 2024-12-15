@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+@extends('layouts.layoutquanly')
+
+@section('content')<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -111,3 +113,4 @@
     </div>
 </body>
 </html>
+@endsection

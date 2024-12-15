@@ -1,3 +1,6 @@
+@extends('layouts.layoutquanly')
+
+@section('content')
 @if(isset($nhanVien))
     <form action="{{ route('quanlys.nhanvien.update', $nhanVien->id) }}" method="POST">
         @csrf
@@ -35,5 +38,4 @@
     <p>Không tìm thấy thông tin nhân viên.</p>
 @endif
 
-
-
+@endsection

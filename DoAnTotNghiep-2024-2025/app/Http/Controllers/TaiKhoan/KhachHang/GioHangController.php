@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TaiKhoan\KhachHang;
 use App\Models\GioHang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DanhMuc;
 use App\Models\KhachHang;
 
 class GioHangController extends Controller
@@ -14,7 +15,7 @@ class GioHangController extends Controller
     {
         $khachhang = session('khachhang');
         //dd($khachhang);
-
+        $danhmucs = DanhMuc::all();
         $khachhang=KhachHang::where('id',auth()->user()->id)->first();
         //dd($khachhang);
         $giohang = GioHang::firstOrCreate(
@@ -26,7 +27,7 @@ class GioHangController extends Controller
         $giohang = GioHang::where('khachhang_id', auth()->user()->id)->first();
 //dd($giohang);
 
-        return view('taikhoans.khachhangs.giohang', compact('giohang'));
+        return view('taikhoans.khachhangs.giohang', compact('giohang','danhmucs'));
     }
 
     // Xóa giỏ hàng (nếu cần)

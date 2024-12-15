@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\YeuCauDoiHang;
 use App\Models\ChiTietDoiHang;
+use App\Models\DanhMuc;
 use App\Models\SanPham;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,11 +17,13 @@ class YeuCauDoiHangController extends Controller
     // Phương thức hiển thị form đổi hàng
     public function showForm($donhang_id)
     {
+        $danhmucs = DanhMuc::all();
+
         // Lấy thông tin đơn hàng và các chi tiết sản phẩm trong đơn hàng
         $donhang = DonHang::with('chiTietDonHangs.sanphams')->findOrFail($donhang_id);
 
         // Trả về view để hiển thị form
-        return view('taikhoans.khachhangs.yeucaudoihang', compact('donhang'));
+        return view('taikhoans.khachhangs.yeucaudoihang', compact('donhang','danhmucs'));
     }
     public function store(Request $request)
     {

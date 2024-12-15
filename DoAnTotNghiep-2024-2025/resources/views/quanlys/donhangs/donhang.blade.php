@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layoutquanly')
 
 @section('content')
 <h1>Quản lý Đơn Hàng</h1>

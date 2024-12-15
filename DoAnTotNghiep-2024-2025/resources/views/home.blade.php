@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layoutkhachhang')
 
 @section('content')
     <div class="container">
@@ -15,7 +15,6 @@
 <div class="container">
     <!-- Hiển thị tài khoản hoặc nút đăng nhập -->
     <div class="d-flex justify-content-between align-items-center my-3">
-        <h2>Danh Sách Danh Mục và Sản Phẩm</h2>
         @if (auth('khachhang')->check())
         <p>Chào, {{ auth('khachhang')->user()->tenTaiKhoan }}</p>
         <form action="{{ route('khachhang.logout') }}" method="POST" style="display:inline;">
@@ -47,10 +46,19 @@
                         @foreach ($danhmuc->sanphams as $sanpham)
                             <div class="col-md-3">
                                 <div class="card mb-3">
-                                    <img src="{{ asset('uploads/sanpham/' . $sanpham->hinhAnh) }}" class="card-img-top" alt="{{ $sanpham->tenSanPham }}">
+                                    @php
+                                        $imagePaths = json_decode($sanpham->hinhAnh, true) ?? []; // Giải mã JSON
+                                        $firstImage = $imagePaths[0] ?? null; // Lấy ảnh đầu tiên, nếu có
+                                        @endphp
+
+                                        @if ($firstImage)
+                                            <img src="{{ asset('uploads/sanpham/' . $firstImage) }}" class="card-img-top" alt="{{ $sanpham->tenSanPham }}">
+                                        @else
+                                            <img src="{{ asset('uploads/sanpham/default-image.png') }}" class="card-img-top" alt="Hình ảnh sản phẩm mặc định">
+                                        @endif
+
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $sanpham->tenSanPham }}</h5>
-                                        <p class="card-text">{{ $sanpham->moTa }}</p>
                                         <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 3) }} VND</p>
 
                                         <!-- Nút xem chi tiết sản phẩm -->

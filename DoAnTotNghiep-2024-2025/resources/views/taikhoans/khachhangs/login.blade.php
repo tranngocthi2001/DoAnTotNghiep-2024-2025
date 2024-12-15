@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layoutkhachhang')
 
 @section('content')
 @if (session('success'))

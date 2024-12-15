@@ -7,13 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\KhachHang;
 use App\Events\KhachHangCreated;
+use App\Models\DanhMuc;
 use Illuminate\Support\Facades\DB;
 
 class DangKyKHController extends Controller
 {
     public function showRegistrationForm()
     {
-        return view('taikhoans.khachhangs.register');
+        $danhmucs = DanhMuc::all();
+
+        return view('taikhoans.khachhangs.register', compact('danhmucs'));
     }
 
     public function handleRegistration(Request $request)

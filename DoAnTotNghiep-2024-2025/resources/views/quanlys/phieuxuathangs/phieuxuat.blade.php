@@ -1,3 +1,6 @@
+@extends('layouts.layoutquanly')
+
+@section('content')
 <form action="{{ route('phieuxuathangs.store') }}" method="POST">
     @csrf
 
@@ -62,3 +65,4 @@
         <a href="#">In phiếu xuất PDF</a>
     </div>
 </form>
+@endsection

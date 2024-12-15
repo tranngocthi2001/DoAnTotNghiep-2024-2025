@@ -1,6 +1,8 @@
 
 
+@extends('layouts.layoutkhachhang')
 
+@section('content')
     <div class="container">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -52,3 +54,4 @@
         </div>
     </div>
 
+    @endsection

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DonHang;
 use App\Models\GioHang;
 use App\Models\ChiTietDonHang;
+use App\Models\DanhMuc;
 use App\Models\KhachHang;
 use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ class DonHangKHController extends Controller
     // Hiển thị đơn hàng cho khách hàng và chọn phương thức thanh toán
     public function dondathang()
     {
+        $danhmucs = DanhMuc::all();
+
         // Lấy giỏ hàng của khách hàng hiện tại
         $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
             ->where('khachhang_id', auth()->user()->id)
@@ -31,10 +34,12 @@ class DonHangKHController extends Controller
         return view('taikhoans.khachhangs.dondathang', [
             'giohang' => $giohang,
             'chiTietGioHangs' => $giohang->chiTietGioHangs
-        ]);
+        ], compact('danhmucs'));
     }
     public function index()
     {
+        $danhmucs = DanhMuc::all();
+
          // Lấy danh sách đơn hàng của khách hàng hiện tại
         $donhangs = DonHang::where('khachhang_id', auth()->user()->id)
         ->where(function ($query) {
@@ -58,7 +63,7 @@ class DonHangKHController extends Controller
         ->orderBy('ngayDatHang', 'desc')->get();
         //dd($donhangs);
         return view('taikhoans.khachhangs.donhang',
-         compact('donhangs','donhangsHoanThanh','donhangsHuy','donhangsDoi'));
+         compact('donhangs','donhangsHoanThanh','donhangsHuy','donhangsDoi','danhmucs'));
     }
 
     public function donHangCreate(Request $request)

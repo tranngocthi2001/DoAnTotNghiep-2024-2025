@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\TaiKhoan\KhachHang;
 
 use App\Http\Controllers\Controller;
+use App\Models\DanhMuc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\KhachHang;
@@ -14,7 +15,9 @@ class DangNhapKHController extends Controller
      */
     public function showLoginForm()
     {
-        return view('taikhoans.khachhangs.login');
+        $danhmucs = DanhMuc::all();
+
+        return view('taikhoans.khachhangs.login', compact('danhmucs'));
     }
 
     /**
@@ -27,6 +30,7 @@ class DangNhapKHController extends Controller
             'tenTaiKhoan' => 'required|string',
             'matKhau' => 'required|string',
         ]);
+
         //dd(KhachHang::where('tenTaiKhoan', $request->tenTaiKhoan)->toSql());
 
         // Tìm khách hàng theo tên tài khoản
