@@ -37,10 +37,10 @@ class NhanVien extends Authenticatable
     const UPDATED_AT = 'ngayCapNhat'; // Tên trường "ngày cập nhật"
 
     // Sử dụng bcrypt để mã hóa mật khẩu khi lưu
-    public function setMatKhauAttribute($value)
-    {
-        $this->attributes['matKhau'] = bcrypt($value);
-    }
+    // public function setMatKhauAttribute($value)
+    // {
+    //     $this->attributes['matKhau'] = bcrypt($value);
+    // }
 
     public function getAuthPassword()
     {

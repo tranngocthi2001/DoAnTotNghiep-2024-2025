@@ -15,6 +15,8 @@ Route::post('/register', [DangKyController::class, 'register'])->name('register.
 Route::get('/login', [DangNhapController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [DangNhapController::class, 'login'])->name('login.submit');
 
+Route::post('/logout', [DangNhapController::class, 'logout'])->name('nhanvien.logout');
+
 // Trang quản lý cho admin, quản lý, và nhân viên
 Route::middleware('auth:nhanvien')->group(function () {
     Route::get('/quanly', function () {

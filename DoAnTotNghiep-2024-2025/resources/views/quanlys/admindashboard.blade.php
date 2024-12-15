@@ -108,6 +108,11 @@
             <h3>Sự kiện</h3>
             <a href="/quanlys/sukien">Xem chi tiết</a>
         </div>
+
     </div>
+    <form action="{{ route('nhanvien.logout') }}" method="POST" style="display:inline;">
+        @csrf
+        <button type="submit" class="btn btn-danger btn-sm">Đăng xuất</button>
+    </form>
 </body>
 </html>

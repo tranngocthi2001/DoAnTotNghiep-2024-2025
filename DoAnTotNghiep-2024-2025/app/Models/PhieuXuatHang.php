@@ -13,11 +13,12 @@ class PhieuXuatHang extends Model
     protected $table = 'phieuxuathang';
 
     // Danh sách các cột có thể gán giá trị (fillable)
-    protected $fillable = ['ngayXuat','ngayTao', 'trangThai', 'donhang_id', 'nhanvien_id'];
+    protected $fillable = ['ngayXuat', 'trangThai', 'donhang_id', 'nhanvien_id'];
 
-    const UPDATED_AT = 'ngayXuat'; // Tên trường "ngày cập nhật"
-    const CREATED_AT = 'ngayTao'; // Tên trường "ngày cập nhật"
+    // const UPDATED_AT = false; // Tên trường "ngày cập nhật"
+    // const CREATED_AT = 'ngayXuat'; // Tên trường "ngày cập nhật"
 
+    public $timestamps = false; // Bỏ qua các cột created_at và updated_at
 
     // Quan hệ với bảng DonHang (1 phiếu xuất thuộc về 1 đơn hàng)
     public function donHangs()
@@ -35,4 +36,7 @@ class PhieuXuatHang extends Model
      {
          return $this->hasMany(ChiTietPhieuXuat::class, 'phieuxuathang_id');
      }
+
+
+
 }

@@ -27,10 +27,11 @@ class DangNhapKHController extends Controller
             'tenTaiKhoan' => 'required|string',
             'matKhau' => 'required|string',
         ]);
+        //dd(KhachHang::where('tenTaiKhoan', $request->tenTaiKhoan)->toSql());
 
         // Tìm khách hàng theo tên tài khoản
         $khachhang = KhachHang::where('tenTaiKhoan', $request->tenTaiKhoan)->first();
-
+        //dd($khachhang);
         if (!$khachhang) {
             return redirect()->back()->withErrors(['tenTaiKhoan' => 'Tên tài khoản không tồn tại!']);
         }
@@ -49,6 +50,7 @@ class DangNhapKHController extends Controller
             'tenTaiKhoan' => $request->tenTaiKhoan,
             'password' => $request->matKhau,
         ];
+        //dd(Auth::guard('khachhang')->attempt($credentials));
 
          // Sử dụng guard 'khachhang' để kiểm tra đăng nhập
         if (Auth::guard('khachhang')->attempt($credentials)) {

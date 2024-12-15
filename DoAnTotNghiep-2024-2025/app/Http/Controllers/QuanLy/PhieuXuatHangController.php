@@ -27,6 +27,20 @@ class PhieuXuatHangController extends Controller
     {
         //$nhanVien = Auth::guard('nhanvien')->user(); // Lấy thông tin nhân viên đang đăng nhập
         $nhanVien = auth()->guard('nhanvien')->user();
+        //dd($nhanVien);
+
+        $validated = $request->validate([
+            'donhang_id' => 'required|exists:donhang,id',
+            'ngayXuat' => 'required|date',
+            'trangThai' => 'required|string',
+            'chiTietDonHangs' => 'required|array',
+            'chiTietDonHangs.*.chitietdonhang_id' => 'required|exists:chitietdonhang,id',
+            'chiTietDonHangs.*.soLuong' => 'required|integer',
+            'chiTietDonHangs.*.baoHanh' => 'nullable|string',
+            'chiTietDonHangs.*.ghiChu' => 'nullable|string',
+        ]);
+        //$ngayXuat = \Carbon\Carbon::parse($request->ngayXuat)->format('Y-m-d H:i:s');
+        //dd($request->ngayXuat);
 
         // Tạo phiếu xuất hàng
         $phieuXuat = PhieuXuatHang::create([

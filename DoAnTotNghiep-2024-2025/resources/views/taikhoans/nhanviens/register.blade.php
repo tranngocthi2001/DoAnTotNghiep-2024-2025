@@ -27,7 +27,10 @@
 
         <label for="matKhau">Mật khẩu:</label>
         <input type="password" id="matKhau" name="matKhau" required><br>
-
+        <div class="form-group">
+            <label for="matKhau_confirmation">Nhập lại mật khẩu</label>
+            <input type="password" name="matKhau_confirmation" id="matKhau_confirmation" class="form-control" required>
+        </div>
         <label for="email">Email:</label>
         <input type="email" id="email" name="email"><br>
 
