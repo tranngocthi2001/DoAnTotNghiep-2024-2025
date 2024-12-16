@@ -41,7 +41,7 @@
                                     {{ $sanPham->tenSanPham }}
                                 </td>
                                 <td>
-                                    <input type="number" name="chiTietDonHangs[{{ $index }}][soLuong]" value="1" required> <!-- Mỗi dòng chỉ có 1 sản phẩm -->
+                                    <input type="number" name="chiTietDonHangs[{{ $index }}][soLuong]" value="1"readonly required> <!-- Mỗi dòng chỉ có 1 sản phẩm -->
                                 </td>
                                 <td>
                                     <input type="datetime-local" name="chiTietDonHangs[{{ $index }}][baoHanh]" >

@@ -73,4 +73,7 @@ class DanhMucController extends Controller
 
         return redirect()->route('quanlys.danhmuc.index')->with('success', 'Xóa danh mục thành công!');
     }
+
+
+
 }

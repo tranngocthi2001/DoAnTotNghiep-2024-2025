@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
+use App\Models\DanhMuc;
 use Illuminate\Http\Request;
 use App\Models\Khachhang;
 use Illuminate\Support\Facades\Auth;
@@ -67,4 +68,41 @@ class KhachHangController extends Controller
         // Chuyển hướng kèm thông báo thành công
         return redirect()->route('quanlys.khachhang.index')->with('success', 'Cập nhật trạng thái thành công!');
     }
+    // phương thức chỉnh sửa thông tin dành chon khách hàng
+    public function edit($id)
+    {
+        $khachhang = auth('khachhang')->user();
+        $danhmucs = DanhMuc::all();
+
+        if ($khachhang->id != $id) {
+            abort(403, 'Bạn không có quyền truy cập.');
+        }
+
+        return view('taikhoans.khachhangs.chinhsuathongtin', compact('khachhang', 'danhmucs'));
+    }
+    public function update(Request $request, $id)
+    {
+        $khachhang = auth('khachhang')->user();
+
+        // Validate dữ liệu
+        $request->validate([
+            'hoTen' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'sdt' => 'required|numeric',
+            'diaChi' => 'nullable|string|max:255',
+            'matKhau' => 'nullable|min:6|confirmed',
+        ]);
+
+        // Cập nhật thông tin
+        $khachhang->update([
+            'hoTen' => $request->hoTen,
+            'email' => $request->email,
+            'sdt' => $request->sdt,
+            'diaChi' => $request->diaChi,
+            'matKhau' => $request->matKhau ? bcrypt($request->matKhau) : $khachhang->matKhau,
+        ]);
+
+        return redirect()->route('khachhang.edit', $id)->with('success', 'Thông tin đã được cập nhật thành công!');
+    }
+
 }

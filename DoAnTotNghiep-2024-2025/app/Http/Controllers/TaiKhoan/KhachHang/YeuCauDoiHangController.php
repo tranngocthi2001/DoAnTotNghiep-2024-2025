@@ -29,11 +29,11 @@ class YeuCauDoiHangController extends Controller
     {
         // Validate dữ liệu
         $request->validate([
-            'sanPhamDoiID' => 'required|array', // Kiểm tra nếu khách hàng đã chọn sản phẩm
+            'sanPhamDoiID'  => 'nullable|array', // Không bắt buộc chọn sản phẩm
             'sanPhamDoiID.*' => 'exists:sanpham,id', // Kiểm tra từng ID sản phẩm có hợp lệ trong bảng sanpham
             'lyDo' => 'required|string', // Lý do đổi
-            'soLuong' => 'required|array',
-            'soLuong.*' => 'integer|min:1',
+            'soLuong' => 'nullable|array', // Không bắt buộc chọn số lượng
+            'soLuong.*' => 'nullable|integer|min:1', // Kiểm tra số lượng nếu có
             'hinhAnh.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         //dd($request);
@@ -53,12 +53,31 @@ class YeuCauDoiHangController extends Controller
             //dd($chiTietDoiHang->sanPhamDoiID);
             $chiTietDoiHang->soLuong = $request->soLuong[$sanPhamDoiID]; // Lấy số lượng từ input
             //$chiTietDoiHang->hinhAnh = $request->hinhAnh ? $request->file('hinhAnh')->store('images') : null; // Nếu có ảnh, lưu ảnh
-            if (isset($request->hinhAnh[$sanPhamDoiID])) {
-                $file = $request->file('hinhAnh')[$sanPhamDoiID];
-                $imageName = time() . '_' . $file->getClientOriginalName();
-                $file->storeAs('upload/yeucau_doi_hang', $imageName);
-                $chiTietDoiHang->hinhAnh = $imageName;
+            // if (isset($request->hinhAnh[$sanPhamDoiID])) {
+            //     $file = $request->file('hinhAnh')[$sanPhamDoiID];
+            //     $imageName = time() . '_' . $file->getClientOriginalName();
+            //     $file->storeAs('uploads/yeucau_doi_hang', $imageName);
+            //     $chiTietDoiHang->hinhAnh = $imageName;
+            // }
+
+            $imagePaths = [];
+            if ($request->hasFile('hinhAnh')) {
+                foreach ($request->file('hinhAnh') as $sanPhamDoiID => $file) {
+                    // Tạo tên file duy nhất để tránh trùng lặp
+                    $imageName = time() . '-' . $file->getClientOriginalName();
+
+                    // Lưu file vào thư mục yêu cầu
+                    $file->move(public_path('uploads/yeucau_doi_hang'), $imageName);
+
+                    // Lưu đường dẫn file vào mảng imagePaths
+                    $imagePaths[] = $imageName;
+                }
             }
+
+            // Gán giá trị mảng chứa tên các ảnh vào cột `hinhAnh` của ChiTietDoiHang
+            $chiTietDoiHang->hinhAnh = json_encode($imagePaths);
+            $chiTietDoiHang->save();
+
 
 //dd($chiTietDoiHang);
             $chiTietDoiHang->save();
@@ -99,7 +118,9 @@ class YeuCauDoiHangController extends Controller
             if (!$yeuCauDoiHang) {
                 return redirect()->route('taikhoans.khachhangs.yeucaudoihang.index')->with('error', 'Yêu cầu đổi hàng không tồn tại.');
             }
-            return view('taikhoans.khachhangs.ycdoihangshow', compact('yeuCauDoiHang', 'sanPhams'));
+            $danhmucs=DanhMuc::all();
+
+            return view('taikhoans.khachhangs.ycdoihangshow', compact('yeuCauDoiHang', 'sanPhams','danhmucs'));
         }
 
         public function showAdmin($id)
@@ -131,7 +152,6 @@ class YeuCauDoiHangController extends Controller
             // Cập nhật trạng thái của yêu cầu đổi hàng
             $yeuCauDoiHang->trangThai = $request->input('trangThai');
             $yeuCauDoiHang->save();
-
 
             return redirect()->route('taikhoans.khachhangs.yeucaudoihang.showAdmin', $yeuCauDoiHang->id)
                              ->with('success', 'Cập nhật trạng thái thành công!');

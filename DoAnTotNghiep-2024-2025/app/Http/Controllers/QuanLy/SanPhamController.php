@@ -152,4 +152,38 @@ class SanPhamController extends Controller
         $sanpham->delete();
         return redirect()->route('quanlys.sanpham.index')->with('success', 'Xóa sản phẩm thành công.');
     }
+
+    //tim kiem
+
+    public function search(Request $request)
+    {
+        $danhmucs= Danhmuc::all();
+        $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm
+        $sanphams = SanPham::where('tenSanPham', 'like', '%' . $keyword . '%')->get();
+
+        return view('taikhoans.khachhangs.timkiem', compact('sanphams', 'keyword','danhmucs'));
+    }
+    //dành cho admin
+    public function searchAdmin(Request $request)
+    {
+        $danhmucs= Danhmuc::all();
+        $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm
+        $sanphams = SanPham::where('tenSanPham', 'like', '%' . $keyword . '%')->get();
+
+        return view('quanlys.sanphams.timkiems', compact('sanphams', 'keyword','danhmucs'));
+    }
+//hiển thị sản phẩm riêng danh mục
+    public function showByCategory($id)
+    {
+        $danhmucs= Danhmuc::all();
+
+        // Lấy danh mục theo ID
+        $danhmucs1 = DanhMuc::find($id);
+//dd($danhmucs1);
+        // Lấy các sản phẩm của danh mục đó
+        $sanphams = $danhmucs1 ? $danhmucs1->sanphams : [];
+
+        return view('taikhoans.khachhangs.danhmuc', compact('sanphams', 'danhmucs1','danhmucs'));
+    }
+
 }

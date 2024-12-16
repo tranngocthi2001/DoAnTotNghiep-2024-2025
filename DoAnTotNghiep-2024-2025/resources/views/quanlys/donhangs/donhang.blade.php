@@ -10,7 +10,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -55,7 +55,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -116,7 +116,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -177,7 +177,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -238,7 +238,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
@@ -299,7 +299,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>

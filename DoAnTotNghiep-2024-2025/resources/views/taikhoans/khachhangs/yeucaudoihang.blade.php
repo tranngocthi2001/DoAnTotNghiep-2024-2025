@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Chọn sản phẩm cần đổi hàng cho đơn hàng #{{ $donhang->id }}</h1>
 
-    <form action="{{ route('taikhoans.khachhangs.yeucaudoihang.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ url('khachhang/yeucaudoihang') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="donhang_id" value="{{ $donhang->id }}">
 
@@ -15,7 +15,8 @@
                     {{ $chiTiet->sanPhams->first()->tenSanPham }}
                 </label>
                 <input type="number" name="soLuong[{{ $chiTiet->sanPhams->first()->id }}]" placeholder="Số lượng muốn đổi" min="1" max="{{ $chiTiet->soLuong }}" class="form-control">
-                <input type="file" name="hinhAnh[{{ $chiTiet->sanPhams->first()->id }}]" class="form-control" accept="image/*">
+                <input type="file" name="hinhAnh[]" id="hinhAnh" class="form-control" multiple>
+
             </div>
         @endforeach
 
@@ -35,6 +36,6 @@
             @endforeach
         </ul>
     </div>
-@endif
-
+    @endif
+</div>
 @endsection

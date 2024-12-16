@@ -165,8 +165,9 @@ class DonHangKHController extends Controller
                     //break 2;  // Dừng vòng lặp khi đã tìm thấy yêu cầu đổi hàng
                 }
             }//dd($yeuCauDoiHang);
+            $danhmucs=DanhMuc::all();
 }            // Trả về view với thông tin đơn hàng và tên khách hàng
-        return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','yeuCauDoiHang'));
+        return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','yeuCauDoiHang','danhmucs'));
     }
 
     public function update(Request $request, $id)

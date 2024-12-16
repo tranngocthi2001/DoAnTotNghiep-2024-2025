@@ -18,12 +18,10 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">T-Smart</a>
+                <a class="navbar-brand" href="{{ route('khachhang.dashboard') }}">T-Smart</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Trang chủ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Thông tin về chúng tôi</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown"
                             href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Danh mục</a>
@@ -34,6 +32,15 @@
                                 <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item"><a>
+                            <form action="{{ route('sanpham.search') }}" method="GET" class="d-flex">
+                                <a ><input type="text" name="q" class="form-control me-2" placeholder="Nhập tên sản phẩm..." value="{{ request('q') }}"></a>
+                                <a ><button type="submit" class="btn btn-outline-success">Tìm kiếm</button></a>
+                            </form>
+                            </a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('khachhang.dashboard') }}">Trang chủ</a></li>
+                        <li class="nav-item"><a  class="nav-link active" aria-current="page" href="{{ route('khachhang.donhang.index') }}">Tra cứu đơn hàng</a></li>
+
                     </ul>
                     <form class="d-flex" action="{{ route('giohang.index') }}" method="get">
                         <button class="btn btn-outline-dark" type="submit">
@@ -42,6 +49,20 @@
                             <span class="badge bg-dark text-white ms-1 rounded-pill"></span>
                         </button>
                     </form>
+
+                    <div class="d-flex justify-content-between align-items-center my-3">
+                        @if (auth('khachhang')->check())
+                        <a href="{{ route('khachhang.edit', auth('khachhang')->user()->id) }}"
+                            class="navbar-brand text-decoration-none text-primary">
+                             {{ auth('khachhang')->user()->hoTen }}
+                         </a>
+                         <form action="{{ route('khachhang.logout') }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">Đăng xuất</button>
+                        </form>
+                    @else
+                        <a href="{{ route('khachhang.login') }}" class="btn btn-primary btn-sm">Đăng nhập</a>
+                    @endif
                 </div>
 
             </div>
@@ -58,10 +79,11 @@
                     <p class="lead fw-normal text-white-50 mb-0">Trang web từ cửa hàng T-Smart</p>
                 </div>
             </div>
+
         </header>
 
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
                 @foreach ($danhmucs as $danhmuc)
                 <div class="card mb-4">
@@ -72,7 +94,28 @@
                 </div>
             @endforeach
             </div>
+        </nav> --}}
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                    @foreach ($danhmucs as $danhmuc)
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>
+                                <!-- Sử dụng form để gửi yêu cầu POST khi nhấn nút -->
+                                <form action="{{ route('danhmuc.show', $danhmuc->id) }}" method="GET" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-link">
+                                        {{ $danhmuc->tenDanhMuc }}
+                                    </button>
+                                </form>
+                                </h4>
+                            </div>
+                        </div>
+                    @endforeach
+            </div>
         </nav>
+
 
 
 

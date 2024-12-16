@@ -10,9 +10,16 @@
             {{ session('success') }}
         </div>
     @endif
+<div  class="container px-4 px-lg-5">
+    <form action="{{ route('sanpham.search') }}" method="GET" class="d-flex">
+        <input type="text" name="q" class="form-control me-2" placeholder="Nhập tên sản phẩm để tìm kiếm..." value="{{ request('q') }}">
+        <button type="submit" class="btn btn-outline-success">Tìm kiếm</button>
+    </form>
+</div>
+
 
     <!-- Nút Thêm Sản Phẩm -->
-    <div class="mb-3">
+    <div class="container px-4 px-lg-5">
         <a href="{{ route('quanlys.sanpham.create') }}" class="btn btn-primary">Thêm Sản Phẩm</a>
     </div>
 

@@ -54,7 +54,10 @@
                 <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
             </form>
         @endif
-        <a href="{{ route('taikhoans.khachhangs.yeucaudoihang', ['donhang_id' => $donhang->id]) }}" class="btn btn-primary">Đổi hàng</a>
+
+        @if ($donhang->trangThai === 'Đã hoàn thành')
+            <a href="{{ route('taikhoans.khachhangs.yeucaudoihang', ['donhang_id' => $donhang->id]) }}" class="btn btn-primary">Đổi hàng</a>
+        @endif
         <p>
             <!-- Kiểm tra xem có yêu cầu đổi hàng không -->
             @if ($yeuCauDoiHang)

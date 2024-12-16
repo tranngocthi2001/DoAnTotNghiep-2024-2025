@@ -10,7 +10,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Tên khách hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
@@ -48,7 +48,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Tên khách hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
@@ -86,7 +86,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Tên khách hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
@@ -117,7 +117,7 @@
     @endif
 
 
-    <h1>Đổi hàng eregterwg</h1>
+    <h1>Đổi hàng</h1>
 
     @if($donhangsDoi->isEmpty())
         <p>Bạn chưa có yêu cầu đổi nào.</p>
@@ -125,7 +125,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã đơn hàng</th>
                     <th>Tên khách hàng</th>
                     <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>

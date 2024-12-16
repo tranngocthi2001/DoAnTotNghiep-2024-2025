@@ -12,28 +12,13 @@
             </div>
         @endif
 
-<div class="container">
-    <!-- Hiển thị tài khoản hoặc nút đăng nhập -->
-    <div class="d-flex justify-content-between align-items-center my-3">
-        @if (auth('khachhang')->check())
-        <p>Chào, {{ auth('khachhang')->user()->tenTaiKhoan }}</p>
-        <form action="{{ route('khachhang.logout') }}" method="POST" style="display:inline;">
-            @csrf
-            <button type="submit" class="btn btn-danger btn-sm">Đăng xuất</button>
-        </form>
-    @else
-        <a href="{{ route('khachhang.login') }}" class="btn btn-primary btn-sm">Đăng nhập</a>
-    @endif
-
-    </div>
-<div>
-    <a href="{{ route('giohang.index') }}">Giỏ hàng của bạn</a></br>
-    <a href="{{ route('khachhang.donhang.index') }}">Đơn hàng của bạn</a>
+    {{-- <a href="{{ route('giohang.index') }}">Giỏ hàng của bạn</a></br> --}}
+    {{-- <a href="{{ route('khachhang.donhang.index') }}">Đơn hàng của bạn</a> --}}
 
 
 </div>
     @foreach ($danhmucs as $danhmuc)
-        <div class="card mb-4">
+        <div class="container">
             <div class="card-header">
                 <h4>{{ $danhmuc->tenDanhMuc }}</h4>
                 <p>{{ $danhmuc->moTa }}</p>
@@ -59,7 +44,7 @@
 
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $sanpham->tenSanPham }}</h5>
-                                        <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 3) }} VND</p>
+                                        <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 0, ',', '.')}} VND</p>
 
                                         <!-- Nút xem chi tiết sản phẩm -->
                                         <a href="{{ route('quanlys.sanpham.show', $sanpham->id) }}" class="btn btn-primary btn-sm">Chi tiết</a>

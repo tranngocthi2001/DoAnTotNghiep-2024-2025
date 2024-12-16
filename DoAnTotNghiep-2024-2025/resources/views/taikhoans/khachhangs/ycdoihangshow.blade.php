@@ -46,11 +46,14 @@
                         </td>
                         <td>{{ $chiTiet->soLuong }}</td>
                         <td>
-                            @if ($chiTiet->hinhAnh)
-                                <img src="{{ asset('storage/' . $chiTiet->hinhAnh) }}" alt="Hình ảnh sản phẩm" style="width: 100px; height: auto;">
-                            @else
-                                Không có
-                            @endif
+                            @php
+                                $imagePaths = json_decode($chiTiet->hinhAnh, true) ?? []; // Giải mã JSON
+                            @endphp
+
+                            @foreach ($imagePaths as $image)
+                                <img src="{{ asset('uploads/yeucau_doi_hang/' . $image) }}" class="card-img-top" alt="Hình ảnh sản phẩm">
+                            @endforeach
+
                         </td>
                     </tr>
 

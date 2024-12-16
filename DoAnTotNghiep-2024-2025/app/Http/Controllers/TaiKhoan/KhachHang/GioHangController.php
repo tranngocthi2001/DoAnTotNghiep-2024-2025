@@ -16,8 +16,10 @@ class GioHangController extends Controller
         $khachhang = session('khachhang');
         //dd($khachhang);
         $danhmucs = DanhMuc::all();
+
         $khachhang=KhachHang::where('id',auth()->user()->id)->first();
         //dd($khachhang);
+
         $giohang = GioHang::firstOrCreate(
             ['khachhang_id' => $khachhang->id],
             ['tongTien' => 0, 'tongSoLuong' => 0]

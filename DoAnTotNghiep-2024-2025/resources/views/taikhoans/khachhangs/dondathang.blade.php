@@ -41,3 +41,4 @@
                     <!-- Nút Đặt hàng -->
                     <button type="submit">Đặt hàng</button>
                 </form>
+@endsection

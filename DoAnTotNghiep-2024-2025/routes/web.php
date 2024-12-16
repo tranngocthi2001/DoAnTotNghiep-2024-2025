@@ -66,6 +66,9 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
         Route::post('/khachhang/{id}/update-status', [KhachHangController::class, 'updateStatus'])->name('khachhang.updateStatus');
     });
 });
+//Khach hàng chỉnh sửa thông tin
+Route::get('/khachhang/{id}/edit', [KhachHangController::class, 'edit'])->name('khachhang.edit');
+Route::PATCH('/khachhang/{id}/update', [KhachHangController::class, 'update'])->name('khachhang.update');
 
 
 Route::get('/unauthorized', function () {
@@ -111,6 +114,7 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
         ]);
     });
 });
+
 //quan ly san pham
 use App\Http\Controllers\QuanLy\SanPhamController;
 
@@ -128,6 +132,15 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
         ]);
     });
 });
+//tìm kiếm sản phẩm
+Route::get('/tim-kiem', [SanPhamController::class, 'search'])->name('sanpham.search');
+//dành cho admin
+Route::get('/tim-kiemAdmin', [SanPhamController::class, 'searchAdmin'])->name('sanpham.search');
+
+//lấy sản phẩm của danh mục
+// Route để lọc sản phẩm theo danh mục
+Route::get('danh-muc/{id}', [SanPhamController::class, 'showByCategory'])->name('danhmuc.show');
+
 
 //gio hang cua khach hang
 use App\Http\Controllers\TaiKhoan\KhachHang\GioHangController;
