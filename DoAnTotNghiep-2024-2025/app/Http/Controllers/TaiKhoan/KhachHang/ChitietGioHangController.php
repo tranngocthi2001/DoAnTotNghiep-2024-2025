@@ -30,11 +30,13 @@ class ChiTietGioHangController extends Controller
 
         if ($sanpham->soLuong < $soLuongYeuCau) {
             // Nếu số lượng trong kho không đủ, trả về thông báo lỗi
-            return redirect()->route('khachhang.dashboard')->withErrors('Sản phẩm "' . $sanpham->tenSanPham  . '" không đủ số lượng, trong kho chỉ còn:'. $sanpham->soLuong);
+            return redirect()->route('khachhang.dashboard')
+            ->withErrors('Sản phẩm "' . $sanpham->tenSanPham  . '" không đủ số lượng, trong kho chỉ còn:'. $sanpham->soLuong);
         }
 
         // Kiểm tra sản phẩm đã tồn tại trong bảng liên kết chưa
-        $chitietgiohang = $giohang->chiTietGioHangs()->whereHas('sanPhams', function ($query) use ($sanpham) {
+        $chitietgiohang = $giohang->chiTietGioHangs()
+        ->whereHas('sanPhams', function ($query) use ($sanpham) {
             $query->where('sanpham_id', $sanpham->id);
         })->first();
         if ($chitietgiohang) {
@@ -55,6 +57,8 @@ class ChiTietGioHangController extends Controller
             ]);
 
             // Thêm vào bảng liên kết
+            //Eloquent sẽ tự động lấy chi_tiet_gio_hang_id từ $chitietgiohang
+            // và thêm nó vào bảng trung gian cùng với sanpham_id và các cột khác.
             $chitietgiohang->sanphams()->attach($sanpham->id, [
                 'soLuong' => $request->soLuong,
             ]);

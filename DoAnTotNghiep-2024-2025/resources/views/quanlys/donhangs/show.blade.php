@@ -26,8 +26,8 @@
                     <tr>
                         <td>{{ $sanpham->tenSanPham }}</td>
                         <td>{{ $chitiet->soLuong }}</td>
-                        <td>{{ number_format($sanpham->gia, 3) }} VND</td>
-                        <td>{{ number_format($chitiet->gia, 3) }} VND</td>
+                        <td>{{ number_format($sanpham->gia,  0, ',', '.') }} VND</td>
+                        <td>{{ number_format($chitiet->gia,  0, ',', '.') }} VND</td>
                     </tr>
                 @endforeach
             @endforeach
@@ -40,7 +40,6 @@
 
         <label for="trangThai">Trạng thái:</label>
         <select name="trangThai" id="trangThai" required>
-            <option value="Chưa xác nhận" @if($donHang->trangThai == 'Chưa xác nhận') selected @endif>Chưa xác nhận</option>
             <option value="Đang xử lý" @if($donHang->trangThai == 'Đang xử lý') selected @endif>Đang xử lý</option>
 
             <option value="Đã giao cho đơn vị vận chuyển" @if($donHang->trangThai == 'Đã giao cho đơn vị vận chuyển') selected @endif>Đã giao cho đơn vị vận chuyển</option>

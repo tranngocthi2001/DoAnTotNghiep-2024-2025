@@ -21,8 +21,10 @@ class ThanhToan extends Model
         'trangThaiGiaoDich',
         'ngayGiaoDich',
         'maGiaoDichNganHang',
-        'maGiaoDichMomo',
+        'maGiaoDichVnpay',
     ];
+    public $timestamps = false; // Bỏ qua các cột created_at và updated_at
+
 
     // Quan hệ giữa Payment và DonHang
     public function donhang()

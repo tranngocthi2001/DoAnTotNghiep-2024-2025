@@ -27,7 +27,45 @@
                         <td>{{ $donhang->id }}</td>
                         <td>{{ $donhang->tenKhachHang }}</td>
                         <td>{{ $donhang->ngayDatHang }}</td>
-                        <td>{{ number_format($donhang->tongTien, 3) }} VND</td>
+                        <td>{{ number_format($donhang->tongTien, 0, ',', '.') }} VND</td>
+                        <td>{{ $donhang->trangThai }}</td>
+                        <td>{{ $donhang->diaChiGiaoHang }}</td>
+                        <td>{{ $donhang->sdt }}</td>
+                        <td>
+                            <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    <h1>Chờ thanh toán</h1>
+
+    @if($donhangsChothanhtoan->isEmpty())
+        <p>Bạn chưa có đơn hàng chờ thanh toán.</p>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tên khách hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Địa chỉ giao hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donhangsChothanhtoan as $donhang)
+                    <tr>
+
+                        <td>{{ $donhang->id }}</td>
+                        <td>{{ $donhang->tenKhachHang }}</td>
+                        <td>{{ $donhang->ngayDatHang }}</td>
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
                         <td>{{ $donhang->diaChiGiaoHang }}</td>
                         <td>{{ $donhang->sdt }}</td>
@@ -65,7 +103,7 @@
                         <td>{{ $donhang->id }}</td>
                         <td>{{ $donhang->tenKhachHang }}</td>
                         <td>{{ $donhang->ngayDatHang }}</td>
-                        <td>{{ number_format($donhang->tongTien, 3) }} VND</td>
+                        <td>{{ number_format($donhang->tongTien, 0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
                         <td>{{ $donhang->diaChiGiaoHang }}</td>
                         <td>{{ $donhang->sdt }}</td>
@@ -78,7 +116,7 @@
         </table>
     @endif
 
-    <h1>Đơn hàng đã hủy</h1>
+    <h1>Hủy đơn hàng</h1>
 
     @if($donhangsHuy->isEmpty())
         <p>Bạn chưa có đơn hàng hủy nào.</p>
@@ -103,7 +141,7 @@
                         <td>{{ $donhang->id }}</td>
                         <td>{{ $donhang->tenKhachHang }}</td>
                         <td>{{ $donhang->ngayDatHang }}</td>
-                        <td>{{ number_format($donhang->tongTien, 3) }} VND</td>
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
                         <td>{{ $donhang->diaChiGiaoHang }}</td>
                         <td>{{ $donhang->sdt }}</td>
@@ -142,7 +180,7 @@
                         <td>{{ $donhang->id }}</td>
                         <td>{{ $donhang->tenKhachHang }}</td>
                         <td>{{ $donhang->ngayDatHang }}</td>
-                        <td>{{ number_format($donhang->tongTien, 3) }} VND</td>
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
                         <td>{{ $donhang->diaChiGiaoHang }}</td>
                         <td>{{ $donhang->sdt }}</td>

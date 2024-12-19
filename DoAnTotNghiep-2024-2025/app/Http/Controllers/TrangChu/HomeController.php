@@ -13,7 +13,7 @@ class HomeController extends Controller
     {
 
         $khachhang=Khachhang::where('id',auth()->user()->id)->first();
-//dd($khachhang);
+
         // Lấy tất cả danh mục và sản phẩm liên quan
         // $danhmucs = Danhmuc::with('sanphams')->get();
 
@@ -30,7 +30,12 @@ class HomeController extends Controller
      public function guest()
      {
          // Lấy dữ liệu dành cho guest
-         $danhmucs = DanhMuc::with('sanphams')->get(); // Ví dụ lấy danh mục và sản phẩm
+
+         $danhmucs = DanhMuc::where('trangThai', 1) // Lọc danh mục có trạng thái 1
+        ->with(['sanphams' => function ($query) {
+            $query->where('trangThai', 1); // Lọc sản phẩm có trạng thái 1
+        }])
+    ->get(); // Ví dụ lấy danh mục và sản phẩm
          return view('homeguest', compact('danhmucs'));
      }
 }

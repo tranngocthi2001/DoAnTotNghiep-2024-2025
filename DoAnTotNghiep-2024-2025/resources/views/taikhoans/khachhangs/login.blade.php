@@ -35,4 +35,5 @@
         <button type="submit" class="btn btn-primary">Đăng Nhập</button>
     </form>
 </div>
+<div><a href=" {{ url('/login') }} "> Đăng nhập cho quản lý</a></div>
 @endsection

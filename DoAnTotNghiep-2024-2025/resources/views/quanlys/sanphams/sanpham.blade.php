@@ -11,7 +11,7 @@
         </div>
     @endif
 <div  class="container px-4 px-lg-5">
-    <form action="{{ route('sanpham.search') }}" method="GET" class="d-flex">
+    <form action="{{ route('sanpham.searchadmin') }}" method="GET" class="d-flex">
         <input type="text" name="q" class="form-control me-2" placeholder="Nhập tên sản phẩm để tìm kiếm..." value="{{ request('q') }}">
         <button type="submit" class="btn btn-outline-success">Tìm kiếm</button>
     </form>

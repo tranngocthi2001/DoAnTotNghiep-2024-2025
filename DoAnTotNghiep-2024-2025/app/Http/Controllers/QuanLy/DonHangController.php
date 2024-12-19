@@ -27,10 +27,11 @@ class DonHangController extends Controller
 
         // Lấy danh sách đơn hàng kèm thông tin nhân viên xử lý
         $donHangsMoi = DonHang::with('nhanViens')
-            ->where('trangThai', 'Chưa xác nhận')
+            ->where('trangThai', 'COD')
+            ->orwhere('trangThai', 'Đã thanh toán')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
-            //dd($donHangsMoi);
+           // dd($donHangsMoi);
         $donHangsCu = DonHang::with('nhanViens')
             ->where('trangThai', '=', 'Đang xử lý')
             ->orderBy('ngayDatHang', 'desc')
@@ -46,17 +47,21 @@ class DonHangController extends Controller
             ->get();
         $donHangsHuy = DonHang::with('nhanViens')
             ->where('trangThai', '=', 'đã hủy')
+            ->orwhere('trangThai', '=', 'Chờ xác nhận hủy')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
         $donHangsDoi = DonHang::with('nhanViens')
             ->where('trangThai', '=', 'Đổi hàng')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
-//dd($donHangsCu);
+        $donHangsChothanhtoan = DonHang::with('nhanViens')
+        ->where('trangThai', '=', 'Chờ thanh toán')
+        ->orderBy('ngayDatHang', 'desc')->get();
+//dd($donHangsChothanhtoan);
 
         return view('quanlys.donhangs.donhang',
          compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh',
-         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen'));
+         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen','donHangsChothanhtoan'));
     }
 
     public function showYeuCauDoiHang()
@@ -100,21 +105,6 @@ class DonHangController extends Controller
             'maVanChuyen' => $request->input('maVanChuyen') ?: $donhang->maVanChuyen, // Không ghi đè mã vận chuyển nếu không có giá trị mới
 
         ]);
-//
-// Nếu mã vận chuyển được cập nhật, gửi đến API GHN để đồng bộ trạng thái
-        //if ($donhang->maVanChuyen) {
-            //$ghnService = new GHNService(); // Service xử lý API GHN
-            //$result = $ghnService->trackOrder($donhang->maVanChuyen);
-
-            // Kiểm tra kết quả từ API
-            // if ($result && isset($result['status'])) {
-            //     // Cập nhật trạng thái đơn hàng từ GHN
-            //     $donhang->trangThai = $result['status'];
-            //     $donhang->save();
-            // } else {
-            //     return back()->withErrors(['msg' => 'Không thể lấy trạng thái từ GHN']);
-            // }
-        //}
         return redirect()->route('quanlys.donhang.indexAdmin')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
     }
     protected $ghnService;
@@ -125,12 +115,8 @@ class DonHangController extends Controller
         // Tìm đơn hàng với id
         $donHang = DonHang::with('chiTietDonHangs')->findOrFail($id);
         //dd($donHang->chiTietDonHangs);
-
         // Lấy thông tin khách hàng qua quan hệ khachhang_id
         $khachHang = $donHang->khachHangs;
-        //dd($donHang->khachHangs);
-        //$orderCode = $donHang->maVanChuyen; // Giả sử bạn có trường mã vận chuyển
-        // Kiểm tra xem yêu cầu đổi hàng có tồn tại không
 // Kiểm tra xem yêu cầu đổi hàng có tồn tại trong các chi tiết đơn hàng hay không
         $yeuCauDoiHang = null;
         foreach ($donHang->chiTietDonHangs as $chiTietDonHang) {
@@ -147,7 +133,6 @@ class DonHangController extends Controller
         return view('quanlys.donhangs.show', compact('donHang', 'khachHang', 'yeuCauDoiHang'));
     }
 
-
     // Xác nhận đơn hàng
     public function xacNhanDonHang($id)
     {
@@ -159,6 +144,5 @@ class DonHangController extends Controller
 
         return redirect()->route('nhanvien.donhang.indexAdmin')->with('success', 'Đơn hàng đã được xác nhận.');
     }
-//---------
 
 }

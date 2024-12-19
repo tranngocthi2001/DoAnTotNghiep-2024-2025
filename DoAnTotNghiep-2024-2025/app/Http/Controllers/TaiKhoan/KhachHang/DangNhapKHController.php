@@ -86,8 +86,9 @@ class DangNhapKHController extends Controller
      */
     public function logout()
     {
-        // Xóa session khách hàng
-        session()->forget('khachhang');
+        // Đăng xuất và xóa toàn bộ session
+        Auth::logout();
+        session()->flush();
 
         // Chuyển hướng về trang đăng nhập
         return redirect()->route('khachhang.showLoginForm')->with('success', 'Bạn đã đăng xuất thành công!');

@@ -25,7 +25,7 @@
                             <div>
                                 <p>Sản phẩm: {{ $sanpham->tenSanPham }}</p>
                                 <p>Số lượng: {{ $sanpham->pivot->soLuong }}</p>
-                                <p>Giá: {{ number_format($sanpham->gia * $sanpham->pivot->soLuong, 3) }} VND</p>
+                                <p>Giá: {{ number_format($sanpham->gia * $sanpham->pivot->soLuong,  0, ',', '.') }} VND</p>
                                 <form action="{{ route('giohang.chitiet.update', ['id' => $sanpham->id]) }}" method="POST">
                                     @csrf
                                     <label for="soLuong">Số lượng:</label>
@@ -43,7 +43,7 @@
                     @endif
                 @endforeach
                 <p>Tổng số lượng: {{ $giohang->tongSoLuong }}</p>
-                <p>Tổng tiền: {{ number_format($giohang->tongTien, 3) }} VND</p>
+                <p>Tổng tiền: {{ number_format($giohang->tongTien,  0, ',', '.') }} VND</p>
             @else
                 <p>Giỏ hàng trống!</p>
             @endif

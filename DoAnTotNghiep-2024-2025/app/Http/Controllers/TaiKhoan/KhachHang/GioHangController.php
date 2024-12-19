@@ -13,7 +13,7 @@ class GioHangController extends Controller
     // Hiển thị giỏ hàng
     public function index()
     {
-        $khachhang = session('khachhang');
+        //$khachhang = session('khachhang');
         //dd($khachhang);
         $danhmucs = DanhMuc::all();
 

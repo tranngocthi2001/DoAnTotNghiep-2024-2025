@@ -125,17 +125,19 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
             'index' => 'quanlys.sanpham.index',
             'create' => 'quanlys.sanpham.create',
             'store' => 'quanlys.sanpham.store',
-            'show' => 'quanlys.sanpham.show',
+             'show' => 'quanlys.sanpham.show',
             'edit' => 'quanlys.sanpham.edit',
             'update' => 'quanlys.sanpham.update',
             'destroy' => 'quanlys.sanpham.destroy',
         ]);
     });
 });
+ Route::get('sanpham/{id}', [SanPhamController::class, 'show'])->name('quanlys.sanpham.show');
+
 //tìm kiếm sản phẩm
 Route::get('/tim-kiem', [SanPhamController::class, 'search'])->name('sanpham.search');
 //dành cho admin
-Route::get('/tim-kiemAdmin', [SanPhamController::class, 'searchAdmin'])->name('sanpham.search');
+Route::get('/tim-kiemAdmin', [SanPhamController::class, 'searchAdmin'])->name('sanpham.searchadmin');
 
 //lấy sản phẩm của danh mục
 // Route để lọc sản phẩm theo danh mục
@@ -203,6 +205,7 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     Route::get('/donhang', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
     Route::get('/khachhang/donhang/{id}', [DonHangKHController::class, 'show'])->name('khachhang.donhang.show');
     Route::put('/donhang/{id}/huy', [DonHangKHController::class, 'huyDonHang'])->name('donhang.huy');
+    Route::post('/donhang/{id}', [DonHangKHController::class, 'update'])->name('donhang.update');
 
 
 });
@@ -245,3 +248,11 @@ Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showA
 //     ->name('taikhoans.khachhangs.yeucaudoihang.show');
 Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
     ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');
+//vnpay
+use App\Http\Controllers\TaiKhoan\KhachHang\VnpayController;
+
+//Route::get('vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
+Route::match(['get', 'post'], 'vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
+
+Route::get('/vnpay/return', [VnpayController::class, 'return'])->name('vnpay.return');
+Route::post('vnpay/ipn', [VnpayController::class, 'ipn'])->name('vnpay.ipn');

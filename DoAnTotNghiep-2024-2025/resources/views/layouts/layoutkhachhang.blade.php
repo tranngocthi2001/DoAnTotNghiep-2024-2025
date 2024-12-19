@@ -18,7 +18,15 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="{{ route('khachhang.dashboard') }}">T-Smart</a>
+                @if(auth()->check())
+                    {{-- Người dùng đã đăng nhập --}}
+                    <a class="navbar-brand" href="{{ route('khachhang.dashboard') }}">T-Smart</a>
+                    @else
+                    {{-- Người dùng chưa đăng nhập --}}
+                    <a class="navbar-brand" href="{{ route('homeguest') }}">T-Smart</a>
+
+                @endif
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -62,6 +70,8 @@
                         </form>
                     @else
                         <a href="{{ route('khachhang.login') }}" class="btn btn-primary btn-sm">Đăng nhập</a>
+                        <a href="{{ url ('khachhang/register') }}" class="btn btn-primary btn-sm">Đăng ký</a>
+
                     @endif
                 </div>
 

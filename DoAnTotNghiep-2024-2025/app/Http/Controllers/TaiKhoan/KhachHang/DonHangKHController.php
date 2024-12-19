@@ -9,6 +9,7 @@ use App\Models\GioHang;
 use App\Models\ChiTietDonHang;
 use App\Models\DanhMuc;
 use App\Models\KhachHang;
+use App\Models\ThanhToan;
 use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 
@@ -45,7 +46,8 @@ class DonHangKHController extends Controller
         ->where(function ($query) {
             $query->where('trangThai', '=', 'đã giao cho đơn vị vận chuyển')
                   ->orWhere('trangThai', '=', 'đang xử lý')
-                  ->orWhere('trangThai', '=', 'chưa xác nhận');
+                  ->orWhere('trangThai', '=', 'COD')
+                  ->orWhere('trangThai', '=', 'Đã thanh toán');
         })
         ->orderBy('ngayDatHang', 'desc')
         ->get();
@@ -59,15 +61,23 @@ class DonHangKHController extends Controller
         ->orderBy('ngayDatHang', 'desc')->get();
 
         $donhangsHuy = DonHang::where('khachhang_id', auth()->user()->id)
-        ->where('trangThai', '=', 'đã hủy')
+        ->where('trangThai', '=', 'Đã hủy')
+        ->orwhere('trangThai', '=', 'Chờ xác nhận hủy')
         ->orderBy('ngayDatHang', 'desc')->get();
-        //dd($donhangs);
+
+        $donhangsChothanhtoan = DonHang::where('khachhang_id', auth()->user()->id)
+        ->where('trangThai', '=', 'Chờ thanh toán')
+        ->orderBy('ngayDatHang', 'desc')->get();
+        //dd($donhangsChothanhtoan);
         return view('taikhoans.khachhangs.donhang',
-         compact('donhangs','donhangsHoanThanh','donhangsHuy','donhangsDoi','danhmucs'));
+         compact('donhangs','donhangsHoanThanh','donhangsHuy',
+         'donhangsDoi','danhmucs', 'donhangsChothanhtoan'));
     }
 
     public function donHangCreate(Request $request)
     {
+        $danhmucs=DanhMuc::all();
+
         // Lấy giỏ hàng của khách hàng hiện tại
             $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
             ->where('khachhang_id', auth()->user()->id)
@@ -78,32 +88,23 @@ class DonHangKHController extends Controller
             return redirect()->route('giohang.index')->withErrors('Giỏ hàng của bạn trống hoặc không hợp lệ.');
         }
         $khachhang = $giohang->khachHang;
-
-
-
+        //dd($request->all());
         // Tạo đơn hàng
         $donHang = DonHang::create([
             'khachhang_id' => $giohang->khachhang_id,
             'tongTien' => $giohang->tongTien,
-            'trangThai' => 'Chưa xác nhận',
+            'trangThai' => 'Chờ thanh toán',
             'diaChiGiaoHang' => $request->input('diaChi', $giohang->khachHang->diaChi),
             'sdt' => $request->input('sdt', $giohang->khachHang->sdt),
             'ngayDatHang' => now(),
             'phuongThucThanhToan' => $request->input('phuongThucThanhToan'),
             'tenKhachHang'=>  $request->input('hoTen', $giohang->khachHang->hoTen),
             'maVanChuyen'=>null,
-
         ]);
-        // Kiểm tra phương thức thanh toán
-        if ($request->input('phuongThucThanhToan') == 'Thanh toán qua ví điện tử Momo') {
-            // Chuyển hướng đến trang thanh toán Momo
-            return redirect()->route('momo.payment', ['donhangId' => $donHang->id]);
-        }
             //dd($donHang);
             if (!$giohang->chiTietGioHangs || $giohang->chiTietGioHangs->isEmpty()) {
                 return redirect()->route('giohang.index')->withErrors('Giỏ hàng trống, không thể tạo đơn hàng.');
             }
-
         // Lưu chi tiết đơn hàng và bảng liên kết
         foreach ($giohang->chiTietGioHangs  as $chitietgiohang) {
             // Lưu chi tiết đơn hàng
@@ -112,7 +113,6 @@ class DonHangKHController extends Controller
                 'soLuong' => $chitietgiohang->soLuong,
                 'gia' => $chitietgiohang->gia,
             ]);
-
             // Chuyển sản phẩm từ bảng liên kết `sanpham_has_chitietgiohang` sang `sanpham_has_chitietdonhang`
             foreach ($chitietgiohang->sanphams as $sanpham) {
                 $chiTietDonHang->sanphams()->attach($sanpham->id, [
@@ -122,18 +122,27 @@ class DonHangKHController extends Controller
                 $sanpham->soLuong -= $sanpham->pivot->soLuong; // Giảm số lượng
                 $sanpham->save(); // Lưu lại sản phẩm sau khi trừ
             }
+                // Xóa sản phẩm trong giỏ hàng
+                $chitietgiohang->sanphams()->detach();
+                $chitietgiohang->delete();
 
-            // Xóa sản phẩm trong giỏ hàng
-            $chitietgiohang->sanphams()->detach();
-            $chitietgiohang->delete();
-        }
-
+        }//dd($chiTietDonHang);
         // Xóa giỏ hàng
-        $giohang->tongTien = 0;
-        $giohang->tongSoLuong = 0;
-        $giohang->save();
+            $giohang->tongTien = 0;
+            $giohang->tongSoLuong = 0;
+            $giohang->save();
 
-        return redirect()->route('khachhang.donhang.index')->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+    // Kiểm tra phương thức thanh toán
+        if ($request->input('phuongThucThanhToan') == 'Thanh toán qua cổng thanh toán VnPay') {
+            // Chuyển hướng đến trang thanh toán
+            return view('taikhoans/khachhangs.vnpaycreate', compact('donHang','danhmucs'));
+            //return redirect()->route('vnpay.create', ['donhang_id' => $donHang->id]);
+        }else
+        {
+            $donHang->trangThai='COD';
+            $donHang->save();
+            return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+        }
     }
 
     public function show($id)
@@ -145,18 +154,10 @@ class DonHangKHController extends Controller
         $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
         ->where('khachhang_id', auth()->user()->id)
         ->first();
-        //$khachhang=$giohang->khachHang;
 
-        // Truy vấn yêu cầu đổi hàng bằng donhang_id
-        // $yeuCauDoiHang = YeuCauDoiHang::with('chitietdoihangs')
-        // ->where('id', $donhang->id)->first();
-        // if (!$yeuCauDoiHang) {
-        //     return redirect()->route('taikhoans.khachhangs.yeucaudoihang.show')
-        //     ->with('error', 'Yêu cầu đổi hàng không tồn tại.');
-        // }
         $yeuCauDoiHang = null;
         foreach ($donhang->chiTietDonHangs as $chiTietDonHang) {
-            //dd($donHang);
+            //dd($donhang);
             foreach ($chiTietDonHang->chiTietPhieuXuats as $chiTietPhieuXuat) {
                 //dd($chiTietDonHang);
                 if ($chiTietPhieuXuat->yeucaudoihang_id) {
@@ -170,42 +171,75 @@ class DonHangKHController extends Controller
         return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','yeuCauDoiHang','danhmucs'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'trangThai' => 'required',
-            'maVanChuyen' => 'nullable|string|max:50',
-
-        ]);
-
-       // Tìm đơn hàng theo ID
-        $donhang = DonHang::findOrFail($id);
-
-
-        // Cập nhật trạng thái đơn hàng và lưu nhân viên thực hiện
-        $donhang->update([
-            'trangThai' => $request->input('trangThai'),
-        ]);
-
-
-    }
 
     public function huyDonHang($id)
     {
-        // Tìm đơn hàng
-        $donhang = DonHang::where('id', $id)
-            ->where('khachhang_id', auth()->user()->id)
-            ->where('trangThai', 'Chưa xác nhận') // Chỉ hủy đơn hàng chưa xác nhận
-            ->first();
-
+         // Tìm đơn hàng theo ID, khách hàng, và trạng thái
+    $donhang = DonHang::where('id', $id)
+        ->where('khachhang_id', auth()->user()->id)
+        ->where(function ($query) {
+            $query->where('trangThai', 'COD')
+                ->orWhere('trangThai', 'Đã thanh toán');
+        })->first();
+//dd($donhang);
         if (!$donhang) {
             return redirect()->back()->with('error', 'Đơn hàng không thể hủy.');
         }
 
         // Cập nhật trạng thái đơn hàng thành "Đã hủy"
-        $donhang->update(['trangThai' => 'đã hủy']);
+        $donhang->update(['trangThai' => 'Chờ xác nhận hủy']);
 
-        return redirect()->route('taikhoans.khachhangs.donhang')->with('success', 'Đơn hàng đã được hủy.');
+        return redirect()->route('khachhang.donhang.index')->with('success', 'Đơn hàng đã được hủy.');
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // Lấy danh sách danh mục (nếu cần hiển thị lại view)
+        $danhmucs = DanhMuc::all();
+
+        // Tìm đơn hàng theo ID
+        $donHang = DonHang::findOrFail($id);
+
+        //dd($donHang);
+        // Cập nhật thông tin đơn hàng
+        $donHang->update([
+            'trangThai' => 'Chờ thanh toán',
+            'diaChiGiaoHang' => $request->input('diaChi', $donHang->diaChiGiaoHang),
+            'sdt' => $request->input('sdt', $donHang->sdt),
+            'phuongThucThanhToan' => $request->input('phuongThucThanhToan', $donHang->phuongThucThanhToan),
+            'tenKhachHang' => $request->input('hoTen', $donHang->tenKhachHang),
+        ]);
+//dd($donHang);
+        // Nếu trạng thái là "Đã hủy", hoàn lại số lượng sản phẩm trong kho
+        if ($request->input('trangThai') == 'Đã hủy') {
+            foreach ($donHang->chiTietDonHangs as $chiTietDonHang) {
+                foreach ($chiTietDonHang->sanphams as $sanpham) {
+                    $sanpham->soLuong += $sanpham->pivot->soLuong; // Hoàn lại số lượng
+                    $sanpham->save(); // Lưu lại thông tin sản phẩm
+                }
+            }
+        }
+
+        if ($request->input('phuongThucThanhToan') == 'Thanh toán qua cổng thanh toán VnPay') {
+            // Chuyển hướng đến trang thanh toán
+            return view('taikhoans/khachhangs.vnpaycreate', compact('donHang','danhmucs'));
+            //return redirect()->route('vnpay.create', ['donhang_id' => $donHang->id]);
+        }else
+        {
+            $donHang->trangThai='COD';
+            $donHang->save();
+            $thanhtoan= new ThanhToan();
+            $thanhtoan->donhang_id=$donHang->id;
+            $thanhtoan->phuongThuc = 'Thanh toán khi nhận hàng (COD)';
+            $thanhtoan->trangThaiGiaoDich='Chờ thanh toán';
+            $thanhtoan->soTien= $donHang->tongTien;
+            $thanhtoan->maGiaoDichVnpay='null';
+
+            $thanhtoan->save();
+//dd($thanhtoan);
+            return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+        }
     }
 
 }

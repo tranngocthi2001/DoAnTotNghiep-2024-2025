@@ -1,9 +1,9 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
-<h1>Quản lý Đơn Hàng</h1>
-<div class="container">
 
+<div class="container">
+    <h1>Quản lý Đơn Hàng</h1>
 
     <h2>Đơn hàng mới</h2>
     @if($donHangsMoi->count() > 0)
@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
                     <td>
                         <form action="{{ route('quanlys.donhang.update', $donHang->id) }}" method="POST">
@@ -72,7 +72,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
 
                     <td>
@@ -133,7 +133,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
 
                     <td>
@@ -194,7 +194,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
 
                     <td>
@@ -255,7 +255,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
 
                     <td>
@@ -314,7 +314,7 @@
                 <tr>
                     <td>{{ $donHang->id }}</td>
                     <td>{{ $donHang->ngayDatHang }}</td>
-                    <td>{{ number_format($donHang->tongTien, 3) }} VND</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
                     <td>{{ $donHang->trangThai }}</td>
 
 
@@ -338,5 +338,52 @@
     @else
         <p>Không có đơn hàng đổi.</p>
     @endif
+
+
+<h2>Đơn hàng chờ thanh toán</h2>
+    @if($donHangsChothanhtoan->count() > 0)
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Nhân viên xử lý</th>
+                    <th>Chi tiết đơn hàng</th>
+                    <th>Mã vận chuyển</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donHangsChothanhtoan as $donHang)
+                <tr>
+                    <td>{{ $donHang->id }}</td>
+                    <td>{{ $donHang->ngayDatHang }}</td>
+                    <td>{{ number_format($donHang->tongTien,  0, ',', '.') }} VND</td>
+                    <td>{{ $donHang->trangThai }}</td>
+
+
+                    <td>{{ $donHang->nhanVienS ? $donHang->nhanVienS->hoTen : 'Chưa cập nhật' }}</td>
+
+                    <td>
+                        <a href="{{ route('quanlys.donhang.show', $donHang->id) }}"> Xem chi tiết</a>
+                    </td>
+
+                    <td>
+                        @if ($donHang->maVanChuyen!=null)
+                            <a>{{$donHang->maVanChuyen }}</a>
+                        @else
+                            <a>chưa có</a>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @else
+        <p>Không có đơn hàng chờ thánh toán.</p>
+    @endif
+</div>
 </div>
 @endsection

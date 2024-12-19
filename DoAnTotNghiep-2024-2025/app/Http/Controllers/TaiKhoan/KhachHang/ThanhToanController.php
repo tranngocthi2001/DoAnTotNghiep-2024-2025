@@ -23,28 +23,37 @@ class ThanhToanController extends Controller
         ]);
 
         // Nếu dữ liệu không hợp lệ, trả về redirect với thông báo lỗi
-        if ($validator->fails()) {
-            return redirect()->back() // Trở lại trang trước đó
-                ->withErrors($validator) // Đưa lỗi vào session
-                ->withInput(); // Giữ lại dữ liệu đầu vào
-        }
+        if ($request->phuongThuc == 'Momo') {
+            // Gọi API MoMo để tạo giao dịch thanh toán
+            $paymentResponse = $this->processMomoPayment($donhang, $request);
 
-        // Tạo thanh toán mới và lưu vào cơ sở dữ liệu
-        ThanhToan::create([
-            'donhang_id' => $donhang->id,  // Liên kết với đơn hàng
-            'phuongThuc' => $request->input('phuongThuc'),
-            'soTien' => $donhang->tong_tien,  // Giả sử có cột 'tong_tien' trong DonHang
-            'trangThaiGiaoDich' => 'Chưa thanh toán', // Mặc định
-            'ngayGiaoDich' => now(),  // Thời gian hiện tại
-            'maGiaoDichNganHang' => $request->input('maGiaoDichNganHang'),
-            'maGiaoDichMomo' => $request->input('maGiaoDichMomo'),
-        ]);
+            if ($paymentResponse['status'] == 'success') {
+                // Tạo thanh toán thành công
+                ThanhToan::create([
+                    'donhang_id' => $donhang->id,
+                    'phuongThuc' => 'Momo',
+                    'soTien' => $donhang->tong_tien,
+                    'trangThaiGiaoDich' => 'Chưa thanh toán', // Trạng thái lúc đầu
+                    'ngayGiaoDich' => now(),
+                    'maGiaoDichMomo' => $paymentResponse['maGiaoDich'],
+                ]);
+
+                // Cập nhật trạng thái đơn hàng
+                $donhang->update(['trang_thai' => 'Chờ thanh toán']);
+
+                // Chuyển hướng đến trang thanh toán của MoMo (gửi thông tin cho MoMo)
+                return redirect($paymentResponse['paymentUrl']);
+            } else {
+                return redirect()->back()
+                    ->withErrors('Thanh toán MoMo không thành công. Vui lòng thử lại.');
+            }
 
         // Trả về redirect đến trang thông tin thanh toán của đơn hàng mới
         return redirect()->route('thanh-toan.show', ['donhangId' => $donhang->id])
             ->with('message', 'Thanh toán đã được tạo thành công!');
-    }
 
+        }
+    }
     // Hàm lấy thông tin thanh toán của đơn hàng
     public function show($donhangId)
     {

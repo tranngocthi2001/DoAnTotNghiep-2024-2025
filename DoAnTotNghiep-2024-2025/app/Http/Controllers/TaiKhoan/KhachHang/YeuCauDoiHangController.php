@@ -30,7 +30,8 @@ class YeuCauDoiHangController extends Controller
         // Validate dữ liệu
         $request->validate([
             'sanPhamDoiID'  => 'nullable|array', // Không bắt buộc chọn sản phẩm
-            'sanPhamDoiID.*' => 'exists:sanpham,id', // Kiểm tra từng ID sản phẩm có hợp lệ trong bảng sanpham
+            'sanPhamDoiID.*' => 'exists:sanpham,id', // kiểm tra từng phần tử trong mảng sanPhamDoiID
+                                                    //để đảm bảo rằng giá trị của nó tồn tại trong cột id của bảng sanpham
             'lyDo' => 'required|string', // Lý do đổi
             'soLuong' => 'nullable|array', // Không bắt buộc chọn số lượng
             'soLuong.*' => 'nullable|integer|min:1', // Kiểm tra số lượng nếu có
@@ -42,33 +43,24 @@ class YeuCauDoiHangController extends Controller
                 'lyDo' => $request->input('lyDo'),
                 'trangThai' => 0,
             ]);
-//dd($yeuCauDoiHang);
-        // Lặp qua từng sản phẩm được chọn và tạo chi tiết đổi hàng
+            //dd($yeuCauDoiHang);
+            // Lặp qua từng sản phẩm được chọn và tạo chi tiết đổi hàng
         foreach ($request->sanPhamDoiID as $sanPhamDoiID) {
             $chiTietDoiHang = new ChiTietDoiHang();
             //dd( $chiTietDoiHang = new ChiTietDoiHang());
             $chiTietDoiHang->yeucaudoihang_id = $yeuCauDoiHang->id;
-//dd($chiTietDoiHang->yeucaudoihang_id);
+            //dd($chiTietDoiHang->yeucaudoihang_id);
             $chiTietDoiHang->sanPhamDoiID = $sanPhamDoiID;
             //dd($chiTietDoiHang->sanPhamDoiID);
             $chiTietDoiHang->soLuong = $request->soLuong[$sanPhamDoiID]; // Lấy số lượng từ input
-            //$chiTietDoiHang->hinhAnh = $request->hinhAnh ? $request->file('hinhAnh')->store('images') : null; // Nếu có ảnh, lưu ảnh
-            // if (isset($request->hinhAnh[$sanPhamDoiID])) {
-            //     $file = $request->file('hinhAnh')[$sanPhamDoiID];
-            //     $imageName = time() . '_' . $file->getClientOriginalName();
-            //     $file->storeAs('uploads/yeucau_doi_hang', $imageName);
-            //     $chiTietDoiHang->hinhAnh = $imageName;
-            // }
 
             $imagePaths = [];
             if ($request->hasFile('hinhAnh')) {
                 foreach ($request->file('hinhAnh') as $sanPhamDoiID => $file) {
                     // Tạo tên file duy nhất để tránh trùng lặp
                     $imageName = time() . '-' . $file->getClientOriginalName();
-
                     // Lưu file vào thư mục yêu cầu
                     $file->move(public_path('uploads/yeucau_doi_hang'), $imageName);
-
                     // Lưu đường dẫn file vào mảng imagePaths
                     $imagePaths[] = $imageName;
                 }
@@ -77,7 +69,6 @@ class YeuCauDoiHangController extends Controller
             // Gán giá trị mảng chứa tên các ảnh vào cột `hinhAnh` của ChiTietDoiHang
             $chiTietDoiHang->hinhAnh = json_encode($imagePaths);
             $chiTietDoiHang->save();
-
 
 //dd($chiTietDoiHang);
             $chiTietDoiHang->save();
@@ -110,10 +101,6 @@ class YeuCauDoiHangController extends Controller
            //dd($sanPham);
             //dd($yeuCauDoiHang);
             // Lấy yêu cầu đổi hàng và các chi tiết liên quan đến đơn hàng
-             // Lấy yêu cầu đổi hàng cùng các chi tiết liên quan đến đơn hàng
-            // $yeuCauDoiHang = YeuCauDoiHang::with('chitietphieuxuat.chitietdonhang.sanPham') // Eager load chi tiết phieu xuất và chi tiết đơn hàng
-            // ->findOrFail($id);
-            //dd($yeuCauDoiHang);
             // Kiểm tra nếu không tìm thấy yêu cầu đổi hàng
             if (!$yeuCauDoiHang) {
                 return redirect()->route('taikhoans.khachhangs.yeucaudoihang.index')->with('error', 'Yêu cầu đổi hàng không tồn tại.');
