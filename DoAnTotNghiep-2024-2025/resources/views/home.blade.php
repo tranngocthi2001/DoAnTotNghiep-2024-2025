@@ -47,7 +47,7 @@
                                         <p class="card-text"><strong>Giá:</strong> {{ number_format($sanpham->gia, 0, ',', '.')}} VND</p>
 
                                         <!-- Nút xem chi tiết sản phẩm -->
-                                        <a href="{{ route('quanlys.sanpham.show', $sanpham->id) }}" class="btn btn-primary btn-sm">Chi tiết</a>
+                                        <a href="{{ route('sanpham.showchitiet', $sanpham->id) }}" class="btn btn-primary btn-sm">Chi tiết</a>
 
                                         <!-- Form thêm sản phẩm vào giỏ hàng -->
                                         <form action="{{ route('giohang.chitiet.store') }}" method="POST" class="mt-2">

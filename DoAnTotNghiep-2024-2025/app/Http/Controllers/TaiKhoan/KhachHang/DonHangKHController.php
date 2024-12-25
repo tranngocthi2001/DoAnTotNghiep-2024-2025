@@ -12,6 +12,10 @@ use App\Models\KhachHang;
 use App\Models\ThanhToan;
 use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlaced;
+use App\Models\SanPham;
+use App\Mail\ProductLowStockNotification;
 
 class DonHangKHController extends Controller
 {
@@ -37,10 +41,11 @@ class DonHangKHController extends Controller
             'chiTietGioHangs' => $giohang->chiTietGioHangs
         ], compact('danhmucs'));
     }
+
     public function index()
     {
         $danhmucs = DanhMuc::all();
-
+//dd(auth()->user()->id);
          // Lấy danh sách đơn hàng của khách hàng hiện tại
         $donhangs = DonHang::where('khachhang_id', auth()->user()->id)
         ->where(function ($query) {
@@ -51,20 +56,23 @@ class DonHangKHController extends Controller
         })
         ->orderBy('ngayDatHang', 'desc')
         ->get();
-
+//dd($donhangs);
         $donhangsHoanThanh = DonHang::where('khachhang_id', auth()->user()->id)
         ->where('trangThai', '=', 'đã hoàn thành')
         ->orderBy('ngayDatHang', 'desc')->get();
-
         $donhangsDoi = DonHang::where('khachhang_id', auth()->user()->id)
         ->where('trangThai', '=', 'Đổi hàng')
         ->orderBy('ngayDatHang', 'desc')->get();
-
+//dd(auth()->user()->id);
+//dd($donhangsHoanThanh);
         $donhangsHuy = DonHang::where('khachhang_id', auth()->user()->id)
-        ->where('trangThai', '=', 'Đã hủy')
-        ->orwhere('trangThai', '=', 'Chờ xác nhận hủy')
-        ->orderBy('ngayDatHang', 'desc')->get();
-
+        ->where(function ($query) {
+            $query->where('trangThai', '=', 'Đã hủy')
+                ->orWhere('trangThai', '=', 'Chờ xác nhận hủy');
+        })
+        ->orderBy('ngayDatHang', 'desc')
+        ->get();
+//dd($donhangsHuy);
         $donhangsChothanhtoan = DonHang::where('khachhang_id', auth()->user()->id)
         ->where('trangThai', '=', 'Chờ thanh toán')
         ->orderBy('ngayDatHang', 'desc')->get();
@@ -74,12 +82,13 @@ class DonHangKHController extends Controller
          'donhangsDoi','danhmucs', 'donhangsChothanhtoan'));
     }
 
+
     public function donHangCreate(Request $request)
     {
         $danhmucs=DanhMuc::all();
 
         // Lấy giỏ hàng của khách hàng hiện tại
-            $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
+        $giohang = GioHang::with('chiTietGioHangs.sanPhams', 'khachHang')
             ->where('khachhang_id', auth()->user()->id)
             ->first();
 //dd($giohang);
@@ -131,16 +140,24 @@ class DonHangKHController extends Controller
             $giohang->tongTien = 0;
             $giohang->tongSoLuong = 0;
             $giohang->save();
+            //gửi mail khi sản phẩm dưới 10
+            $sanPhams = SanPham::all();
+            foreach ($sanPhams as $sanPham) {
+                if ($sanPham->soLuong < 10) {
+                    $adminEmail = 'thi.03092001@gmail.com';
+                    Mail::to($adminEmail)->send(new ProductLowStockNotification($sanPham));
+                }
+            }
 
     // Kiểm tra phương thức thanh toán
         if ($request->input('phuongThucThanhToan') == 'Thanh toán qua cổng thanh toán VnPay') {
             // Chuyển hướng đến trang thanh toán
             return view('taikhoans/khachhangs.vnpaycreate', compact('donHang','danhmucs'));
-            //return redirect()->route('vnpay.create', ['donhang_id' => $donHang->id]);
         }else
         {
             $donHang->trangThai='COD';
             $donHang->save();
+            Mail::to(auth()->user()->email)->send(new OrderPlaced($donHang));
             return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
         }
     }

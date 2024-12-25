@@ -36,7 +36,7 @@
                                                 </p>
                                                 <a href="{{ route('quanlys.sanpham.show', $sanpham->id) }}"
                                                 class="btn btn-primary btn-sm mt-auto">
-                                                    Chi tiết
+                                                    Chi tiết1
                                                 </a>
                                         </div>
                                     </div>

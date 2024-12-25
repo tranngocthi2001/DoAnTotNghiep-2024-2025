@@ -151,6 +151,9 @@ Route::middleware('khachhang.dangnhap')->group(function () {
 
 
 });
+use App\Http\Controllers\TaiKhoan\KhachHang\SanPhamKHController;
+Route::get('/khachhang/chitietsanpham/{id}',[SanPhamKHController::class,'show'])->name('sanpham.showchitiet');
+
 
 use App\Http\Controllers\TaiKhoan\KhachHang\ChitietGioHangController;
 Route::middleware('khachhang.dangnhap')->group(function () {
@@ -256,3 +259,7 @@ Route::match(['get', 'post'], 'vnpay/create/{donhang_id}', [VnpayController::cla
 
 Route::get('/vnpay/return', [VnpayController::class, 'return'])->name('vnpay.return');
 Route::post('vnpay/ipn', [VnpayController::class, 'ipn'])->name('vnpay.ipn');
+
+use App\Http\Controllers\QuanLy\SeriController;
+Route::get('/seri',[SeriController::class, 'index'])->name('seri');
+Route::get('/timkiemSeri', [SeriController::class, 'searchAdmin'])->name('seri.search');

@@ -87,29 +87,33 @@
 
         <div class="card">
             <h3>Sửa chữa & bảo trì</h3>
-            <a href="/quanlys/baotri">Xem chi tiết</a>
+            <a href="#">Xem chi tiết</a>
         </div>
 
         <div class="card">
             <h3>Thanh toán</h3>
-            <a href="/quanlys/thanhtoan">Xem chi tiết</a>
+            <a href="#">Xem chi tiết</a>
         </div>
 
         <div class="card">
             <h3>Thông báo</h3>
-            <a href="/quanlys/thongbao">Xem chi tiết</a>
+            <a href="#">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Yêu cầu đổi hàng</h3>
-            <a href="{{ route('quanlys.donhang.showYeuCauDoiHang') }}">Link đến yêu cầu đổi hàng</a>
+            <a href="{{ route('quanlys.donhang.showYeuCauDoiHang') }}">Xem chi tiết</a>
+        </div>
+        <div class="card">
+            <h3>Tra cứu seri</h3>
+            <a href=" {{url('/seri')}}">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Yêu cầu trả hàng</h3>
-            <a href="/quanlys/trahang">Xem chi tiết</a>
+            <a href="#">Xem chi tiết</a>
         </div>
         <div class="card">
             <h3>Sự kiện</h3>
-            <a href="/quanlys/sukien">Xem chi tiết</a>
+            <a href="#">Xem chi tiết</a>
         </div>
 
     </div>

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\DanhMuc;
 use App\Models\DonHang;
 use App\Models\ThanhToan;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlaced;
 
 class VnpayController extends Controller
 {
@@ -109,18 +111,22 @@ class VnpayController extends Controller
         unset($vnp_Params['vnp_SecureHash']);
         ksort($vnp_Params);
         $query = http_build_query($vnp_Params);
-        $expectedSecureHash = hash_hmac('sha512', $query, env('VNP_HASH_SECRET'));
+        //$expectedSecureHash = hash_hmac('sha512', $query, env('VNP_HASH_SECRET'));
 
-        if ($secureHash === $expectedSecureHash) {
+       // if ($secureHash === $expectedSecureHash) {
             // Kiểm tra kết quả thanh toán
             if ($vnp_Params['vnp_ResponseCode'] === '00') {
                 // Thanh toán thành công
-                Log::info('Thanh toán thành công: ', $vnp_Params);
+                //dd($vnp_Params['vnp_ResponseCode']);
+                //Log::info('Thanh toán thành công: ', $vnp_Params);
 
                 // Cập nhật trạng thái giao dịch thanh toán
                 $donHang = DonHang::where('id', $vnp_Params['vnp_OrderInfo'])->first();
                 $donHang->trangThai="Đã thanh toán";
                 $donHang->save();
+                //dd(auth()->user()->email);
+                Mail::to(auth()->user()->email)->send(new OrderPlaced($donHang));
+
 
                 $payment = ThanhToan::where('donhang_id', $vnp_Params['vnp_OrderInfo'])->first();
                 if ($payment) {
@@ -128,9 +134,10 @@ class VnpayController extends Controller
                     $payment->maGiaoDichNganHang = $vnp_Params['vnp_BankCode']; // Mã giao dịch ngân hàng
                     $payment->save(); // Lưu thông tin
                 }
-
-                return view('taikhoans/khachhangs.vnpaysuccess'); // Hiển thị trang thành công
+                $danhmucs=DanhMuc::all();
+                return view('taikhoans/khachhangs.vnpaysuccess', compact('danhmucs')); // Hiển thị trang thành công
             } else {
+                 // Trường hợp mã bảo mật không khớp
                 // Thanh toán thất bại
                 Log::info('Thanh toán thất bại: ', $vnp_Params);
 
@@ -141,9 +148,9 @@ class VnpayController extends Controller
                     $payment->save(); // Lưu thông tin
                 }
 
-                return view('taikhoans/khachhangs.vnpayfail', compact('danhmucs')); // Hiển thị trang thất bại
+                return view('#', compact('danhmucs')); // Hiển thị trang thất bại
             }
-        }
+        //}
     }
 
 

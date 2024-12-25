@@ -1,4 +1,4 @@
-@extends('layouts.layoutquanly')
+@extends('layouts.layoutkhachhang')
 
 @section('content')
 <div class="container">
@@ -21,8 +21,15 @@
                 @endif
             </p>
             <p><strong>Danh Mục:</strong> {{ $sanpham->danhmucs->tenDanhMuc ?? 'Không có' }}</p>
-            <p><strong>Ngày Tạo:</strong> {{ $sanpham->ngayTao }}</p>
-            <p><strong>Ngày Cập Nhật:</strong> {{ $sanpham->ngayCapNhat }}</p>
+            <form action="{{ route('giohang.chitiet.store') }}" method="POST" class="mt-2">
+                @csrf
+                <input type="hidden" name="sanpham_id" value="{{ $sanpham->id }}">
+                <div class="form-group d-flex align-items-center">
+                    <label for="soLuong" class="mr-2">Số lượng:</label>
+                    <input type="number" name="soLuong" value="1" min="1" class="form-control form-control-sm" style="width: 70px;">
+                </div>
+                <button type="submit" class="btn btn-success btn-sm mt-2">Thêm vào giỏ hàng</button>
+            </form>
         </div>
     </div>
 

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sanpham;
-use App\Models\Danhmuc;
+use App\Models\SanPham;
+use App\Models\DanhMuc;
 use Illuminate\Http\Request;
 
 class SanPhamController extends Controller
@@ -17,14 +17,14 @@ class SanPhamController extends Controller
         if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
             return redirect()->route('unauthorized');
         }
-        $sanphams = Sanpham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
+        $sanphams = SanPham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
         return view('quanlys.sanphams.sanpham', compact('sanphams'));
     }
 
     // Hiển thị form thêm mới sản phẩm
     public function create()
     {
-        $danhmucs = Danhmuc::all(); // Lấy danh sách danh mục để chọn
+        $danhmucs = DanhMuc::all(); // Lấy danh sách danh mục để chọn
         return view('quanlys.sanphams.create', compact('danhmucs'));
     }
 
@@ -48,7 +48,7 @@ class SanPhamController extends Controller
             }
         }
 
-        $sanpham = new Sanpham();
+        $sanpham = new SanPham();
         $sanpham->tenSanPham = $request->tenSanPham;
         $sanpham->moTa = $request->moTa;
         $sanpham->gia = $request->gia;
@@ -67,15 +67,15 @@ class SanPhamController extends Controller
     // Hiển thị chi tiết một sản phẩm
     public function show($id)
     {
-        $sanpham = Sanpham::with('danhMucs')->findOrFail($id);
+        $sanpham = SanPham::with('danhMucs')->findOrFail($id);
         return view('quanlys.sanphams.chitietsanpham', compact('sanpham'));
     }
 
     // Hiển thị form chỉnh sửa sản phẩm
     public function edit($id)
     {
-        $sanpham = Sanpham::findOrFail($id);
-        $danhmucs = Danhmuc::all();
+        $sanpham = SanPham::findOrFail($id);
+        $danhmucs = DanhMuc::all();
         return view('quanlys.sanphams.edit', compact('sanpham', 'danhmucs'));
     }
 
@@ -90,7 +90,7 @@ class SanPhamController extends Controller
             'hinhAnh.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate ảnh mới
         ]);
 
-        $sanpham = Sanpham::findOrFail($id);
+        $sanpham = SanPham::findOrFail($id);
 
         // Giải mã JSON để lấy danh sách ảnh cũ
         $imagePaths = json_decode($sanpham->hinhAnh, true) ?? [];
@@ -136,7 +136,7 @@ class SanPhamController extends Controller
     // Xóa một sản phẩm khỏi cơ sở dữ liệu
     public function destroy($id)
     {
-        $sanpham = Sanpham::findOrFail($id);
+        $sanpham = SanPham::findOrFail($id);
 
         // Xóa các file ảnh liên quan
         $imagePaths = json_decode($sanpham->hinhAnh, true);
@@ -157,7 +157,7 @@ class SanPhamController extends Controller
 
     public function search(Request $request)
     {
-        $danhmucs= Danhmuc::all();
+        $danhmucs= DanhMuc::all();
         $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm
         $sanphams = SanPham::where('tenSanPham', 'like', '%' . $keyword . '%')->get();
 
@@ -175,13 +175,13 @@ class SanPhamController extends Controller
 //hiển thị sản phẩm riêng danh mục
     public function showByCategory($id)
     {
-        $danhmucs= Danhmuc::all();
+        $danhmucs= DanhMuc::all();
 
         // Lấy danh mục theo ID
         $danhmucs1 = DanhMuc::find($id);
 //dd($danhmucs1);
         // Lấy các sản phẩm của danh mục đó
-        $sanphams = $danhmucs1 ? $danhmucs1->sanphams : [];
+        $sanphams = $danhmucs1 ? $danhmucs1->sanphams()->where('trangThai', 1)->get() : collect([]);
 
         return view('taikhoans.khachhangs.danhmuc', compact('sanphams', 'danhmucs1','danhmucs'));
     }
