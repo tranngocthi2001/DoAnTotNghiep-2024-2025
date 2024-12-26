@@ -64,7 +64,12 @@
 
         <button type="submit">Cập nhật</button>
     </form>
-    <p>
+    @if ($donHang->id)
+        <a href="{{ route('phieuxuathangs.show', ['donhang_id' => $donHang->id]) }}">
+            Xem phiếu xuất cho đơn hàng: {{ $donHang->id }}
+        </a><p>
+    @endif
+
         <!-- Kiểm tra xem có yêu cầu đổi hàng không -->
         @if ($yeuCauDoiHang)
             <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.showAdmin', ['id' => $yeuCauDoiHang->id]) }}" class="btn btn-primary">

@@ -10,7 +10,7 @@ use App\Models\PhieuXuatHang;
 use App\Models\NhanVien;
 use App\Models\ChiTietPhieuXuat;
 use App\Models\ChiTietDonHang;
-
+use App\Models\Seri;
 
 class PhieuXuatHangController extends Controller
 {
@@ -52,10 +52,10 @@ class PhieuXuatHangController extends Controller
         //dd($phieuXuat);
         // Tạo chi tiết phiếu xuất
         foreach ($request->chiTietDonHangs as $chiTiet) {
-            $sanPham = ChiTietDonHang::with('sanPhams')->find($chiTiet['chitietdonhang_id']);
-
+            // Lấy chi tiết đơn hàng
+            $chiTietDonHang = ChiTietDonHang::with('sanPhams')->findOrFail($chiTiet['chitietdonhang_id']);
             $chiTietPhieuXuat = ChiTietPhieuXuat::create([
-                'soLuong' => $chiTiet['soLuong'],
+                'soLuong' => $chiTietDonHang->soLuong,
                 'baoHanh' => $chiTiet['baoHanh'],
                 'ghiChu' => $chiTiet['ghiChu'],
                 'chitietdonhang_id' => $chiTiet['chitietdonhang_id'],
@@ -65,30 +65,38 @@ class PhieuXuatHangController extends Controller
             ]);
 
             // Lưu các mã seri cho từng chi tiết phiếu xuất
-        if (isset($chiTiet['seri'])) {
-            foreach ($chiTiet['seri'] as $seri) {
-                // Tạo seri cho chi tiết phiếu xuất
-                \App\Models\Seri::create([
-                    'chitietphieuxuat_id' => $chiTietPhieuXuat->id,
-                    'maSeri' => $seri,
-                ]);
+            if (isset($chiTiet['seri'])) {
+                foreach ($chiTiet['seri'] as $seri) {
+                    // Tạo seri cho chi tiết phiếu xuất
+                    \App\Models\Seri::create([
+                        'chitietphieuxuat_id' => $chiTietPhieuXuat->id,
+                        'maSeri' => $seri,
+                    ]);
+                }
             }
-        }
-
-            // Debug tên sản phẩm (nếu cần kiểm tra)
             // dd($sanPham->sanPhams->tenSanPham);
         }
         //dd($phieuXuat);
         return redirect()->route('quanlys.donhang.show', $request->donhang_id)->with('success', 'Phiếu xuất hàng đã được tạo!');
     }
 
-    public function show($id)
+    public function show($donhang_id)
     {
+        // Tìm phiếu xuất dựa trên donhang_id
+        $phieuXuat = PhieuXuatHang::with('donHangs.khachHangs', 'nhanViens')
+            ->where('donhang_id', $donhang_id)
+            ->firstOrFail();
 
-        $phieuXuat = PhieuXuatHang::with('donHangs.khachHangs', 'nhanViens')->findOrFail($id);
-
-        return view('phieuxuathangs.show', compact('phieuXuat'));
+        // Tìm chi tiết phiếu xuất liên quan đến phiếu xuất
+        $chiTietPhieuXuat = ChiTietPhieuXuat::where('phieuxuathang_id', $phieuXuat->id)->get();
+//dd($chiTietPhieuXuat);
+        // Tìm các mã seri liên quan đến từng chi tiết phiếu xuất
+        $seri = Seri::whereIn('chitietphieuxuat_id', $chiTietPhieuXuat->pluck('id'))->get();
+//dd($seri);
+        // Hiển thị kết quả trong view
+        return view('quanlys.phieuxuathangs.show', compact('phieuXuat', 'chiTietPhieuXuat', 'seri'));
     }
+
 
     public function print($id)
     {

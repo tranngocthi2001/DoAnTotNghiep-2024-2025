@@ -148,9 +148,8 @@ Route::get('danh-muc/{id}', [SanPhamController::class, 'showByCategory'])->name(
 use App\Http\Controllers\TaiKhoan\KhachHang\GioHangController;
 Route::middleware('khachhang.dangnhap')->group(function () {
     Route::get('/giohang', [GioHangController::class, 'index'])->name('giohang.index');
-
-
 });
+
 use App\Http\Controllers\TaiKhoan\KhachHang\SanPhamKHController;
 Route::get('/khachhang/chitietsanpham/{id}',[SanPhamKHController::class,'show'])->name('sanpham.showchitiet');
 
@@ -192,7 +191,7 @@ Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->gr
     Route::controller(PhieuXuatHangController::class)->group(function () {
         Route::get('/phieuxuathang/create/{donHangId}', 'create')->name('quanlys.phieuxuathang.create'); // Tạo phiếu xuất
         Route::post('/phieuxuathang/store', 'store')->name('phieuxuathangs.store'); // Lưu phiếu xuất
-        Route::get('/phieuxuathang/{id}', 'show')->name('phieuxuathangs.show'); // Xem chi tiết phiếu xuất
+        Route::get('/phieuxuathang/donhang/{donhang_id}', 'show')->name('phieuxuathangs.show');
         Route::get('/phieuxuathang/{id}/print', 'print')->name('phieuxuathangs.print'); // In phiếu xuất
 
     });
@@ -241,17 +240,14 @@ Route::post('/khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'store'
 //dd("a");
 Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'show'])
     ->name('taikhoans.khachhangs.yeucaudoihang.show');
-// Route::get('/taikhoans/khachhangs/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'show'])
-//     ->name('taikhoans.khachhangs.yeucaudoihang.show');
 
 Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
 ->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
 
-// Route::get('/taikhoans/khachhangs/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'show'])
-//     ->name('taikhoans.khachhangs.yeucaudoihang.show');
 Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
     ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');
-//vnpay
+
+    //vnpay
 use App\Http\Controllers\TaiKhoan\KhachHang\VnpayController;
 
 //Route::get('vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');

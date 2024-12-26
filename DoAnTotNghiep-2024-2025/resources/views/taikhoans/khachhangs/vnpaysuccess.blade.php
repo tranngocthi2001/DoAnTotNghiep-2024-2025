@@ -79,15 +79,15 @@
                 <div class="form-group">
                     <label>Kết quả:</label>
                     <label>
-                        @if ($secureHash == $vnp_SecureHash)  <!-- Kiểm tra chữ ký hợp lệ -->
+                        {{-- @if ($secureHash == $vnp_SecureHash)  <!-- Kiểm tra chữ ký hợp lệ --> --}}
                             @if (request()->input('vnp_ResponseCode') == '00')
                                 <span style='color:blue'>Giao dịch thành công</span>
                             @else
                                 <span style='color:red'>Giao dịch không thành công</span>
                             @endif
-                        @else
+                        {{-- @else
                             <span style='color:red'>Chữ ký không hợp lệ</span>
-                        @endif
+                        @endif --}}
                     </label>
                 </div>
             </div>

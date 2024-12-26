@@ -62,7 +62,6 @@
         </table>
 
         <button type="submit">Lưu Phiếu Xuất</button><br>
-        <a href="#">In phiếu xuất PDF</a>
     </div>
 </form>
 @endsection

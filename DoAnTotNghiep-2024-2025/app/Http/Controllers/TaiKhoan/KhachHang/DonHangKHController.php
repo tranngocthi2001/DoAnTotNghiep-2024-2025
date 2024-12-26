@@ -98,7 +98,6 @@ class DonHangKHController extends Controller
         }
         $khachhang = $giohang->khachHang;
         //dd($request->all());
-        // Tạo đơn hàng
         $donHang = DonHang::create([
             'khachhang_id' => $giohang->khachhang_id,
             'tongTien' => $giohang->tongTien,
@@ -110,10 +109,7 @@ class DonHangKHController extends Controller
             'tenKhachHang'=>  $request->input('hoTen', $giohang->khachHang->hoTen),
             'maVanChuyen'=>null,
         ]);
-            //dd($donHang);
-            if (!$giohang->chiTietGioHangs || $giohang->chiTietGioHangs->isEmpty()) {
-                return redirect()->route('giohang.index')->withErrors('Giỏ hàng trống, không thể tạo đơn hàng.');
-            }
+
         // Lưu chi tiết đơn hàng và bảng liên kết
         foreach ($giohang->chiTietGioHangs  as $chitietgiohang) {
             // Lưu chi tiết đơn hàng

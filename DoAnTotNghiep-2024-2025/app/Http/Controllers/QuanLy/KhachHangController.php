@@ -80,6 +80,7 @@ class KhachHangController extends Controller
 
         return view('taikhoans.khachhangs.chinhsuathongtin', compact('khachhang', 'danhmucs'));
     }
+    //update từ khách hàng
     public function update(Request $request, $id)
     {
         $khachhang = auth('khachhang')->user();

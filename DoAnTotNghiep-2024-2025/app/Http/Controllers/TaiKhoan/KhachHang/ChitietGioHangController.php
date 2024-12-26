@@ -19,7 +19,7 @@ class ChiTietGioHangController extends Controller
             'soLuong' => 'required|integer|min:1',
         ]);
 
-        $khachhangId = auth()->id();
+        //$khachhangId = auth()->id();
         $sanpham = SanPham::findOrFail($request->sanpham_id);
 
         // Lấy giỏ hàng của khách hàng hoặc tạo mới
@@ -36,9 +36,9 @@ class ChiTietGioHangController extends Controller
 
         // Kiểm tra sản phẩm đã tồn tại trong bảng liên kết chưa
         $chitietgiohang = $giohang->chiTietGioHangs()
-        ->whereHas('sanPhams', function ($query) use ($sanpham) {
-            $query->where('sanpham_id', $sanpham->id);
-        })->first();
+            ->whereHas('sanPhams', function ($query) use ($sanpham) {
+                $query->where('sanpham_id', $sanpham->id);
+            })->first();
         if ($chitietgiohang) {
             // Nếu đã tồn tại, cập nhật số lượng và giá
             $chitietgiohang->soLuong += $request->soLuong;
@@ -46,7 +46,7 @@ class ChiTietGioHangController extends Controller
             $chitietgiohang->save();
 
             // Cập nhật bảng liên kết
-            $chitietgiohang->sanphams()->updateExistingPivot($sanpham->id, [
+            $chitietgiohang->sanPhams()->updateExistingPivot($sanpham->id, [
                 'soLuong' => $chitietgiohang->soLuong,
             ]);
         } else {
@@ -59,7 +59,7 @@ class ChiTietGioHangController extends Controller
             // Thêm vào bảng liên kết
             //Eloquent sẽ tự động lấy chi_tiet_gio_hang_id từ $chitietgiohang
             // và thêm nó vào bảng trung gian cùng với sanpham_id và các cột khác.
-            $chitietgiohang->sanphams()->attach($sanpham->id, [
+            $chitietgiohang->sanPhams()->attach($sanpham->id, [
                 'soLuong' => $request->soLuong,
             ]);
         }

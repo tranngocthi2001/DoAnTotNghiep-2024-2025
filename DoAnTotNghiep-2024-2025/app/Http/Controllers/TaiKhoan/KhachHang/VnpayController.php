@@ -16,15 +16,13 @@ class VnpayController extends Controller
     // Hàm tạo URL thanh toán VNPAY
     public function createPayment(Request $request, $id)
     {
-        $danhmucs=DanhMuc::all();
-
         $donHang = DonHang::findOrFail($id);
         $amount = $donHang->tongTien; // Lấy số tiền từ đơn hàng
         $order_id = $donHang->id; // Mã đơn hàng
 
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR']; //IP Khách hàng thanh toán
         $vnp_TmnCode = "DD6QHVE6"; //Mã định danh merchant kết nối (Terminal Id)
-        $vnp_HashSecret = "GR4ZMC29DNNMPMXDHH2IFNLOVHW6NIKL"; //Secret key
+        $vnp_HashSecret = "FSNNJKD0FHW6H7WS90K1F60HJNR052EA"; //Secret key
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = route('vnpay.return');;
         $vnp_apiUrl = "http://sandbox.vnpayment.vn/merchant_webapi/merchant.html";
@@ -113,7 +111,7 @@ class VnpayController extends Controller
         $query = http_build_query($vnp_Params);
         //$expectedSecureHash = hash_hmac('sha512', $query, env('VNP_HASH_SECRET'));
 
-       // if ($secureHash === $expectedSecureHash) {
+       //if ($secureHash === $expectedSecureHash) {
             // Kiểm tra kết quả thanh toán
             if ($vnp_Params['vnp_ResponseCode'] === '00') {
                 // Thanh toán thành công
