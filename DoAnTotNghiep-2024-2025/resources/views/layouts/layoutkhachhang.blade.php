@@ -136,8 +136,39 @@
         </main>
         <!-- Footer-->
         <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+            <div class="container">
+                <!-- Contact Information -->
+                <div class="mt-4 text-center text-white">
+                    <p><strong>Liên hệ: </strong>Email: dh51901412@student.stu.edu.vn.com | Hotline: <a href="tel:0348888144" class="text-white">034 8888 144</a></p>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="mt-3 text-center">
+                    <p class="text-white"><strong>Kết nối với chúng tôi:</strong>
+                        <a href="https://facebook.com" target="_blank" class="text-white me-3">
+                            <i class="fab fa-facebook"></i> Facebook
+                        </a>
+                        <a href="https://zalo.me/yourzalo" target="_blank" class="text-white me-3">
+                            <i class="fas fa-phone"></i> Zalo
+                        </a>
+                        <a href="https://instagram.com/" target="_blank" class="text-white">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                    </p>
+
+                </div>
+
+                <!-- Additional Information -->
+                <div class="mt-4 text-center text-white">
+                    <p><strong>Thông tin khác:</strong>
+                        <p>Địa chỉ: 180 Đường Cao Lỗ, Phường 4, Quận 8, Thành phố Hồ Chí Minh</p>
+                        <p>Giờ làm việc: 08:00 - 17:00 (Thứ Hai - Thứ Bảy)</p>
+                    </p>
+
+                </div>
+            </div>
         </footer>
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->

@@ -56,26 +56,35 @@
         @endif
 
         @if ($donhang->trangThai ==='Chờ thanh toán' )
-        <form action="{{ route('donhang.update', $donhang->id) }}" method="POST">
+        <form action="{{ route('donhang.update', $donhang->id) }}" method="POST" style="max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
             @csrf
-            <!-- Tên khách hàng -->
-            <label for="hoTen">Tên khách hàng:</label>
-            <input type="text" name="hoTen" id="hoTen" value="{{ auth()->user()->hoTen ?? '' }}" required>
-            <br><br>
+            <h2 style="text-align: center; margin-bottom: 20px;">Thông tin đặt hàng</h2>
+
+    <!-- Tên khách hàng -->
+    <div style="margin-bottom: 15px;">
+        <label for="hoTen" style="display: block; font-weight: bold;">Tên khách hàng:</label>
+        <input type="text" name="hoTen" id="hoTen" value="{{ auth()->user()->hoTen ?? '' }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
             <!-- Địa chỉ giao hàng -->
-            <label for="diaChi">Địa chỉ giao hàng:</label>
-            <input type="text" name="diaChi" id="diaChi" value="{{ auth()->user()->diaChi ?? '' }}" required>
-            <br><br>
-            <!-- Số điện thoại -->
-            <label for="sdt">Số điện thoại:</label>
-            <input type="text" name="sdt" id="sdt" value="{{ auth()->user()->sdt ?? '' }}" required></br>
-            <br>
-            <!-- Phương thức thanh toán -->
-            <label for="phuongThucThanhToan">Chọn phương thức thanh toán:</label>
-            <select name="phuongThucThanhToan" id="phuongThucThanhToan" required>
-                <option value="Thanh toán khi nhận hàng (COD)">Thanh toán khi nhận hàng (COD)</option>
-                <option value="Thanh toán qua cổng thanh toán VnPay">Thanh toán qua cổng thanh toán VnPay</option>
-            </select>
+    <div style="margin-bottom: 15px;">
+        <label for="diaChi" style="display: block; font-weight: bold;">Địa chỉ giao hàng:</label>
+        <input type="text" name="diaChi" id="diaChi" value="{{ auth()->user()->diaChi ?? '' }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
+
+    <!-- Số điện thoại -->
+    <div style="margin-bottom: 15px;">
+        <label for="sdt" style="display: block; font-weight: bold;">Số điện thoại:</label>
+        <input type="number" name="sdt" id="sdt" value="{{ auth()->user()->sdt ?? '' }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
+
+    <!-- Phương thức thanh toán -->
+    <div style="margin-bottom: 15px;">
+        <label for="phuongThucThanhToan" style="display: block; font-weight: bold;">Chọn phương thức thanh toán:</label>
+        <select name="phuongThucThanhToan" id="phuongThucThanhToan" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="Thanh toán khi nhận hàng (COD)">Thanh toán khi nhận hàng (COD)</option>
+            <option value="Thanh toán qua cổng thanh toán VnPay">Thanh toán qua cổng thanh toán VnPay</option>
+        </select>
+    </div>
             <!-- Gửi tổng số tiền -->
             <input type="hidden" name="tongTien" value="{{ $donhang->tongTien }}">
             <br><br>

@@ -8,7 +8,6 @@ use App\Models\Sanpham;
 use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Services\GHNService;
 
 class DonHangController extends Controller
 {

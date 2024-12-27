@@ -37,6 +37,25 @@ class YeuCauDoiHangController extends Controller
             'soLuong.*' => 'nullable|integer|min:1', // Kiểm tra số lượng nếu có
             'hinhAnh.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+         // Lấy đơn hàng liên quan
+        $donHang = DonHang::find($request->donhang_id);
+        if (!$donHang) {
+            return redirect()->back()->withErrors(['error' => 'Đơn hàng không tồn tại.']);
+        }
+
+        // Kiểm tra điều kiện trạng thái và thời gian
+        $ngayHienTai = now();
+        $ngayDatHang = $donHang->ngayDatHang;
+
+        if ($donHang->trangThai !== 'Đã hoàn thành') {
+            return redirect()->back()->withErrors(['error' => 'Chỉ có thể đổi hàng cho các đơn hàng đã hoàn thành.']);
+        }
+
+        if ($ngayHienTai->diffInDays($ngayDatHang) > 10) {
+            return redirect()->back()->withErrors(['error' => 'Đơn hàng đã quá hạn đổi hàng (10 ngày).']);
+        }
+
         //dd($request);
             $yeuCauDoiHang=YeuCauDoiHang::create([
                 'ngayYeuCau' => now(),
@@ -74,7 +93,6 @@ class YeuCauDoiHangController extends Controller
             $chiTietDoiHang->save();
         }
         // Cập nhật trạng thái đơn hàng thành "Đổi hàng"
-        $donHang = DonHang::find($request->donhang_id); // Lấy đơn hàng liên quan
         if ($donHang) {
             $donHang->trangThai = 'Đổi hàng'; // Cập nhật trạng thái
             $donHang->save(); // Lưu thay đổi trạng thái

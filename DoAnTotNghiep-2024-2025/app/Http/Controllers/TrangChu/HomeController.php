@@ -15,7 +15,6 @@ class HomeController extends Controller
         $khachhang=Khachhang::where('id',auth()->user()->id)->first();
 
         // Lấy tất cả danh mục và sản phẩm liên quan
-        // $danhmucs = Danhmuc::with('sanphams')->get();
 
         $danhmucs = DanhMuc::where('trangThai', 1) // Lọc danh mục có trạng thái 1
         ->with(['sanphams' => function ($query) {
