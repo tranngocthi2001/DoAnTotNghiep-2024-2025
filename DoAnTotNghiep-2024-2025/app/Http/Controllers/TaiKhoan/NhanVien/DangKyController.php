@@ -17,7 +17,7 @@ class DangKyController extends Controller
             'tenTaiKhoan' => 'required|unique:nhanvien,tenTaiKhoan|max:100',
             'matKhau' => 'required|min:6|max:255|confirmed', // Xác nhận mật khẩu
             'email' => 'nullable|email|max:100',
-            'vaiTro' => 'required|in:admin,quanly,nhanvien',
+            // 'vaiTro' => 'required|in:admin,quanly,nhanvien',
             'sdt' => 'nullable|max:15',
             'diaChi' => 'nullable|max:255',
             'hoTen' => 'nullable|max:255',
@@ -31,7 +31,7 @@ class DangKyController extends Controller
             'sdt' => $request->sdt,
             'diaChi' => $request->diaChi,
             'hoTen' => $request->hoTen,
-            'vaiTro' => $request->vaiTro,
+            'vaiTro' => 'nhanvien',
             'trangThai' => 1, // Trạng thái mặc định là kích hoạt
         ]);
 

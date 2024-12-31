@@ -99,7 +99,7 @@
         @endif
         <!-- Kiểm tra xem có yêu cầu đổi hàng không -->
         @if ($donhang->trangThai === 'Đổi hàng')
-            <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.show', ['id' => $yeuCauDoiHang->id]) }}" class="btn btn-primary">
+            <a href="{{ route('taikhoans.khachhangs.yeucaudoihang.show', ['id' => $yeuCauDoiHangID]) }}" class="btn btn-primary">
                 Xem chi tiết yêu cầu đổi hàng
             </a>
         @endif

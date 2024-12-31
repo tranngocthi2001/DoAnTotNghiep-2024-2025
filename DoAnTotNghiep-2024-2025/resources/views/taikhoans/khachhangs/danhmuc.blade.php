@@ -2,7 +2,13 @@
 
 @section('content')
 
+
 <div class="container">
+    @if (session('themsanphamgiohang'))
+        <div class="alert alert-warning">
+            {{ session('themsanphamgiohang') }}
+        </div>
+    @endif
 <h1>Sản phẩm trong danh mục: {{ $danhmucs1->tenDanhMuc }}</h1>
     <div class="row">
         @foreach ($sanphams as $sanpham)

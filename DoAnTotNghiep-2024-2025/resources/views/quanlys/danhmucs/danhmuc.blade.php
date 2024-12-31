@@ -13,8 +13,9 @@
             <tr>
                 <th>ID</th>
                 <th>Tên Danh Mục</th>
-                <th>Mô Tả</th>
+                <th>Mô Tả Danh Mục</th>
                 <th>Trạng Thái</th>
+                <th>Số Lượng </th>
                 <th>Hành Động</th>
             </tr>
         </thead>
@@ -25,6 +26,8 @@
                 <td>{{ $danhmuc->tenDanhMuc }}</td>
                 <td>{{ $danhmuc->moTa }}</td>
                 <td>{{ $danhmuc->trangThai ? 'Hoạt động' : 'Không hoạt động' }}</td>
+
+                <td>{{ $danhmuc->count }}</td>
                 <td>
                     <a href="{{ route('quanlys.danhmuc.edit', $danhmuc->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                     <form action="{{ route('quanlys.danhmuc.destroy', $danhmuc->id) }}" method="POST" style="display:inline-block;">

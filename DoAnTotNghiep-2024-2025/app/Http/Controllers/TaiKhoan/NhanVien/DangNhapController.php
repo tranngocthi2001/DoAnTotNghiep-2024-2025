@@ -46,6 +46,7 @@ class DangNhapController extends Controller
             // Kiểm tra vai trò của nhân viên và lưu session cho nhanvien
             session(['nhanvien' => $nhanvien]); // Lưu nhân viên vào session
 
+
             if ($nhanvien->vaiTro === 'admin') {
                 //dd(session()->get('nhanvien'));
 
@@ -70,9 +71,11 @@ class DangNhapController extends Controller
      */
     public function logout()
     {
-        // Xóa session khách hàng
-        session()->forget('nhanvien');
-
+        // Xóa tất cả thông tin xác thực
+        // Đăng xuất và xóa toàn bộ session
+        Auth::logout();
+        session()->flush();
+        //dd(session());
         // Chuyển hướng về trang đăng nhập
         return redirect()->route('login')->with('success', 'Bạn đã đăng xuất thành công!');
     }

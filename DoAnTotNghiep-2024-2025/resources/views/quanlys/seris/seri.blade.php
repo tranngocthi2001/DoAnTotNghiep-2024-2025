@@ -14,7 +14,7 @@
     <form action="{{ route('seri.search') }}" method="GET" class="d-flex">
         <input type="text" name="q" class="form-control me-2" placeholder="Nhập mã seri để tìm kiếm..." value="{{ request('q') }}">
         <button type="submit" class="btn btn-outline-success">Tìm kiếm</button>
-    </form>
+    </form><br>
 </div>
 
 
@@ -25,16 +25,23 @@
             <tr>
                 <th>#</th>
                 <th>Mã seri</th>
-                <th>Chi tiết phiếu xuất </th>
-
+                <th>Tên sản phẩm</th>
+                <th>Mã đơn hàng </th>
             </tr>
         </thead>
         <tbody>
             @foreach ($seris as $key => $seri)
+
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $seri->maSeri }}</td>
-                    <td>{{$seri->chitietphieuxuat_id}}</td>
+                    <td>
+                        @foreach ( $seri->chiTietPhieuXuat->chiTietDonHangs->sanPhams as $sanpham)
+                            {{ $sanpham->tenSanPham }}
+                        @endforeach
+                    </td>
+                    <td>{{ $seri->chiTietPhieuXuat->chiTietDonHangs->donHangs->id }}
+
 
                 </tr>
             @endforeach

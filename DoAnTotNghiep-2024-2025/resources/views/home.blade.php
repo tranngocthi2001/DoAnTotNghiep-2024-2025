@@ -1,6 +1,7 @@
 @extends('layouts.layoutkhachhang')
 
 @section('content')
+<div class="container">
     <div class="container">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -17,6 +18,11 @@
 
 
 </div>
+@if (session('themsanphamgiohang'))
+        <div class="alert alert-warning">
+            {{ session('themsanphamgiohang') }}
+        </div>
+    @endif
     @foreach ($danhmucs as $danhmuc)
         <div class="container">
             <div class="card-header">
@@ -69,5 +75,6 @@
             </div>
         </div>
     @endforeach
+</div>
 </div>
 @endsection

@@ -14,8 +14,9 @@
                     <input type="checkbox" name="sanPhamDoiID[]" value="{{ $chiTiet->sanPhams->first()->id }}">
                     {{ $chiTiet->sanPhams->first()->tenSanPham }}
                 </label>
-                <input type="number" name="soLuong[{{ $chiTiet->sanPhams->first()->id }}]" placeholder="Số lượng muốn đổi" min="1" max="{{ $chiTiet->soLuong }}" class="form-control">
-                <input type="file" name="hinhAnh[]" id="hinhAnh" class="form-control" multiple>
+                <input type="number" name="soLuong[{{ $chiTiet->sanPhams->first()->id }}]"
+                 placeholder="Số lượng muốn đổi" min="1" max="{{ $chiTiet->soLuong }}" class="form-control">
+                 <input type="file" name="hinhAnh[]" id="hinhAnh" class="form-control" multiple>
 
             </div>
         @endforeach

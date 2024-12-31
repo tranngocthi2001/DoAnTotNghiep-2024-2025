@@ -2,18 +2,18 @@
 
 @section('content')
 <div class="container">
-    <h1>Chi tiết phiếu xuất #{{ $phieuXuat->id }}</h1>
+    <h1>Phiếu xuất #{{ $phieuXuatHang->id }}</h1>
 
-    <p><strong>Ngày xuất hàng:</strong> {{ $phieuXuat->ngayXuat }}</p>
-    <p><strong>Người tạo phiếu:</strong> {{ $phieuXuat->nhanViens->hoTen }}</p>
-    <p><strong>Trạng thái phiếu:</strong> {{ $phieuXuat->trangThai }}</p>
+    <p><strong>Ngày xuất hàng:</strong> {{ $phieuXuatHang->ngayXuat }}</p>
+    <p><strong>Người tạo phiếu:</strong> {{ $phieuXuatHang->nhanViens->hoTen }}</p>
+    <p><strong>Trạng thái phiếu:</strong> {{ $phieuXuatHang->trangThai }}</p>
 
     <h2>Thông tin đơn hàng</h2>
-    <p><strong>Mã đơn hàng:</strong> {{ $phieuXuat->donHangs->id }}</p>
-    <p><strong>Ngày đặt hàng:</strong> {{ $phieuXuat->donHangs->ngayDatHang }}</p>
-    <p><strong>Tên khách hàng:</strong> {{ $phieuXuat->donHangs->khachHangs->hoTen }}</p>
-    <p><strong>Địa chỉ giao hàng:</strong> {{ $phieuXuat->donHangs->diaChiGiaoHang }}</p>
-    <p><strong>Số điện thoại:</strong> {{ $phieuXuat->donHangs->sdt }}</p>
+    <p><strong>Mã đơn hàng:</strong> {{ $phieuXuatHang->donHangs->id }}</p>
+    <p><strong>Ngày đặt hàng:</strong> {{ $phieuXuatHang->donHangs->ngayDatHang }}</p>
+    <p><strong>Tên khách hàng:</strong> {{ $phieuXuatHang->donHangs->khachHangs->hoTen }}</p>
+    <p><strong>Địa chỉ giao hàng:</strong> {{ $phieuXuatHang->donHangs->diaChiGiaoHang }}</p>
+    <p><strong>Số điện thoại:</strong> {{ $phieuXuatHang->donHangs->sdt }}</p>
 
     <h2>Sản phẩm trong phiếu xuất</h2>
     <table class="table">
@@ -21,35 +21,33 @@
             <tr>
                 <th>Tên sản phẩm</th>
                 <th>Số lượng</th>
-                <th>Seri</th>
                 <th>Giá</th>
                 <th>Tổng</th>
+                <th>Seri</th>
             </tr>
+
         </thead>
         <tbody>
-            @foreach($phieuXuat->donHangs->chiTietDonHangs as $chiTietDonHang)
-                @foreach($chiTietDonHang->sanPhams as $sanPham)
-                    {{-- Kiểm tra chi tiết phiếu xuất có tồn tại không --}}
-                    @php
-                        $chiTietPhieuXuat = $chiTietPhieuXuat->firstWhere('chitietdonhang_id', $chiTietDonHang->id);
-                        $seris = $seri->where('chitietphieuxuat_id', $chiTietPhieuXuat ? $chiTietPhieuXuat->id : null);
-                    @endphp
-                    {{-- Hiển thị sản phẩm và seri nếu có --}}
+
+            @foreach ($phieuXuatHang->donHangs->chiTietDonHangs as $chiTietDonHang)
+                @foreach ($chiTietDonHang->sanPhams as $sanpham)
                     <tr>
-                        <td>{{ $sanPham->tenSanPham }}</td>
+                        <td>{{ $sanpham->tenSanPham }}</td>
                         <td>{{ $chiTietDonHang->soLuong }}</td>
-                        <td>
-                            <ul>
-                                @foreach($seris as $seri)
-                                    <li>{{ $seri->maSeri }}</li>
-                                @endforeach
-                            </ul>
-                        </td>
-                        <td>{{ number_format($sanPham->gia, 0, ',', '.') }} VND</td>
-                        <td>{{ number_format($chiTietDonHang->soLuong * $sanPham->gia, 0, ',', '.') }} VND</td>
-                    </tr>
+                        <td>{{ number_format($sanpham->gia, 0, ',', '.') }} VND </td>
+                        <td>{{ number_format($chiTietDonHang->soLuong *$sanpham->gia, 0, ',', '.') }}VND</td>
                 @endforeach
+                        <td>
+                            @foreach ($chiTietDonHang->chiTietPhieuXuats as $chiTietPhieuXuat)
+                                @foreach ($chiTietPhieuXuat->seris as $seri)
+                                    {{ $seri->maSeri }}<br>
+
+                                @endforeach
+                            @endforeach
+                        </td>
+                    </tr>
             @endforeach
+
         </tbody>
     </table>
     <h4><a href="#">In phiếu xuất PDF</a></h4>

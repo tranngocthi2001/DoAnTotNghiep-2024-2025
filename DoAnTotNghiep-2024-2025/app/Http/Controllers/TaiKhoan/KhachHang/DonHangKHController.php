@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderPlaced;
 use App\Models\SanPham;
 use App\Mail\ProductLowStockNotification;
+use App\Models\ChiTietPhieuXuat;
+use App\Models\PhieuXuatHang;
+use Illuminate\Http\Resources\MergeValue;
 
 class DonHangKHController extends Controller
 {
@@ -34,11 +37,13 @@ class DonHangKHController extends Controller
         if (!$giohang || $giohang->tongTien <= 0 || !$giohang->chiTietGioHangs || $giohang->chiTietGioHangs->isEmpty()) {
             return redirect()->route('giohang.index')->withErrors('Giỏ hàng của bạn trống hoặc không hợp lệ.');
         }
-
+        $khachhang= auth()->user();
+        //dd($khachhang);
         // Truyền thông tin giỏ hàng cho view, bao gồm chi tiết giỏ hàng
         return view('taikhoans.khachhangs.dondathang', [
             'giohang' => $giohang,
-            'chiTietGioHangs' => $giohang->chiTietGioHangs
+            'chiTietGioHangs' => $giohang->chiTietGioHangs,
+            'khachHang'=>$khachhang
         ], compact('danhmucs'));
     }
 
@@ -59,6 +64,7 @@ class DonHangKHController extends Controller
 //dd($donhangs);
         $donhangsHoanThanh = DonHang::where('khachhang_id', auth()->user()->id)
         ->where('trangThai', '=', 'đã hoàn thành')
+
         ->orderBy('ngayDatHang', 'desc')->get();
         $donhangsDoi = DonHang::where('khachhang_id', auth()->user()->id)
         ->where('trangThai', '=', 'Đổi hàng')
@@ -139,7 +145,7 @@ class DonHangKHController extends Controller
             //gửi mail khi sản phẩm dưới 10
             $sanPhams = SanPham::all();
             foreach ($sanPhams as $sanPham) {
-                if ($sanPham->soLuong < 10) {
+                if ($sanPham->soLuong < 1) {
                     $adminEmail = 'thi.03092001@gmail.com';
                     Mail::to($adminEmail)->send(new ProductLowStockNotification($sanPham));
                 }
@@ -154,7 +160,7 @@ class DonHangKHController extends Controller
             $donHang->trangThai='COD';
             $donHang->save();
             Mail::to(auth()->user()->email)->send(new OrderPlaced($donHang));
-            return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('success', 'Đơn hàng của bạn đã được tạo thành công!');
+            return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('dathangthanhcong', 'Đơn hàng của bạn đã được tạo thành công!');
         }
     }
 
@@ -168,27 +174,28 @@ class DonHangKHController extends Controller
         ->where('khachhang_id', auth()->user()->id)
         ->first();
 
-        $yeuCauDoiHang = null;
-        foreach ($donhang->chiTietDonHangs as $chiTietDonHang) {
-            //dd($donhang);
-            foreach ($chiTietDonHang->chiTietPhieuXuats as $chiTietPhieuXuat) {
-                //dd($chiTietDonHang);
-                if ($chiTietPhieuXuat->yeucaudoihang_id) {
-                    //dd($chiTietPhieuXuat);
-                    $yeuCauDoiHang = $chiTietPhieuXuat->yeucaudoihang;  // Lấy yêu cầu đổi hàng từ mối quan hệ
-                    //break 2;  // Dừng vòng lặp khi đã tìm thấy yêu cầu đổi hàng
-                }
-            }//dd($yeuCauDoiHang);
-            $danhmucs=DanhMuc::all();
-}            // Trả về view với thông tin đơn hàng và tên khách hàng
-        return view('taikhoans.khachhangs.chitietdonhang', compact('donhang','yeuCauDoiHang','danhmucs'));
+        $yeuCauDoiHangID=null;
+        $phieuxuathangs=PhieuXuatHang::where('donhang_id', $donhang->id)->first();
+        if($phieuxuathangs){
+            $chiTietPhieuXuats=ChiTietPhieuXuat::where('phieuxuathang_id', $phieuxuathangs->id)->get();
+            foreach($chiTietPhieuXuats as $chiTietPhieuXuat){
+                $yeuCauDoiHangID=$chiTietPhieuXuat->yeucaudoihang_id;//TRẢ VỀ ID CỦA YCDH
+            }
+        }
+
+
+//dd($yeuCauDoiHang);
+         $danhmucs=DanhMuc::all();
+        // Trả về view với thông tin đơn hàng và tên khách hàng
+        return view('taikhoans.khachhangs.chitietdonhang',
+        compact('donhang','yeuCauDoiHangID','danhmucs'));
     }
 
 
     public function huyDonHang($id)
     {
          // Tìm đơn hàng theo ID, khách hàng, và trạng thái
-    $donhang = DonHang::where('id', $id)
+        $donhang = DonHang::where('id', $id)
         ->where('khachhang_id', auth()->user()->id)
         ->where(function ($query) {
             $query->where('trangThai', 'COD')
@@ -200,9 +207,30 @@ class DonHangKHController extends Controller
         }
 
         // Cập nhật trạng thái đơn hàng thành "Đã hủy"
-        $donhang->update(['trangThai' => 'Chờ xác nhận hủy']);
+        $donhang->update(['trangThai' => 'Đã hủy']);
+        $chiTietDonHangs=ChiTietDonHang::where('donhang_id', $donhang->id)->get();
+        //dd($chiTietDonHangs);
+        $sanpham_has_chitietdonhangs =collect();
 
-        return redirect()->route('khachhang.donhang.index')->with('success', 'Đơn hàng đã được hủy.');
+        foreach($chiTietDonHangs as $chiTietDonHang){
+            $sanpham=$chiTietDonHang->sanPhams;
+            $sanpham_has_chitietdonhangs=$sanpham_has_chitietdonhangs->merge($sanpham);
+
+        }
+        //dd($sanpham_has_chitietdonhang);
+        $sanphams=SanPham::all();
+        foreach($sanpham_has_chitietdonhangs as $sanpham_has_chitietdonhang){
+            foreach($sanphams as $sanpham){
+                if($sanpham_has_chitietdonhang->id==$sanpham->id){
+                    //dd($sanpham_has_chitietdonhang->pivot->soLuong);
+                    $sanpham->soLuong+=$sanpham_has_chitietdonhang->pivot->soLuong;
+                    $sanpham->save();
+                    //dd($sanpham->soLuong);
+                }
+            }
+        }
+
+        return redirect()->route('khachhang.donhang.index')->with('huythanhcong', 'Đơn hàng đã được hủy.');
     }
 
 

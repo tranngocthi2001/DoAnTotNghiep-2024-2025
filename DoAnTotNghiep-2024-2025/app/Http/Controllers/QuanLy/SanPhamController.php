@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChiTietDonHang;
 use App\Models\SanPham;
 use App\Models\DanhMuc;
+use App\Models\DonHang;
+use App\Models\GioHang;
+
 use Illuminate\Http\Request;
 
 class SanPhamController extends Controller
@@ -17,8 +21,22 @@ class SanPhamController extends Controller
         if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
             return redirect()->route('unauthorized');
         }
+
+       //dd($sanphamDH);
+        $allSanPhams = collect();
+        $chitiets= ChiTietDonHang::all();
+        foreach($chitiets as $chitiet){
+            $sanphams=$chitiet->sanPhams;
+            //dd($sanphams);
+            $allSanPhams =$allSanPhams->merge($sanphams);
+        }
+
         $sanphams = SanPham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
-        return view('quanlys.sanphams.sanpham', compact('sanphams'));
+
+
+
+        return view('quanlys.sanphams.sanpham',
+        compact('sanphams','allSanPhams'));
     }
 
     // Hiển thị form thêm mới sản phẩm
@@ -67,6 +85,7 @@ class SanPhamController extends Controller
     // Hiển thị chi tiết một sản phẩm
     public function show($id)
     {
+
         $sanpham = SanPham::with('danhMucs')->findOrFail($id);
         return view('quanlys.sanphams.chitietsanpham', compact('sanpham'));
     }
@@ -160,7 +179,10 @@ class SanPhamController extends Controller
         $danhmucs= DanhMuc::all();
         $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm
         $sanphams = SanPham::where('tenSanPham', 'like', '%' . $keyword . '%')->get();
-
+        if($request->input('q')=='')
+            return back()->with('message','Vui lòng nhập từ khóa đẻ tìm kiếm');
+        elseif($sanphams->isEmpty())
+            return back()->with('message','Không tìm thấy sản phẩm');
         return view('taikhoans.khachhangs.timkiem', compact('sanphams', 'keyword','danhmucs'));
     }
     //dành cho admin
@@ -169,7 +191,10 @@ class SanPhamController extends Controller
         $danhmucs= Danhmuc::all();
         $keyword = $request->input('q'); // Lấy từ khóa tìm kiếm
         $sanphams = SanPham::where('tenSanPham', 'like', '%' . $keyword . '%')->get();
-
+        if($request->input('q')=='')
+            return back()->with('message','Vui lòng nhập từ khóa đẻ tìm kiếm');
+        elseif($sanphams->isEmpty())
+            return back()->with('message','Không tìm thấy sản phẩm');
         return view('quanlys.sanphams.timkiems', compact('sanphams', 'keyword','danhmucs'));
     }
 //hiển thị sản phẩm riêng danh mục

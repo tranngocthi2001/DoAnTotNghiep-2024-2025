@@ -1,6 +1,8 @@
 @extends('layouts.layoutkhachhang')
 
 @section('content')
+
+<div class="container">
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,7 +17,13 @@
         <script src="/vnpay_php/assets/jquery-1.11.3.min.js"></script>
     </head>
     <body>
+        @if (session('dathangthanhcong'))
+        <div class="alert alert-warning">
+            {{ session('dathangthanhcong') }}
+        </div>
+    @endif
         @php
+
         // Nhận các tham số trả về từ VNPAY
         $vnp_SecureHash = request()->input('vnp_SecureHash'); // Chữ ký bảo mật gửi từ VNPAY
         $vnp_HashSecret = "GR4ZMC29DNNMPMXDHH2IFNLOVHW6NIKL"; // Secret key
@@ -97,5 +105,5 @@
         </div>
     </body>
 </html>
-
+</div>
 @endsection

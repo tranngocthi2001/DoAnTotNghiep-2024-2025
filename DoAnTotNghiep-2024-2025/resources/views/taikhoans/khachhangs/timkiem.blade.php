@@ -1,6 +1,7 @@
 @extends('layouts.layoutkhachhang')
 
 @section('content')
+<div class="container">
     <h3>Kết quả tìm kiếm cho từ khóa: "{{ $keyword }}"</h3>
 
     @if ($sanphams->isEmpty())
@@ -44,4 +45,5 @@
             @endforeach
         </div>
     @endif
+</div>
 @endsection

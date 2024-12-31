@@ -1,6 +1,7 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
+<div class="container"></div>
 <form action="{{ route('phieuxuathangs.store') }}" method="POST">
     @csrf
 
@@ -64,4 +65,5 @@
         <button type="submit">Lưu Phiếu Xuất</button><br>
     </div>
 </form>
+</div>
 @endsection

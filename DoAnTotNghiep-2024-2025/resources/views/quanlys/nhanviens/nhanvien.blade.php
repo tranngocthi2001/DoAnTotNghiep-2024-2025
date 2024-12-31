@@ -1,12 +1,13 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
-    <h1>Danh sách nhân viên</h1>
+<div class="container">
+    <h1 class="container">Danh sách nhân viên</h1>
     @if(session('success'))
         <p style="color: green;">{{ session('success') }}</p>
     @endif
-    <a href="{{ route('quanlys.nhanvien.create') }}">Tạo nhân viên mới</a>
-    <table>
+    <a class="btn btn-primary" href="{{ route('quanlys.nhanvien.create') }}">Tạo nhân viên mới</a>
+    <table class="container">
         <thead>
             <tr>
                 <th>ID</th>
@@ -34,23 +35,30 @@
                         @endif
                     </td>
                     <td>
-                        <form action="{{ route('quanlys.nhanvien.updateStatus', $nhanvien->id) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-sm {{ $nhanvien->trangThai ? 'btn-danger' : 'btn-success' }}">
-                                {{ $nhanvien->trangThai ? 'Khóa' : 'Kích Hoạt' }}
-                            </button>
-                        </form>
+                        @if ($nhanvien->vaiTro!='admin')
+                            <form action="{{ route('quanlys.nhanvien.updateStatus', $nhanvien->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm {{ $nhanvien->trangThai ? 'btn-danger' : 'btn-success' }}">
+                                    {{ $nhanvien->trangThai ? 'Khóa' : 'Kích Hoạt' }}
+                                </button>
+                            </form>
+                        @endif
+
                     </td>
                     <td>
+                        @if ($nhanvien->vaiTro!='admin')
+                            <form action="{{ route('quanlys.nhanvien.destroy', $nhanvien->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                            </form>
+                        @endif
                         <a href="{{ route('quanlys.nhanvien.edit', $nhanvien->id) }}">Sửa</a>
-                        <form action="{{ route('quanlys.nhanvien.destroy', $nhanvien->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
-                        </form>
+
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+</div>
 @endsection

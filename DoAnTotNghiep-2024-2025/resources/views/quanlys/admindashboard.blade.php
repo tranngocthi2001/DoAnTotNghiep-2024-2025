@@ -55,6 +55,7 @@
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>Hệ thống quản lý</h1>
     </div>
@@ -76,19 +77,19 @@
             <h3>Quản lý sản phẩm</h3>
             <a href="{{ route('quanlys.sanpham.index')}}">Xem chi tiết</a>
         </div>
-        <div class="card">
+        {{-- <div class="card">
             <h3>Mã giảm giá</h3>
             <a href="/quanlys/magiamgia">Xem chi tiết</a>
-        </div>
+        </div> --}}
         <div class="card">
             <h3>Quản lý đơn hàng</h3>
             <a href="{{ route('quanlys.donhang.indexAdmin') }}">Xem chi tiết</a>
         </div>
 
-        <div class="card">
+        {{-- <div class="card">
             <h3>Sửa chữa & bảo trì</h3>
             <a href="#">Xem chi tiết</a>
-        </div>
+        </div> --}}
 
         <div class="card">
             <h3>Thanh toán</h3>
@@ -117,10 +118,7 @@
         </div>
 
     </div>
-    <form action="{{ route('nhanvien.logout') }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-danger btn-sm">Đăng xuất</button>
-    </form>
+
 </body>
 </html>
 @endsection

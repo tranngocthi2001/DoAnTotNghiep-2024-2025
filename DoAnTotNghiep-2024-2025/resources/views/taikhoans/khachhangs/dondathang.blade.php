@@ -49,12 +49,11 @@
 
 <form action="{{ route('khachhang.donhang.create') }}" method="POST" style="max-width: 500px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9;">
     @csrf
-    <h2 style="text-align: center; margin-bottom: 20px;">Thông tin đặt hàng</h2>
 
     <!-- Tên khách hàng -->
     <div style="margin-bottom: 15px;">
         <label for="hoTen" style="display: block; font-weight: bold;">Tên khách hàng:</label>
-        <input type="text" name="hoTen" id="hoTen" value="{{ auth()->user()->hoTen ?? '' }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <input type="text" name="hoTen" id="hoTen" value="{{ $khachHang->hoTen ?? '' }}" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
     </div>
 
     <!-- Địa chỉ giao hàng -->

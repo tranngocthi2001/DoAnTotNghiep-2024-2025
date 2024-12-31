@@ -1,6 +1,7 @@
 @extends('layouts.layoutkhachhang')
 
 @section('content')
+<div class="container">
 @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -35,5 +36,6 @@
         <button type="submit" class="btn btn-primary">Đăng Nhập</button>
     </form>
 </div>
-<div><a href=" {{ url('/login') }} "> Đăng nhập cho quản lý</a></div>
+{{-- <div><a class="btn btn-primary" href=" {{ url('/login') }} "> Đăng nhập cho quản lý</a></div> --}}
+</div>
 @endsection

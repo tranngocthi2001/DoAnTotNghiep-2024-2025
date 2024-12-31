@@ -3,20 +3,24 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChiTietPhieuXuat;
+use App\Models\DanhMuc;
 use App\Models\DonHang;
+use App\Models\PhieuXuatHang;
 use App\Models\Sanpham;
 use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DonHangController extends Controller
 {
     // Hiển thị danh sách đơn hàng dành cho nhân viên/admin
     public function indexAdmin()
     {
-        // Lấy thông tin người dùng từ guard 'nhanvien'
-        $user = auth()->guard('nhanvien')->user();
-//dd($user);
+
+        $donHangCount=DonHang::all()->count();
+
         // Kiểm tra quyền truy cập
         $nhanVien = auth()->guard('nhanvien')->user();
 
@@ -60,7 +64,7 @@ class DonHangController extends Controller
 
         return view('quanlys.donhangs.donhang',
          compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh',
-         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen','donHangsChothanhtoan'));
+         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen','donHangsChothanhtoan','donHangCount'));
     }
 
     public function showYeuCauDoiHang()
@@ -86,7 +90,7 @@ class DonHangController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'trangThai' => 'required',
+            'trangThai' => 'nullable',
             'maVanChuyen' => 'nullable|string|max:50',
 
         ]);
@@ -99,14 +103,15 @@ class DonHangController extends Controller
 //dd($nhanvienId);
         // Cập nhật trạng thái đơn hàng và lưu nhân viên thực hiện
         $donhang->update([
-            'trangThai' => $request->input('trangThai'),
+            'trangThai' => $request->input('trangThai')?: $donhang->trangThai,
+
             'nhanvien_id' => $nhanvienId,
             'maVanChuyen' => $request->input('maVanChuyen') ?: $donhang->maVanChuyen, // Không ghi đè mã vận chuyển nếu không có giá trị mới
 
         ]);
-        return redirect()->route('quanlys.donhang.indexAdmin')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+
+        return redirect()->route('quanlys.donhang.show',[$donhang->id])->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
     }
-    protected $ghnService;
 
     // Hiển thị chi tiết đơn hàng
     public function show($id)
@@ -128,8 +133,12 @@ class DonHangController extends Controller
                     //break 2;  // Dừng vòng lặp khi đã tìm thấy yêu cầu đổi hàng
                 }
             }//dd($yeuCauDoiHang);
-}            // Trả về view với thông tin đơn hàng và tên khách hàng
-        return view('quanlys.donhangs.show', compact('donHang', 'khachHang', 'yeuCauDoiHang'));
+        }
+        $phieuXuatHang=PhieuXuatHang::where('donhang_id', $donHang->id)->first();
+       // dd($phieuXuatHang);
+
+        // Trả về view với thông tin đơn hàng và tên khách hàng
+        return view('quanlys.donhangs.show', compact('donHang', 'khachHang', 'yeuCauDoiHang','phieuXuatHang'));
     }
 
     // Xác nhận đơn hàng
@@ -142,6 +151,20 @@ class DonHangController extends Controller
         ]);
 
         return redirect()->route('nhanvien.donhang.indexAdmin')->with('success', 'Đơn hàng đã được xác nhận.');
+    }
+
+    public function timKiemDonHang(Request $request){
+
+        $danhmucs=DanhMuc::all();
+        $keyword= $request->input('q');
+        $donHangs=DonHang::where('id', '=', $keyword)->get();
+        //dd($donHangs);
+        if($request->input('q')=='')
+            return back()->with('loikhongtimthay','Vui lòng nhập từ khóa để tìm kiếm');
+        if($donHangs->isEmpty())
+            return back()->with('loikhongtimthay','Không tim thấy đơn hàng');
+
+        return view('quanlys.donhangs.timkiem', compact('danhmucs','keyword','donHangs'));
     }
 
 }

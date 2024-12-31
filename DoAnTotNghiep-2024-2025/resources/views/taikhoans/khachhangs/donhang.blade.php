@@ -2,6 +2,16 @@
 
 @section('content')
 <div class="container">
+    @if (session('huythanhcong'))
+        <div class="alert alert-warning">
+            {{ session('huythanhcong') }}
+        </div>
+    @endif
+    @if (session('dathangthanhcong'))
+        <div class="alert alert-warning">
+            {{ session('dathangthanhcong') }}
+        </div>
+    @endif
     <h1>Đơn hàng của bạn</h1>
 
     @if($donhangs->isEmpty())
@@ -11,13 +21,9 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Chi tiết đơn hàng</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,12 +31,8 @@
                     <tr>
 
                         <td>{{ $donhang->id }}</td>
-                        <td>{{ $donhang->tenKhachHang }}</td>
-                        <td>{{ $donhang->ngayDatHang }}</td>
                         <td>{{ number_format($donhang->tongTien, 0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
-                        <td>{{ $donhang->diaChiGiaoHang }}</td>
-                        <td>{{ $donhang->sdt }}</td>
                         <td>
                             <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
                         </td>
@@ -49,13 +51,9 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Chi tiết đơn hàng</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,12 +61,8 @@
                     <tr>
 
                         <td>{{ $donhang->id }}</td>
-                        <td>{{ $donhang->tenKhachHang }}</td>
-                        <td>{{ $donhang->ngayDatHang }}</td>
                         <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
-                        <td>{{ $donhang->diaChiGiaoHang }}</td>
-                        <td>{{ $donhang->sdt }}</td>
                         <td>
                             <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
                         </td>
@@ -87,13 +81,9 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Chi tiết đơn hàng</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,12 +91,10 @@
                     <tr>
 
                         <td>{{ $donhang->id }}</td>
-                        <td>{{ $donhang->tenKhachHang }}</td>
-                        <td>{{ $donhang->ngayDatHang }}</td>
+
                         <td>{{ number_format($donhang->tongTien, 0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
-                        <td>{{ $donhang->diaChiGiaoHang }}</td>
-                        <td>{{ $donhang->sdt }}</td>
+
                         <td>
                             <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
                         </td>
@@ -125,26 +113,17 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Chi tiết đơn hàng</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($donhangsHuy as $donhang)
                     <tr>
-
                         <td>{{ $donhang->id }}</td>
-                        <td>{{ $donhang->tenKhachHang }}</td>
-                        <td>{{ $donhang->ngayDatHang }}</td>
                         <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
-                        <td>{{ $donhang->diaChiGiaoHang }}</td>
-                        <td>{{ $donhang->sdt }}</td>
                         <td>
                             <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
                         </td>
@@ -164,26 +143,18 @@
             <thead>
                 <tr>
                     <th>Mã đơn hàng</th>
-                    <th>Tên khách hàng</th>
-                    <th>Ngày đặt hàng</th>
                     <th>Tổng tiền</th>
                     <th>Trạng thái</th>
-                    <th>Địa chỉ giao hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Hành động</th>
+                    <th>Chi tiết đơn hàng</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($donhangsDoi as $donhang)
                     <tr>
-
                         <td>{{ $donhang->id }}</td>
-                        <td>{{ $donhang->tenKhachHang }}</td>
-                        <td>{{ $donhang->ngayDatHang }}</td>
+
                         <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
                         <td>{{ $donhang->trangThai }}</td>
-                        <td>{{ $donhang->diaChiGiaoHang }}</td>
-                        <td>{{ $donhang->sdt }}</td>
                         <td>
                             <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
                         </td>

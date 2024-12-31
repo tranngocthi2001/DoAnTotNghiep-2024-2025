@@ -5,7 +5,9 @@ namespace App\Http\Controllers\QuanLy;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Danhmuc;
+use App\Models\SanPham;
 use Illuminate\Support\Facades\Auth;
+use Termwind\Components\Dd;
 
 class DanhMucController extends Controller
 {
@@ -13,6 +15,11 @@ class DanhMucController extends Controller
     public function index()
     {
         $danhmucs = Danhmuc::all(); // Lấy tất cả danh mục
+        foreach($danhmucs as $danhmuc){
+            $danhmuc->count= SanPham::where('danhmuc_id', $danhmuc->id)->count();
+//dd($count);
+        }
+
         return view('quanlys.danhmucs.danhmuc', compact('danhmucs'));
     }
 

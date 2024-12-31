@@ -29,12 +29,10 @@ class YeuCauDoiHangController extends Controller
     {
         // Validate dữ liệu
         $request->validate([
-            'sanPhamDoiID'  => 'nullable|array', // Không bắt buộc chọn sản phẩm
             'sanPhamDoiID.*' => 'exists:sanpham,id', // kiểm tra từng phần tử trong mảng sanPhamDoiID
                                                     //để đảm bảo rằng giá trị của nó tồn tại trong cột id của bảng sanpham
             'lyDo' => 'required|string', // Lý do đổi
-            'soLuong' => 'nullable|array', // Không bắt buộc chọn số lượng
-            'soLuong.*' => 'nullable|integer|min:1', // Kiểm tra số lượng nếu có
+            'soLuong.*' => 'integer|min:1', // Kiểm tra số lượng nếu có
             'hinhAnh.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -76,14 +74,20 @@ class YeuCauDoiHangController extends Controller
             $imagePaths = [];
             if ($request->hasFile('hinhAnh')) {
                 foreach ($request->file('hinhAnh') as $sanPhamDoiID => $file) {
-                    // Tạo tên file duy nhất để tránh trùng lặp
-                    $imageName = time() . '-' . $file->getClientOriginalName();
-                    // Lưu file vào thư mục yêu cầu
-                    $file->move(public_path('uploads/yeucau_doi_hang'), $imageName);
-                    // Lưu đường dẫn file vào mảng imagePaths
+                    // Tạo tên file cố định (hoặc có thể dựa vào tên file gốc, không thay đổi)
+                    $imageName = $file->getClientOriginalName();
+
+                    // Kiểm tra xem file đã tồn tại chưa
+                    if (!file_exists(public_path('uploads/yeucau_doi_hang/' . $imageName))) {
+                        // Lưu file vào thư mục yêu cầu chỉ nếu chưa tồn tại
+                        $file->move(public_path('uploads/yeucau_doi_hang'), $imageName);
+                    }
+
+                    // Lưu đường dẫn file vào mảng imagePaths (dùng tên cố định)
                     $imagePaths[] = $imageName;
                 }
             }
+
 
             // Gán giá trị mảng chứa tên các ảnh vào cột `hinhAnh` của ChiTietDoiHang
             $chiTietDoiHang->hinhAnh = json_encode($imagePaths);
@@ -151,12 +155,14 @@ class YeuCauDoiHangController extends Controller
 
             // Kiểm tra dữ liệu trạng thái
             $request->validate([
-                'trangThai' => 'required|in:0,1,2', // Trạng thái có thể là 0, 1, hoặc 2 (ví dụ: 0: Chưa xử lý, 1: Đang xử lý, 2: Hoàn tất)
+                'trangThai' => 'required|in:0,1,2',
+                // Trạng thái có thể là 0, 1, hoặc 2 (ví dụ: 0: Chưa xử lý, 1: Đang xử lý, 2: Hoàn tất)
             ]);
 
             // Cập nhật trạng thái của yêu cầu đổi hàng
             $yeuCauDoiHang->trangThai = $request->input('trangThai');
             $yeuCauDoiHang->save();
+
 
             return redirect()->route('taikhoans.khachhangs.yeucaudoihang.showAdmin', $yeuCauDoiHang->id)
                              ->with('success', 'Cập nhật trạng thái thành công!');

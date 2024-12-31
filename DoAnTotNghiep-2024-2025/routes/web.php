@@ -100,14 +100,13 @@ Route::get('/khachhang/register', [DangKyKHController::class, 'showRegistrationF
 Route::post('/khachhang/register', [DangKyKHController::class, 'handleRegistration'])->name('dangky.khachhang.submit');
 //quan lys danh  muc
 use App\Http\Controllers\QuanLy\DanhmucController;
-Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 
     Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
         Route::resource('danhmuc', DanhMucController::class)->names([
             'index' => 'quanlys.danhmuc.index',
             'create' => 'quanlys.danhmuc.create',
             'store' => 'quanlys.danhmuc.store',
-            'show' => 'quanlys.danhmuc.show',
             'edit' => 'quanlys.danhmuc.edit',
             'update' => 'quanlys.danhmuc.update',
             'destroy' => 'quanlys.danhmuc.destroy',
@@ -118,7 +117,7 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
 //quan ly san pham
 use App\Http\Controllers\QuanLy\SanPhamController;
 
-Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 
     Route::prefix('/')->middleware(['checkNhanVienStatus'])->group(function () {
         Route::resource('sanpham', SanPhamController::class)->names([
@@ -130,19 +129,17 @@ Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(funct
             'update' => 'quanlys.sanpham.update',
             'destroy' => 'quanlys.sanpham.destroy',
         ]);
+
+        //dành cho admin
+        Route::get('/tim-kiemAdmin', [SanPhamController::class, 'searchAdmin'])->name('sanpham.searchadmin');
+        //lấy sản phẩm của danh mục
+
+
     });
 });
- Route::get('sanpham/{id}', [SanPhamController::class, 'show'])->name('quanlys.sanpham.show');
+Route::get('sanpham/{id}', [SanPhamController::class, 'show'])->name('quanlys.sanpham.show');
 
-//tìm kiếm sản phẩm
-Route::get('/tim-kiem', [SanPhamController::class, 'search'])->name('sanpham.search');
-//dành cho admin
-Route::get('/tim-kiemAdmin', [SanPhamController::class, 'searchAdmin'])->name('sanpham.searchadmin');
-
-//lấy sản phẩm của danh mục
-// Route để lọc sản phẩm theo danh mục
 Route::get('danh-muc/{id}', [SanPhamController::class, 'showByCategory'])->name('danhmuc.show');
-
 
 //gio hang cua khach hang
 use App\Http\Controllers\TaiKhoan\KhachHang\GioHangController;
@@ -152,6 +149,8 @@ Route::middleware('khachhang.dangnhap')->group(function () {
 
 use App\Http\Controllers\TaiKhoan\KhachHang\SanPhamKHController;
 Route::get('/khachhang/chitietsanpham/{id}',[SanPhamKHController::class,'show'])->name('sanpham.showchitiet');
+//tìm kiếm sản phẩm
+Route::get('/tim-kiem', [SanPhamController::class, 'search'])->name('sanpham.search');
 
 
 use App\Http\Controllers\TaiKhoan\KhachHang\ChitietGioHangController;
@@ -168,26 +167,24 @@ Route::middleware('khachhang.dangnhap')->group(function () {
 
 //Dơn hàng
 use App\Http\Controllers\QuanLy\DonHangController;
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 
-Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+    Route::get('/donhang/timkiem', [DonHangController::class, 'timKiemDonHang'])->name('quanlys.donhang.timkiem');
+
     Route::get('/donhang', [DonHangController::class, 'indexAdmin'])->name('quanlys.donhang.indexAdmin');
     Route::get('/donhang/yeucaudoihang', [DonHangController::class, 'showYeuCauDoiHang'])->name('quanlys.donhang.showYeuCauDoiHang');
 
     Route::put('/donhang/{id}', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
     Route::get('/donhang/{id}', [DonHangController::class, 'show'])->name('quanlys.donhang.show');
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
-    // Route thêm mã vận chuyển
-    //Route::put('/donhang/{id}/update', [DonHangController::class, 'update'])->name('quanlys.donhang.update');
-    Route::get('/don-hang/theo-doi', [DonHangController::class, 'track'])->name('donhang.track');
 
-    //yeucaudoihang tu admin
-   // dd('a');
+
 
 });
 
 use App\Http\Controllers\QuanLy\PhieuXuatHangController;
 
-Route::prefix('quanlys')->middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
     Route::controller(PhieuXuatHangController::class)->group(function () {
         Route::get('/phieuxuathang/create/{donHangId}', 'create')->name('quanlys.phieuxuathang.create'); // Tạo phiếu xuất
         Route::post('/phieuxuathang/store', 'store')->name('phieuxuathangs.store'); // Lưu phiếu xuất
@@ -214,48 +211,55 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
 
 
 use App\Http\Controllers\TaiKhoan\KhachHang\ThanhToanController;
-Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
+// Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
 
-    // Route tạo mới thanh toán
-    Route::post('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'store'])->name('thanh-toan.store');
+//     // Route tạo mới thanh toán
+//     Route::post('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'store'])->name('thanh-toan.store');
 
-    // Route xem chi tiết thanh toán của đơn hàng
-    Route::get('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'show'])->name('thanh-toan.show');
+//     // Route xem chi tiết thanh toán của đơn hàng
+//     Route::get('don-hang/{donhangId}/thanh-toan', [ThanhToanController::class, 'show'])->name('thanh-toan.show');
 
-    // Route cập nhật thanh toán
-    Route::put('thanh-toan/{id}', [ThanhToanController::class, 'update'])->name('thanh-toan.update');
+//     // Route cập nhật thanh toán
+//     Route::put('thanh-toan/{id}', [ThanhToanController::class, 'update'])->name('thanh-toan.update');
 
-    // Route xóa thanh toán
-    Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
+//     // Route xóa thanh toán
+//     Route::delete('thanh-toan/{id}', [ThanhToanController::class, 'destroy'])->name('thanh-toan.destroy');
 
-});
+// });
 
 use App\Http\Controllers\TaiKhoan\KhachHang\YeuCauDoiHangController;
 // Hiển thị danh sách đơn hàng hoàn thành (khách hàng)
 // Chỉ cho phép phương thức POST
-Route::get('khachhang/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'showForm'])->name('taikhoans.khachhangs.yeucaudoihang');
+Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
 
-Route::post('khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'create'])->name('taikhoans.khachhangs.yeucaudoihang');
-Route::post('/khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'store'])->name('taikhoans.khachhangs.yeucaudoihang.store');
-//dd("a");
-Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'show'])
-    ->name('taikhoans.khachhangs.yeucaudoihang.show');
+        Route::get('khachhang/yeucaudoihang/{donhang_id}', [YeuCauDoiHangController::class, 'showForm'])->name('taikhoans.khachhangs.yeucaudoihang');
 
-Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
-->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
+        Route::post('khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'create'])->name('taikhoans.khachhangs.yeucaudoihang');
+        Route::post('/khachhang/yeucaudoihang', [YeuCauDoiHangController::class, 'store'])->name('taikhoans.khachhangs.yeucaudoihang.store');
+        //dd("a");
+        Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'show'])
+            ->name('taikhoans.khachhangs.yeucaudoihang.show');
 
-Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
-    ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');
+        Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
+        ->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
 
+        Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
+            ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');
+});
     //vnpay
 use App\Http\Controllers\TaiKhoan\KhachHang\VnpayController;
+Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
 
-//Route::get('vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
-Route::match(['get', 'post'], 'vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
+    //Route::get('vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
+    Route::match(['get', 'post'], 'vnpay/create/{donhang_id}', [VnpayController::class, 'createPayment'])->name('vnpay.create');
 
-Route::get('/vnpay/return', [VnpayController::class, 'return'])->name('vnpay.return');
-Route::post('vnpay/ipn', [VnpayController::class, 'ipn'])->name('vnpay.ipn');
+    Route::get('/vnpay/return', [VnpayController::class, 'return'])->name('vnpay.return');
+    Route::post('vnpay/ipn', [VnpayController::class, 'ipn'])->name('vnpay.ipn');
+});
 
 use App\Http\Controllers\QuanLy\SeriController;
-Route::get('/seri',[SeriController::class, 'index'])->name('seri');
-Route::get('/timkiemSeri', [SeriController::class, 'searchAdmin'])->name('seri.search');
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+
+    Route::get('/seri',[SeriController::class, 'index'])->name('seri');
+    Route::get('/timkiemSeri', [SeriController::class, 'searchAdmin'])->name('seri.search');
+});

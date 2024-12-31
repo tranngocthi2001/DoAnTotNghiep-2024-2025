@@ -93,18 +93,7 @@
         </header>
 
 
-        {{-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                @foreach ($danhmucs as $danhmuc)
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h4>{{ $danhmuc->tenDanhMuc }}</h4>
-                    </div>
 
-                </div>
-            @endforeach
-            </div>
-        </nav> --}}
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
@@ -128,12 +117,21 @@
 
 
 
+        @if (session('message'))
+            <div class="alert alert-warning">
+                {{ session('message') }}
+            </div>
+        @endif
 
 
         <!-- Section-->
+        <h1>&nbsp;&nbsp;&nbsp; </h1>
+
         <main>
             @yield('content')
         </main>
+        <h1>&nbsp;&nbsp;&nbsp; </h1>
+
         <!-- Footer-->
         <footer class="py-5 bg-dark">
             <div class="container">

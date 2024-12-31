@@ -1,6 +1,7 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
+<div class="container">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,11 @@
             </ul>
         </div>
     @endif
-
+    @if (session('success'))
+    <div class="alert alert-warning">
+        {{ session('success') }}
+    </div>
+    @endif
     <!-- Form đăng nhập -->
     <form method="POST" action="{{ route('login.submit') }}">
         @csrf
@@ -34,4 +39,5 @@
 
 </body>
 </html>
+</div>
 @endsection

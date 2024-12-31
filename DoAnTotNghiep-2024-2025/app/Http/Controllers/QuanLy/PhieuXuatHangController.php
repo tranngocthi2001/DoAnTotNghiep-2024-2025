@@ -25,23 +25,6 @@ class PhieuXuatHangController extends Controller
 
     public function store(Request $request)
     {
-        //$nhanVien = Auth::guard('nhanvien')->user(); // Lấy thông tin nhân viên đang đăng nhập
-        $nhanVien = auth()->guard('nhanvien')->user();
-        //dd($nhanVien);
-
-        $validated = $request->validate([
-            'donhang_id' => 'required|exists:donhang,id',
-            'ngayXuat' => 'required|date',
-            'trangThai' => 'required|string',
-            'chiTietDonHangs' => 'required|array',
-            'chiTietDonHangs.*.chitietdonhang_id' => 'required|exists:chitietdonhang,id',
-            'chiTietDonHangs.*.soLuong' => 'required|integer',
-            'chiTietDonHangs.*.baoHanh' => 'nullable|string',
-            'chiTietDonHangs.*.ghiChu' => 'nullable|string',
-        ]);
-        //$ngayXuat = \Carbon\Carbon::parse($request->ngayXuat)->format('Y-m-d H:i:s');
-        //dd($request->ngayXuat);
-
         // Tạo phiếu xuất hàng
         $phieuXuat = PhieuXuatHang::create([
             'donhang_id' => $request->donhang_id,
@@ -82,19 +65,10 @@ class PhieuXuatHangController extends Controller
 
     public function show($donhang_id)
     {
-        // Tìm phiếu xuất dựa trên donhang_id
-        $phieuXuat = PhieuXuatHang::with('donHangs.khachHangs', 'nhanViens')
-            ->where('donhang_id', $donhang_id)
-            ->firstOrFail();
 
-        // Tìm chi tiết phiếu xuất liên quan đến phiếu xuất
-        $chiTietPhieuXuat = ChiTietPhieuXuat::where('phieuxuathang_id', $phieuXuat->id)->get();
-//dd($chiTietPhieuXuat);
-        // Tìm các mã seri liên quan đến từng chi tiết phiếu xuất
-        $seri = Seri::whereIn('chitietphieuxuat_id', $chiTietPhieuXuat->pluck('id'))->get();
-//dd($seri);
-        // Hiển thị kết quả trong view
-        return view('quanlys.phieuxuathangs.show', compact('phieuXuat', 'chiTietPhieuXuat', 'seri'));
+        $phieuXuatHang=PhieuXuatHang::where('donhang_id',$donhang_id)->first();
+
+        return view('quanlys.phieuxuathangs.show', compact('phieuXuatHang'));
     }
 
 

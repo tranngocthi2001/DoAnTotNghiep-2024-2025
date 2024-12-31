@@ -1,7 +1,9 @@
 
 @extends('layouts.layoutkhachhang')
 
-@section('content')<!DOCTYPE html>
+@section('content')
+<div class="contaner">
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -65,4 +67,5 @@
         </div>
     </body>
 </html>
+</div>
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
+<div class="container">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,36 +26,52 @@
     <!-- Form đăng ký -->
     <form action="{{ route('register') }}" method="POST">
         @csrf
-        <label for="tenTaiKhoan">Tên tài khoản:</label>
-        <input type="text" id="tenTaiKhoan" name="tenTaiKhoan" required><br>
-
-        <label for="matKhau">Mật khẩu:</label>
-        <input type="password" id="matKhau" name="matKhau" required><br>
+        <div class="form-group">
+            <label for="tenTaiKhoan">Tên tài khoản</label>
+            <input type="text" name="tenTaiKhoan" id="tenTaiKhoan" class="form-control" required>
+            @error('tenTaiKhoan')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="matKhau">Mật khẩu</label>
+            <input type="password" name="matKhau" id="matKhau" class="form-control" required>
+            @error('matKhau')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
         <div class="form-group">
             <label for="matKhau_confirmation">Nhập lại mật khẩu</label>
             <input type="password" name="matKhau_confirmation" id="matKhau_confirmation" class="form-control" required>
         </div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
-
-        <label for="sdt">Số điện thoại:</label>
-        <input type="text" id="sdt" name="sdt"><br>
-
-        <label for="diaChi">Địa chỉ:</label>
-        <input type="text" id="diaChi" name="diaChi"><br>
-
-        <label for="hoTen">Họ và tên:</label>
-        <input type="text" id="hoTen" name="hoTen"><br>
-
-        <label for="vaiTro">Vai trò:</label>
-        <select id="vaiTro" name="vaiTro" required>
-            <option value="nhanvien">Nhân viên</option>
-            <option value="quanly">Quản lý</option>
-            <option value="admin">Admin</option>
-        </select><br>
-
-        <button type="submit">Đăng ký</button>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+            @error('email')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="sdt">Số điện thoại</label>
+            <input type="text" name="sdt" id="sdt" class="form-control" required>
+            @error('sdt')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="diaChi">Địa chỉ</label>
+            <input type="text" name="diaChi" id="diaChi" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="hoTen">Họ tên</label>
+            <input type="text" name="hoTen" id="hoTen" class="form-control" required>
+            @error('hoTen')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Đăng Ký</button>
     </form>
 </body>
 </html>
+</div>
 @endsection

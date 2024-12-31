@@ -2,6 +2,7 @@
 
 @section('content')
 
+<div class="contaier">
 <h3>Kết quả tìm kiếm cho từ khóa: "{{ $keyword }}"</h3>
 
     @if ($sanphams->isEmpty())
@@ -59,6 +60,7 @@
         </tbody>
     </table>
 
+</div>
 
     @endif
 

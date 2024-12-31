@@ -70,7 +70,7 @@ class ChiTietGioHangController extends Controller
         $giohang->tongTien += $sanpham->gia * $request->soLuong;
         $giohang->save();
 
-        return back()->with('success', 'Sản phẩm đã được thêm vào giỏ hàng!');
+        return back()->with('themsanphamgiohang', 'Sản phẩm đã được thêm vào giỏ hàng!');
     }
 
     // Xóa sản phẩm khỏi giỏ hàng

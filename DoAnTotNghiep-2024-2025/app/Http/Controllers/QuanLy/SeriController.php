@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChiTietDonHang;
+use App\Models\ChiTietPhieuXuat;
+use App\Models\DonHang;
+use App\Models\PhieuXuatHang;
 use App\Models\SanPham;
 use App\Models\Seri;
 use Illuminate\Http\Request;
@@ -11,8 +15,8 @@ class SeriController extends Controller
 {
     public function index(){
         $seris = Seri::all();
-        return view('quanlys.seris.seri', compact('seris'));
 
+        return view('quanlys.seris.seri', compact('seris'));
     }
     //dành cho admin
     public function searchAdmin(Request $request)
