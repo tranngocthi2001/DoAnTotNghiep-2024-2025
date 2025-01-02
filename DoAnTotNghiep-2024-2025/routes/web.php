@@ -53,9 +53,9 @@ Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 });
 
 use App\Http\Controllers\QuanLy\KhachHangController;
-Route::prefix('quanlys')->middleware(['auth', 'role:admin,quanly'])->group(function () {
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 
-    Route::prefix('khachhang')->middleware(['checkNhanVienStatus'])->group(function () {
+    Route::prefix('quanlys')->middleware(['checkNhanVienStatus'])->group(function () {
         Route::resource('khachhang', KhachHangcontroller::class)->names([
             'index' => 'quanlys.khachhang.index',
             'create' => 'quanlys.khachhang.create',
@@ -169,6 +169,7 @@ Route::middleware('khachhang.dangnhap')->group(function () {
 use App\Http\Controllers\QuanLy\DonHangController;
 Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
 
+
     Route::get('/donhang/timkiem', [DonHangController::class, 'timKiemDonHang'])->name('quanlys.donhang.timkiem');
 
     Route::get('/donhang', [DonHangController::class, 'indexAdmin'])->name('quanlys.donhang.indexAdmin');
@@ -179,8 +180,16 @@ Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
     Route::post('/donhang/xacnhan/{id}', [DonHangController::class, 'xacNhanDonHang'])->name('quanlys.donhang.xacnhan');
 
 
+    Route::get('quanlys/donhang/create', [DonHangController::class, 'formcreate'])->name('donhang.create.form');
+    Route::post('quanlys/donhang/create', [DonHangController::class, 'create'])->name('quanlys.donhang.create');
+    Route::get('quanlys/donhang/addchitiet{donHang_id}',[DonHangController::class, 'formAddChiTietDonHang'])->name('donhang.addchitiet.form');
+    Route::post('quanlys/donhang/addchitiet{id}',[DonHangController::class, 'xuLyThemChiTiet'])->name('donhang.xuLyThemChiTiet');
+
+
 
 });
+Route::delete('/donhang/xoa-chitiet/{id}', [DonHangController::class, 'xoaChiTiet'])->name('donhang.xoaChiTiet');
+Route::put('/donhang/capnhat-soluong/{id}', [DonHangController::class, 'capNhatSoLuong'])->name('donhang.capNhatSoLuong');
 
 use App\Http\Controllers\QuanLy\PhieuXuatHangController;
 
@@ -240,10 +249,12 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
         Route::get('/taikhoans/khachhangs/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'show'])
             ->name('taikhoans.khachhangs.yeucaudoihang.show');
 
-        Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
-        ->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
+});
 
-        Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
+Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
+    Route::get('quanlys/yeucaudoihang/{id}', [YeuCauDoiHangController::class, 'showAdmin'])
+    ->name('taikhoans.khachhangs.yeucaudoihang.showAdmin');
+    Route::post('/yeu-cau-doi-hang/{id}/update-status', [YeuCauDoiHangController::class, 'updateStatus'])
             ->name('taikhoans.khachhangs.yeucaudoihang.updateStatus');
 });
     //vnpay

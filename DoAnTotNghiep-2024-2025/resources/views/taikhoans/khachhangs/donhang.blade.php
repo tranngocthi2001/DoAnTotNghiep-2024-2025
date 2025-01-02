@@ -104,37 +104,10 @@
         </table>
     @endif
 
-    <h1>Hủy đơn hàng</h1>
-
-    @if($donhangsHuy->isEmpty())
-        <p>Bạn chưa có đơn hàng hủy nào.</p>
-    @else
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
-                    <th>Chi tiết đơn hàng</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($donhangsHuy as $donhang)
-                    <tr>
-                        <td>{{ $donhang->id }}</td>
-                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
-                        <td>{{ $donhang->trangThai }}</td>
-                        <td>
-                            <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @endif
 
 
-    <h1>Đổi hàng</h1>
+
+    <h1>Yêu cầu đổi hàng</h1>
 
     @if($donhangsDoi->isEmpty())
         <p>Bạn chưa có yêu cầu đổi nào.</p>
@@ -163,5 +136,95 @@
             </tbody>
         </table>
     @endif
+
+<h1>Kết quả đổi hàng</h1>
+
+    @if($donHangsCuDaDoi->isEmpty())
+        <p>Bạn chưa có yêu cầu đổi nào.</p>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết đơn hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donHangsCuDaDoi as $donhang)
+                    <tr>
+                        <td>{{ $donhang->id }}</td>
+
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
+                        <td>{{ $donhang->trangThai }}</td>
+                        <td>
+                            <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+    <h1>Đơn hàng mới đổi hàng</h1>
+
+    @if($donHangsDaDoi->isEmpty())
+        <p>Bạn chưa có yêu cầu đổi nào.</p>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết đơn hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donHangsDaDoi as $donhang)
+                    <tr>
+                        <td>{{ $donhang->id }}</td>
+
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
+                        <td>{{ $donhang->trangThai }}</td>
+                        <td>
+                            <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
+<h1>Hủy đơn hàng</h1>
+
+    @if($donhangsHuy->isEmpty())
+        <p>Bạn chưa có đơn hàng hủy nào.</p>
+    @else
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết đơn hàng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($donhangsHuy as $donhang)
+                    <tr>
+                        <td>{{ $donhang->id }}</td>
+                        <td>{{ number_format($donhang->tongTien,  0, ',', '.') }} VND</td>
+                        <td>{{ $donhang->trangThai }}</td>
+                        <td>
+                            <a href="{{ route('khachhang.donhang.show', $donhang->id) }}">Xem chi tiết</a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</div>
 </div>
 @endsection

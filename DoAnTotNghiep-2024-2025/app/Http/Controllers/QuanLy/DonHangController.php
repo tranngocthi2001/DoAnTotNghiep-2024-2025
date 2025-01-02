@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\QuanLy;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChiTietDoiHang;
+use App\Models\ChiTietDonHang;
 use App\Models\ChiTietPhieuXuat;
 use App\Models\DanhMuc;
 use App\Models\DonHang;
+use App\Models\KhachHang;
 use App\Models\PhieuXuatHang;
 use App\Models\Sanpham;
 use App\Models\YeuCauDoiHang;
@@ -57,6 +60,15 @@ class DonHangController extends Controller
             ->where('trangThai', '=', 'Đổi hàng')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
+        $donHangsCuDaDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đã chấp nhận đổi')
+            ->orwhere('trangThai', '=', 'Từ chối đổi hàng')
+            ->orderBy('id', 'desc')
+            ->get();
+        $donHangsDaDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đang chờ nhận lại hàng')
+            ->orderBy('id', 'desc')
+            ->get();
         $donHangsChothanhtoan = DonHang::with('nhanViens')
         ->where('trangThai', '=', 'Chờ thanh toán')
         ->orderBy('ngayDatHang', 'desc')->get();
@@ -64,7 +76,8 @@ class DonHangController extends Controller
 
         return view('quanlys.donhangs.donhang',
          compact('donHangsMoi', 'donHangsCu', 'donHangsHoanThanh',
-         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen','donHangsChothanhtoan','donHangCount'));
+         'donHangsHuy', 'donHangsDoi', 'donHangsVanChuyen',
+         'donHangsChothanhtoan','donHangCount','donHangsDaDoi','donHangsCuDaDoi'));
     }
 
     public function showYeuCauDoiHang()
@@ -80,9 +93,12 @@ class DonHangController extends Controller
             ->where('trangThai', '=', 'Đổi hàng')
             ->orderBy('ngayDatHang', 'desc')
             ->get();
+        $donHangsDaDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đang chờ nhận lại hàng')
+            ->orderBy('id', 'desc')
+            ->get();
 
-
-        return view('quanlys.yeucaudoihangs.yeucaudoihang', compact( 'donHangsDoi'));
+        return view('quanlys.yeucaudoihangs.yeucaudoihang', compact( 'donHangsDoi','donHangsDaDoi'));
     }
 
 
@@ -166,5 +182,132 @@ class DonHangController extends Controller
 
         return view('quanlys.donhangs.timkiem', compact('danhmucs','keyword','donHangs'));
     }
+
+    public function formcreate()
+    {
+        $khachHangs = KhachHang::all(); // Lấy danh sách khách hàng
+        $sanPhams = SanPham::all(); // Lấy danh sách sản phẩm
+        $danhmucs= DanhMuc::all();
+        return view('quanlys.donhangs.create', compact('khachHangs', 'sanPhams','danhmucs'));
+    }
+
+    public function create(Request $request)
+    {
+        // Validate dữ liệu đầu vào
+        $validatedData = $request->validate([
+            'khachhang_id' => 'required|exists:khachhang,id',
+            'diaChiGiaoHang' => 'required|string|max:255',
+            'sdt' => 'required|string|max:15',
+            'tenKhachHang' => 'required|string|max:255',
+        ]);
+
+        try {
+            // Tạo đơn hàng mới
+            $donHang = DonHang::create([
+                'khachhang_id' => $validatedData['khachhang_id'],
+                'nhanvien_id' => auth()->user()->id,
+                'trangThai' => 'Đang xử lý',
+                'diaChiGiaoHang' => $validatedData['diaChiGiaoHang'],
+                'sdt' => $validatedData['sdt'],
+                'ngayDatHang' => $validatedData['ngayDatHang'] ?? now(),
+                'updated_by' => $validatedData['updated_by'] ?? now(),
+                'phuongThucThanhToan' => 'Chưa có' ,
+                'tenKhachHang' => $validatedData['tenKhachHang'],
+
+                'tongTien'=>0
+            ]);
+
+
+
+            return redirect()->route('quanlys.donhang.show',[$donHang->id])
+                            ->with('success', 'Đơn hàng được tạo thành công!');
+        } catch (\Exception $e) {
+            // Xử lý lỗi nếu có
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
+    }
+
+    public function formAddChiTietDonHang($donHang_id)
+    {
+        $donHang=DonHang::where('id', $donHang_id)->first();
+        //dd($donHang);
+        $sanPhams = SanPham::all(); // Lấy danh sách sản phẩm
+        $danhmucs= DanhMuc::all();
+        return view('quanlys.donhangs.addchitiet', compact('sanPhams','danhmucs','donHang'));
+    }
+
+    public function xuLyThemChiTiet(Request $request, $id)
+    {
+        //dd($request);
+        $sanPham = SanPham::findOrFail($request->sanpham_id);
+        $donHang=DonHang::where('id', $id)->first();
+        $chiTietDonHang= new ChiTietDonHang();
+        $chiTietDonHang->donhang_id= $donHang->id;
+        $chiTietDonHang->soLuong=$request->so_luong;
+        $chiTietDonHang->gia=($chiTietDonHang->soLuong-1)*$sanPham->gia;
+        $chiTietDonHang->save();
+         // Thêm vào bảng sanpham_has_chitietdonhang
+
+        $sanPham->chiTietDonHangs()->attach($chiTietDonHang->id, [
+            'soLuong' => $request->so_luong,
+        ]);
+        $donHang->tongTien+=($chiTietDonHang->soLuong)*$sanPham->gia;
+        $donHang->save();
+        return back()->with('success', 'Sản phẩm được thêm thành công!');
+    }
+    public function xoaChiTiet($id)
+    {
+        $chiTietDonHang = ChiTietDonHang::findOrFail($id);
+
+
+        // Cập nhật tổng tiền trong đơn hàng
+        $donHang = DonHang::findOrFail($chiTietDonHang->donhang_id);
+        //dump($donHang);
+        foreach($chiTietDonHang->sanPhams as $sanPham){
+            $donHang->tongTien -= $chiTietDonHang->soLuong * $sanPham->gia;
+            $donHang->save();
+
+        }
+        //$sanPham = SanPham::findOrFail($chiTietDonHang->sanPhams()->sanpham_id);
+
+//dd($donHang);
+        //xóa sanpham trong sanpham_has_chitiet donhang
+        $chiTietDonHang->sanPhams()->detach();
+
+        // Xóa chi tiết đơn hàng
+        $chiTietDonHang->delete();
+
+        return back()->with('success', 'Chi tiết đơn hàng đã được xóa!');
+    }
+    public function capNhatSoLuong(Request $request, $id)
+    {
+
+        $request->validate([
+            'so_luong' => 'required|integer|min:1',
+        ]);
+
+        $chiTietDonHang = ChiTietDonHang::findOrFail($id);
+        // Tìm đơn hàng và sản phẩm
+        $donHang = DonHang::findOrFail($chiTietDonHang->donhang_id);
+        //dump($chiTietDonHang);
+
+        foreach($chiTietDonHang->sanPhams as $sanPham){
+            $donHang->tongTien -= $chiTietDonHang->soLuong * $sanPham->gia;
+            $chiTietDonHang->soLuong = $request->so_luong;
+            $donHang->tongTien += $chiTietDonHang->soLuong * $sanPham->gia;
+            $donHang->save();
+
+        }
+        // Cập nhật tổng tiền
+
+
+        // Lưu lại các thay đổi
+        $chiTietDonHang->save();
+        $donHang->save();
+
+        return back()->with('success', 'Số lượng sản phẩm đã được cập nhật!');
+    }
+
+
 
 }

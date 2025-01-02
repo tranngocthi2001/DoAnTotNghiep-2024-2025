@@ -5,8 +5,7 @@
 <form action="{{ route('phieuxuathangs.store') }}" method="POST">
     @csrf
 
-    <h3>Nhân viên xuất hàng</h3>
-    <h3>{{  $donHang->nhanViens->hoTen }}</h3>
+    <h3>Nhân viên xuất hàng: {{  auth()->user()->hoTen }}</h3>
     <input type="hidden" name="donhang_id" value="{{ $donHang->id }}">
 
     <div>

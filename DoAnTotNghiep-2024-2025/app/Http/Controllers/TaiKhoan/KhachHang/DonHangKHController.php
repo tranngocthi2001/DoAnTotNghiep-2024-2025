@@ -71,6 +71,16 @@ class DonHangKHController extends Controller
         ->orderBy('ngayDatHang', 'desc')->get();
 //dd(auth()->user()->id);
 //dd($donhangsHoanThanh);
+        $donHangsCuDaDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đã chấp nhận đổi')
+            ->orwhere('trangThai', '=', 'Từ chối đổi hàng')
+
+            ->orderBy('id', 'desc')
+            ->get();
+        $donHangsDaDoi = DonHang::with('nhanViens')
+            ->where('trangThai', '=', 'Đang chờ nhận lại hàng')
+            ->orderBy('id', 'desc')
+            ->get();
         $donhangsHuy = DonHang::where('khachhang_id', auth()->user()->id)
         ->where(function ($query) {
             $query->where('trangThai', '=', 'Đã hủy')
@@ -85,7 +95,7 @@ class DonHangKHController extends Controller
         //dd($donhangsChothanhtoan);
         return view('taikhoans.khachhangs.donhang',
          compact('donhangs','donhangsHoanThanh','donhangsHuy',
-         'donhangsDoi','danhmucs', 'donhangsChothanhtoan'));
+         'donhangsDoi','danhmucs', 'donhangsChothanhtoan','donHangsDaDoi','donHangsCuDaDoi'));
     }
 
 

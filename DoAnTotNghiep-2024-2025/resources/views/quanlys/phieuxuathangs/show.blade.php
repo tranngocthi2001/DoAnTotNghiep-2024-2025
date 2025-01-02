@@ -50,6 +50,6 @@
 
         </tbody>
     </table>
-    <h4><a href="#">In phiếu xuất PDF</a></h4>
+    <h4><a href="{{route('phieuxuathangs.print',['id'=>$phieuXuatHang->id])}}">In phiếu xuất PDF</a></h4>
 </div>
 @endsection

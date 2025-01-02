@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\YeuCauDoiHang;
 use App\Models\ChiTietDoiHang;
+use App\Models\ChiTietDonHang;
 use App\Models\DanhMuc;
 use App\Models\SanPham;
 use Illuminate\Support\Facades\Validator;
+use Termwind\Components\Dd;
 
 class YeuCauDoiHangController extends Controller
 {
@@ -148,7 +150,7 @@ class YeuCauDoiHangController extends Controller
         {
             // Tìm yêu cầu đổi hàng theo id
             $yeuCauDoiHang = YeuCauDoiHang::find($id);
-
+            //dd($yeuCauDoiHang);
             if (!$yeuCauDoiHang) {
                 return redirect()->back()->with('error', 'Yêu cầu đổi hàng không tồn tại!');
             }
@@ -158,12 +160,68 @@ class YeuCauDoiHangController extends Controller
                 'trangThai' => 'required|in:0,1,2',
                 // Trạng thái có thể là 0, 1, hoặc 2 (ví dụ: 0: Chưa xử lý, 1: Đang xử lý, 2: Hoàn tất)
             ]);
+            $tongTien=0;
+            if($yeuCauDoiHang->trangThai==1){
+                foreach($yeuCauDoiHang->chitietdoihangs as $chiTietDoiHang){
+                    //dump($chiTietDoiHang);
+                    $sanPhamYCDH=SanPham::where('id', $chiTietDoiHang->sanPhamDoiID )->first();
+                    //dump($sanPhamYCDH);
+                   $tongTien+=$chiTietDoiHang->soLuong* $sanPhamYCDH->gia;
 
-            // Cập nhật trạng thái của yêu cầu đổi hàng
-            $yeuCauDoiHang->trangThai = $request->input('trangThai');
-            $yeuCauDoiHang->save();
+                }
 
 
+
+            foreach($yeuCauDoiHang->chitietPhieuxuat as $chiTietPhieuXuat){
+                $donHang=$chiTietPhieuXuat->chiTietDonHangs->donHangs;
+                $donHang->trangThai='Đã chấp nhận đổi';
+                $donHang->save();
+            }dump($tongTien);
+            $donHangMoi=DonHang::create([
+                'khachhang_id'=>$donHang->khachhang_id,
+                'nhanvien_id'=> $donHang->nhanvien_id,
+                'tongTien'=> $tongTien,
+                'trangThai'=>'Đang chờ nhận lại hàng',
+                'diaChiGiaoHang'=>'180 Cao Lỗ, phường 4, Quận 8, TP. Hồ Chí Minh',
+                'sdt'=> '0348888144',
+                'ngayDatHang'=>$donHang->ngayDatHang,
+                'updated_by'=>$donHang->updated_by,
+                'phuongThucThanhToan'=>'null',
+                'tenKhachHang'=>$donHang->tenKhachHang,
+                'maVanChuye'=>'null',
+            ]);
+            //dump($donHangMoi);
+            foreach($yeuCauDoiHang->chitietdoihangs as $chiTietDoiHang){
+                $sanPhamYCDH=SanPham::where('id', $chiTietDoiHang->sanPhamDoiID )->first();
+
+                $chiTietDonHangMois=ChiTietDonHang::create([
+                    'soLuong'=>$chiTietDoiHang->soLuong,
+                    'gia'=>$sanPhamYCDH->gia,
+                    'donhang_id'=>$donHangMoi->id,
+                ]);
+                // Gán sản phẩm vào chi tiết đơn hàng mới với số lượng
+                $chiTietDonHangMois->sanPhams()->attach($chiTietDoiHang->sanPhamDoiID, [
+                    'soLuong' => $chiTietDoiHang->soLuong,
+                ]);
+                //dump($chiTietDonHangMois);
+            }
+
+
+            //Cập nhật trạng thái của yêu cầu đổi hàng
+
+        }
+        elseif($yeuCauDoiHang->trangThai==2){
+            foreach($yeuCauDoiHang->chitietPhieuxuat as $chiTietPhieuXuat){
+                $donHang=$chiTietPhieuXuat->chiTietDonHangs->donHangs;
+                $donHang->trangThai='Từ chối đổi hàng';
+                dump($donHang);
+
+                $donHang->save();
+                //dd($donHang);
+            }
+        }
+        $yeuCauDoiHang->trangThai = $request->input('trangThai');
+        $yeuCauDoiHang->save();
             return redirect()->route('taikhoans.khachhangs.yeucaudoihang.showAdmin', $yeuCauDoiHang->id)
                              ->with('success', 'Cập nhật trạng thái thành công!');
         }

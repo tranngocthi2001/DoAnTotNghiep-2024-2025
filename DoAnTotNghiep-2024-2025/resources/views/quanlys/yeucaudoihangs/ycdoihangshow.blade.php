@@ -1,6 +1,11 @@
 @extends('layouts.layoutquanly')
 
 @section('content')
+@if (session('success'))
+<div class="alert alert-warning">
+    {{ session('success') }}
+</div>
+@endif
 <div class="container">
     <h1>1 Chi tiết yêu cầu đổi hàng #{{ $yeuCauDoiHang->id }}</h1>
 

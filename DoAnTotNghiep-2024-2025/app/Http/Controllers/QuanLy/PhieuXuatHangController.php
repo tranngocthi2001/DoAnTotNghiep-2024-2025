@@ -11,6 +11,7 @@ use App\Models\NhanVien;
 use App\Models\ChiTietPhieuXuat;
 use App\Models\ChiTietDonHang;
 use App\Models\Seri;
+use Barryvdh\DomPDF\PDF;
 
 class PhieuXuatHangController extends Controller
 {
@@ -74,9 +75,14 @@ class PhieuXuatHangController extends Controller
 
     public function print($id)
     {
-        $phieuXuat = PhieuXuatHang::with('donHangs.khachHangs', 'nhanViens')->findOrFail($id);
+       // Tìm phiếu xuất hàng với các quan hệ đi kèm
+        $phieuXuatHang = PhieuXuatHang::with('donHangs.khachHangs', 'nhanViens')->findOrFail($id);
 
-        // Tùy chỉnh hiển thị giao diện in phiếu xuất
-        return view('phieuxuathangs.print', compact('phieuXuat'));
+        // Tạo PDF từ view với dữ liệu $phieuXuat
+        $pdf = app('dompdf.wrapper')->loadView('quanlys.phieuxuathangs.show', compact('phieuXuatHang'))
+        ->setOptions(['isHtml5ParserEnabled' => true, 'isPhpEnabled' => true]);
+
+        // Trả về PDF dưới dạng file tải xuống
+        return $pdf->download('phieu_xuat_hang_' . $phieuXuatHang->id . '.pdf');
     }
 }

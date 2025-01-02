@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Chọn sản phẩm cần đổi hàng cho đơn hàng #{{ $donhang->id }}</h1>
 
-    <form action="{{ url('khachhang/yeucaudoihang') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ url('khachhang/khachhang/yeucaudoihang') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="donhang_id" value="{{ $donhang->id }}">
 

@@ -13,8 +13,8 @@ class KhachHangController extends Controller
     //Hiển thị danh sách khách hang
     public function index()
     {
-        $nhanVien = auth()->guard('nhanvien')->user();
 
+        $nhanVien = auth()->guard('nhanvien')->user();
         if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
             return redirect()->route('unauthorized');
         }
@@ -68,6 +68,7 @@ class KhachHangController extends Controller
         // Chuyển hướng kèm thông báo thành công
         return redirect()->route('quanlys.khachhang.index')->with('success', 'Cập nhật trạng thái thành công!');
     }
+    //
     // phương thức chỉnh sửa thông tin dành chon khách hàng
     public function edit($id)
     {
