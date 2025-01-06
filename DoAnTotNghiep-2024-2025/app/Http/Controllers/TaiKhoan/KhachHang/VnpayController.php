@@ -28,7 +28,7 @@ class VnpayController extends Controller
         $vnp_apiUrl = "http://sandbox.vnpayment.vn/merchant_webapi/merchant.html";
         $apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
         $startTime = date("YmdHis");
-        $expire = date('YmdHis',strtotime('+435 minutes',strtotime($startTime)));
+        $expire = date('YmdHis',strtotime('+15 minutes',strtotime($startTime)));
 
 
         $vnp_Locale = $request->input('language');
@@ -81,15 +81,7 @@ class VnpayController extends Controller
         $donHang->save();
 //dd($donHang);
 
-        // Lưu thông tin thanh toán vào database
-        $payment = new ThanhToan();
-        $payment->donhang_id = $order_id;
-        $payment->phuongThuc = 'Thanh toán qua cổng thanh toán VnPay';
-        $payment->soTien = $amount;
-        $payment->trangThaiGiaoDich = 'Chờ thanh toán'; // Bạn có thể sử dụng trạng thái 'Chờ thanh toán' hoặc một trạng thái nào đó phù hợp
-        $payment->ngayGiaoDich = now();
-        $payment->maGiaoDichVnpay=$order_id;
-        $payment->save(); // Lưu thông tin thanh toán vào bảng
+
 //dd($payment);
         // Redirect đến VNPAY để thực hiện thanh toán
         return redirect()->to($vnp_Url);
@@ -132,6 +124,15 @@ class VnpayController extends Controller
                     $payment->maGiaoDichNganHang = $vnp_Params['vnp_BankCode']; // Mã giao dịch ngân hàng
                     $payment->save(); // Lưu thông tin
                 }
+                // Lưu thông tin thanh toán vào database
+                $payment = new ThanhToan();
+                $payment->donhang_id = $donHang->id;
+                $payment->phuongThuc = 'Thanh toán qua cổng thanh toán VnPay';
+                $payment->soTien = $donHang->tongTien;
+                $payment->trangThaiGiaoDich = 'Chờ thanh toán'; // Bạn có thể sử dụng trạng thái 'Chờ thanh toán' hoặc một trạng thái nào đó phù hợp
+                $payment->ngayGiaoDich = now();
+                $payment->maGiaoDichVnpay=$donHang->id;
+                $payment->save(); // Lưu thông tin thanh toán vào bảng
                 $danhmucs=DanhMuc::all();
                 return view('taikhoans/khachhangs.vnpaysuccess', compact('danhmucs')); // Hiển thị trang thành công
             } else {

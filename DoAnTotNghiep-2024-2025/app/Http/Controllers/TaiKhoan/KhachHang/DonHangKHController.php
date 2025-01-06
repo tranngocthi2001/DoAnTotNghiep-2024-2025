@@ -71,13 +71,17 @@ class DonHangKHController extends Controller
         ->orderBy('ngayDatHang', 'desc')->get();
 //dd(auth()->user()->id);
 //dd($donhangsHoanThanh);
-        $donHangsCuDaDoi = DonHang::with('nhanViens')
-            ->where('trangThai', '=', 'Đã chấp nhận đổi')
-            ->orwhere('trangThai', '=', 'Từ chối đổi hàng')
-
+        $donHangsCuDaDoi = DonHang::where('khachhang_id', auth()->user()->id)
+            ->where(function($query) {
+                $query->where('trangThai', '=', 'Đã chấp nhận đổi')
+                    ->orWhere('trangThai', '=', 'Từ chối đổi hàng');
+            })
             ->orderBy('id', 'desc')
             ->get();
-        $donHangsDaDoi = DonHang::with('nhanViens')
+            // dump(auth()->user());
+            // dd($donHangsCuDaDoi);
+
+        $donHangsDaDoi = DonHang::where('khachhang_id', auth()->user()->id)
             ->where('trangThai', '=', 'Đang chờ nhận lại hàng')
             ->orderBy('id', 'desc')
             ->get();
@@ -169,6 +173,14 @@ class DonHangKHController extends Controller
         {
             $donHang->trangThai='COD';
             $donHang->save();
+            $payment = new ThanhToan();
+                $payment->donhang_id = $donHang->id;
+                $payment->phuongThuc = 'Thanh toán khi nhận hàng (COD)';
+                $payment->soTien = $donHang->tongTien;
+                $payment->trangThaiGiaoDich = 'COD'; // Bạn có thể sử dụng trạng thái 'Chờ thanh toán' hoặc một trạng thái nào đó phù hợp
+                $payment->ngayGiaoDich = now();
+                //$payment->maGiaoDichVnpay=$donHang->id;
+                $payment->save(); // Lưu thông tin thanh toán vào bảng
             Mail::to(auth()->user()->email)->send(new OrderPlaced($donHang));
             return redirect()->route('khachhang.donhang.index', compact('danhmucs'))->with('dathangthanhcong', 'Đơn hàng của bạn đã được tạo thành công!');
         }

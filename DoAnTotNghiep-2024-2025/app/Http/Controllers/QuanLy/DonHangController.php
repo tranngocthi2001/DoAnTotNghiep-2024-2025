@@ -24,6 +24,14 @@ class DonHangController extends Controller
 
         $donHangCount=DonHang::all()->count();
 
+        $donHang=DonHang::all();
+        // $tongTien=DonHang::all()->sum('tongTien');
+        // dump($tongTien);
+        // $tong=0;
+        // foreach($donHang as $dh)
+        //     $tong+=$dh-> tongTien;
+        //     dd($tongTien);
+
         // Kiểm tra quyền truy cập
         $nhanVien = auth()->guard('nhanvien')->user();
 

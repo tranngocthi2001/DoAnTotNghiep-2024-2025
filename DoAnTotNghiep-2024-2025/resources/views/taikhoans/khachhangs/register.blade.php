@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- CSS của bạn -->
 </head>
 <body>
+
     <div class="container">
         <h2 class="text-center mt-5">Đăng Ký Tài Khoản</h2>
         <form action="{{ route('dangky.khachhang.submit') }}" method="POST" class="mt-4">
@@ -48,7 +49,7 @@
             </div>
             <div class="form-group">
                 <label for="diaChi">Địa chỉ</label>
-                <input type="text" name="diaChi" id="diaChi" class="form-control">
+                <input type="text" name="diaChi" id="diaChi" class="form-control" required>
             </div>
             <div class="form-group">
                 <label for="hoTen">Họ tên</label>
