@@ -28,7 +28,10 @@
         </div>
         <div class="mb-3">
             <label for="sdt" class="form-label">Số Điện Thoại</label>
-            <input type="text" class="form-control" id="sdt" name="sdt" value="{{ old('sdt') }}" required>
+            <input type="number" class="form-control" id="sdt" name="sdt" value="{{ old('sdt') }}" required>
+            @error('sdt')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
         </div>
         <div class="mb-3">
             <label for="diaChi" class="form-label">Địa Chỉ</label>

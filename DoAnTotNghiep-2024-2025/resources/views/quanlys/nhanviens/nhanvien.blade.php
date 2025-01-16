@@ -6,6 +6,10 @@
     @if(session('success'))
         <p style="color: green;">{{ session('success') }}</p>
     @endif
+
+    @if(session('error'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
     <a class="btn btn-primary" href="{{ route('quanlys.nhanvien.create') }}">Tạo nhân viên mới</a>
     <table class="container">
         <thead>

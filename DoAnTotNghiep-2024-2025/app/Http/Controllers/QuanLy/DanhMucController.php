@@ -30,7 +30,7 @@ class DanhMucController extends Controller
 
         if ($nhanVien->vaiTro !== 'admin' && $nhanVien->vaiTro !== 'quanly') {
             return redirect()->route('unauthorized');
-       }
+        }
         return view('quanlys.danhmucs.create');
     }
 

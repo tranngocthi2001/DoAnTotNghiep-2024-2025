@@ -94,12 +94,16 @@ class KhachHangController extends Controller
             'diaChi' => 'nullable|string|max:255',
             'matKhau' => 'nullable|min:6|confirmed',
         ]);
-
+        $sdt = $request->sdt;
+        //dd(strlen($sdt));
+        if (strlen($sdt) >10  ||strlen($sdt) <9 ){
+            return back()->with('error', 'Số điện thoại không hợp lệ hoặc quá dài!');
+        }
         // Cập nhật thông tin
         $khachhang->update([
             'hoTen' => $request->hoTen,
             'email' => $request->email,
-            'sdt' => $request->sdt,
+            'sdt' => $sdt,
             'diaChi' => $request->diaChi,
             'matKhau' => $request->matKhau ? bcrypt($request->matKhau) : $khachhang->matKhau,
         ]);

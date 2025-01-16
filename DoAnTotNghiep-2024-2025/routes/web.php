@@ -43,11 +43,16 @@ Route::middleware(['auth:nhanvien', 'role:admin,quanly'])->group(function () {
             'create' => 'quanlys.nhanvien.create',
             'store' => 'quanlys.nhanvien.store',
             'show' => 'quanlys.nhanvien.show',
-            'edit' => 'quanlys.nhanvien.edit',
-            'update' => 'quanlys.nhanvien.update',
+            // 'edit' => 'quanlys.nhanvien.edit',
+            // 'update' => 'quanlys.nhanvien.update',
             'destroy' => 'quanlys.nhanvien.destroy',
             // Tên cho route xóa
         ]);
+        // Route riêng cho edit
+        Route::get('nhanvien/{id}/edit', [NhanVienController::class, 'edit'])->name('quanlys.nhanvien.edit');
+
+        // Route riêng cho update
+        Route::post('nhanvien/{id}/update', [NhanVienController::class, 'update'])->name('quanlys.nhanvien.update');
         // Chỉnh sửa trạng thái tài khoản nhân viên
         Route::post('/{id}/update-status', [NhanVienController::class, 'updateStatus'])->name('quanlys.nhanvien.updateStatus');
 });
@@ -210,7 +215,7 @@ Route::prefix('khachhang')->middleware(['auth:khachhang'])->group(function () {
     // Route cho trang giỏ hàng của khách hàng để đi đến đơn đặt hàng
     Route::get('/dondathang', [DonHangKHController::class, 'dondathang'])->name('khachhang.giohang.dondathang');
     Route::post('/donhang/create', [DonHangKHController::class, 'donHangCreate'])->name('khachhang.donhang.create');
-    Route::get('/donhang', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
+    Route::get('/donhangKH', [DonHangKHController::class, 'index'])->name('khachhang.donhang.index');
     Route::get('/khachhang/donhang/{id}', [DonHangKHController::class, 'show'])->name('khachhang.donhang.show');
     Route::put('/donhang/{id}/huy', [DonHangKHController::class, 'huyDonHang'])->name('donhang.huy');
     Route::post('/donhang/{id}', [DonHangKHController::class, 'update'])->name('donhang.update');

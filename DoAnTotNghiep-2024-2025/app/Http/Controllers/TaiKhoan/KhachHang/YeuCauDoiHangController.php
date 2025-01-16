@@ -189,7 +189,7 @@ class YeuCauDoiHangController extends Controller
                 'phuongThucThanhToan'=>'null',
                 'tenKhachHang'=>$donHang->tenKhachHang,
                 'maVanChuye'=>'null',
-            ]);
+            ]); $donHangMoi->save();
             //dump($donHangMoi);
             foreach($yeuCauDoiHang->chitietdoihangs as $chiTietDoiHang){
                 $sanPhamYCDH=SanPham::where('id', $chiTietDoiHang->sanPhamDoiID )->first();

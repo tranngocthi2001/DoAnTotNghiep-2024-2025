@@ -87,6 +87,7 @@
 
                 <!-- Social Media Links -->
                 <div class="mt-3 text-center">
+                    <h1>&nbsp;&nbsp;&nbsp; </h1>
                     <p class="text-white"><strong>Kết nối với chúng tôi:</strong>
                         <a href="https://facebook.com" target="_blank" class="text-white me-3">
                             <i class="fab fa-facebook"></i> Facebook
@@ -95,7 +96,7 @@
                             <i class="fas fa-phone"></i> Zalo
                         </a>
                         <a href="https://instagram.com/" target="_blank" class="text-white">
-                            <i class="fab fa-instagram"></i> Instagram
+                            <i class="fab fa-instagram"></i> instagram
                         </a>
                     </p>
 
@@ -110,8 +111,6 @@
 
                 </div>
             </div>
-
-
         </footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

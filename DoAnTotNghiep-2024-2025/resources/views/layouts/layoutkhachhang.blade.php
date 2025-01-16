@@ -34,10 +34,11 @@
                             <a class="nav-link dropdown-toggle" id="navbarDropdown"
                             href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Danh mục</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">Tất cả sản phẩm</a></li>
+                                <li><a class="dropdown-item" href="{{url('/home')}}">Tất cả sản phẩm</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                                @foreach ($danhmucs as $danhmuc)
+                                        <li><a class="dropdown-item" href="{{route('danhmuc.show', $danhmuc->id)}}">{{ $danhmuc->tenDanhMuc }}</a></li>
+                                @endforeach
                             </ul>
                         </li>
                         <li class="nav-item"><a>
@@ -47,7 +48,10 @@
                             </form>
                             </a></li>
                         <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('khachhang.dashboard') }}">Trang chủ</a></li>
-                        <li class="nav-item"><a  class="nav-link active" aria-current="page" href="{{ route('khachhang.donhang.index') }}">Tra cứu đơn hàng</a></li>
+                        @if (auth('khachhang')->check())
+                            <li class="nav-item"><a  class="nav-link active" aria-current="page" href="{{ route('khachhang.donhang.index') }}">Tra cứu đơn hàng</a></li>
+
+                        @endif
 
                     </ul>
                     <form class="d-flex" action="{{ route('giohang.index') }}" method="get">

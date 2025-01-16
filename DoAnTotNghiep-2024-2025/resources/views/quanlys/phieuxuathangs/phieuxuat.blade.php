@@ -33,7 +33,7 @@
             <tbody>
                 @foreach ($donHang->chiTietDonHangs as $index => $chiTiet)
                     @foreach ($chiTiet->sanPhams as $sanPham)
-                        @for ($i = 0; $i < $sanPham->pivot->soLuong; $i++) <!-- Lặp qua số lượng -->
+                        @for ($i = 0; $i < $chiTiet->soLuong; $i++) <!-- Lặp qua số lượng -->
 
                             <tr>
                                 <td>

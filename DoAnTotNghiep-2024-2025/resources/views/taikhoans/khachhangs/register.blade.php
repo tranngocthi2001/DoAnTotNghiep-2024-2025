@@ -42,7 +42,7 @@
             </div>
             <div class="form-group">
                 <label for="sdt">Số điện thoại</label>
-                <input type="text" name="sdt" id="sdt" class="form-control" required>
+                <input type="number" name="sdt" id="sdt" class="form-control" required>
                 @error('sdt')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

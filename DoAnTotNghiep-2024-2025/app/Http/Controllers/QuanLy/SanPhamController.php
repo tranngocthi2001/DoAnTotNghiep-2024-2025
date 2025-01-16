@@ -33,8 +33,6 @@ class SanPhamController extends Controller
 
         $sanphams = SanPham::with('danhMucs')->get(); // Lấy tất cả sản phẩm cùng danh mục
 
-
-
         return view('quanlys.sanphams.sanpham',
         compact('sanphams','allSanPhams'));
     }

@@ -15,6 +15,7 @@ use App\Models\YeuCauDoiHang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\LaravelIgnition\Recorders\DumpRecorder\Dump;
 
 class DonHangController extends Controller
 {
@@ -205,7 +206,7 @@ class DonHangController extends Controller
         $validatedData = $request->validate([
             'khachhang_id' => 'required|exists:khachhang,id',
             'diaChiGiaoHang' => 'required|string|max:255',
-            'sdt' => 'required|string|max:15',
+            'sdt' => ['required', 'digits:10'],
             'tenKhachHang' => 'required|string|max:255',
         ]);
 
@@ -249,18 +250,54 @@ class DonHangController extends Controller
         //dd($request);
         $sanPham = SanPham::findOrFail($request->sanpham_id);
         $donHang=DonHang::where('id', $id)->first();
-        $chiTietDonHang= new ChiTietDonHang();
-        $chiTietDonHang->donhang_id= $donHang->id;
-        $chiTietDonHang->soLuong=$request->so_luong;
-        $chiTietDonHang->gia=($chiTietDonHang->soLuong-1)*$sanPham->gia;
-        $chiTietDonHang->save();
-         // Thêm vào bảng sanpham_has_chitietdonhang
+        // Kiểm tra xem sản phẩm đã tồn tại trong chi tiết đơn hàng chưa
+        $chiTietDonHang = ChiTietDonHang::where('donhang_id', $donHang->id)->first();
+        if(!$chiTietDonHang){
+            $chiTietDonHang = new ChiTietDonHang();
+            $chiTietDonHang->donhang_id = $donHang->id;
+            $chiTietDonHang->soLuong = $request->so_luong;
+            $chiTietDonHang->gia = $chiTietDonHang->soLuong * $sanPham->gia;
+            $chiTietDonHang->save();
 
-        $sanPham->chiTietDonHangs()->attach($chiTietDonHang->id, [
-            'soLuong' => $request->so_luong,
-        ]);
-        $donHang->tongTien+=($chiTietDonHang->soLuong)*$sanPham->gia;
-        $donHang->save();
+            // Ghi vào bảng trung gian nếu có
+            $sanPham->chiTietDonHangs()->attach($chiTietDonHang->id, [
+                'soLuong' => $request->so_luong,
+            ]);
+            $donHang->tongTien += $chiTietDonHang->soLuong *$sanPham->gia;
+            $donHang->save();
+        }else{
+            foreach($chiTietDonHang->sanPhams as $sanphams_has_Chitiet){
+                //dump($sanphams_has_Chitiet);
+                if ($sanphams_has_Chitiet->id==$sanPham->id) {
+                    // Nếu đã tồn tại, tăng số lượng
+                    $chiTietDonHang->soLuong += $request->so_luong;
+                    $chiTietDonHang->gia = $chiTietDonHang->soLuong * $sanPham->gia;
+                    $chiTietDonHang->save();
+                    $donHang->tongTien = $chiTietDonHang->soLuong *$sanPham->gia;
+                    $donHang->save();
+                } else {
+                    // Nếu chưa tồn tại, thêm mới
+                    $chiTietDonHang = new ChiTietDonHang();
+                    $chiTietDonHang->donhang_id = $donHang->id;
+                    $chiTietDonHang->soLuong = $request->so_luong;
+                    $chiTietDonHang->gia = $chiTietDonHang->soLuong * $sanPham->gia;
+                    $chiTietDonHang->save();
+
+                    // Ghi vào bảng trung gian nếu có
+                    $sanPham->chiTietDonHangs()->attach($chiTietDonHang->id, [
+                        'soLuong' => $request->so_luong,
+                    ]);
+                    $donHang->tongTien += $chiTietDonHang->soLuong *$sanPham->gia;
+                    $donHang->save();
+                    //dd($chiTietDonHang);
+                }
+            }
+        }
+
+
+
+        // $donHang->tongTien+=($chiTietDonHang->soLuong)*$sanPham->gia;
+        // $donHang->save();
         return back()->with('success', 'Sản phẩm được thêm thành công!');
     }
     public function xoaChiTiet($id)
@@ -277,8 +314,7 @@ class DonHangController extends Controller
 
         }
         //$sanPham = SanPham::findOrFail($chiTietDonHang->sanPhams()->sanpham_id);
-
-//dd($donHang);
+        //dd($donHang);
         //xóa sanpham trong sanpham_has_chitiet donhang
         $chiTietDonHang->sanPhams()->detach();
 
@@ -302,17 +338,15 @@ class DonHangController extends Controller
         foreach($chiTietDonHang->sanPhams as $sanPham){
             $donHang->tongTien -= $chiTietDonHang->soLuong * $sanPham->gia;
             $chiTietDonHang->soLuong = $request->so_luong;
-            $donHang->tongTien += $chiTietDonHang->soLuong * $sanPham->gia;
-            $donHang->save();
+            $chiTietDonHang->gia= $chiTietDonHang->soLuong * $sanPham->gia;
+            $chiTietDonHang->save();
 
         }
         // Cập nhật tổng tiền
-
-
-        // Lưu lại các thay đổi
-        $chiTietDonHang->save();
-        $donHang->save();
-
+        foreach($chiTietDonHang->sanPhams as $sanPham){
+            $donHang->tongTien+= $chiTietDonHang->soLuong*$sanPham->gia;
+            $donHang->save();
+        }
         return back()->with('success', 'Số lượng sản phẩm đã được cập nhật!');
     }
 

@@ -57,7 +57,7 @@
 
     <!-- Nút quay lại -->
     <div class="mt-3">
-        <a href="{{ route('quanlys.sanpham.index') }}" class="btn btn-secondary">Quay Lại</a>
+        <a href="{{ url()->previous() }}" class="btn btn-secondary">Quay Lại</a>
     </div>
 </div>
 @endsection

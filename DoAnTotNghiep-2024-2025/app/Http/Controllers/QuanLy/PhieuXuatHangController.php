@@ -47,7 +47,6 @@ class PhieuXuatHangController extends Controller
                 'yeucautrahang_id' => null, // Đặt mặc định là NULL
                 'yeucaudoihang_id' => null, // Đặt mặc định là NULL
             ]);
-
             // Lưu các mã seri cho từng chi tiết phiếu xuất
             if (isset($chiTiet['seri'])) {
                 foreach ($chiTiet['seri'] as $seri) {

@@ -41,7 +41,7 @@
                         @endforeach
                     </td>
                     <td>{{ $seri->chiTietPhieuXuat->chiTietDonHangs->donHangs->id }}
-
+                        {{-- <td><a href="{{ route('quanlys.donhang.show', $seri->chiTietPhieuXuat->chiTietDonHangs->donHangs->id) }}"> Xem chi tiết</a></td> --}}
 
                 </tr>
             @endforeach

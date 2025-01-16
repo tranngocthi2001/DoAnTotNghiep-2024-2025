@@ -2,10 +2,12 @@
 
 @section('content')
 <div class="container">
+    @if(session('error'))
+        <p style="color: red;">{{ session('error') }}</p>
+    @endif
     @if(isset($nhanVien))
         <form action="{{ route('quanlys.nhanvien.update', $nhanVien->id) }}" method="POST">
             @csrf
-            @method('PUT')
             <div class="mb-3">
                 <label for="tenTaiKhoan" class="form-label">Tên Tài Khoản</label>
                 <input type="text" class="form-control" id="tenTaiKhoan" name="tenTaiKhoan" value="{{ $nhanVien->tenTaiKhoan }}" required>
@@ -14,9 +16,13 @@
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" value="{{ $nhanVien->email }}" required>
             </div>
-            <div class="mb-3">
-                <label for="sdt" class="form-label">Số Điện Thoại</label>
-                <input type="text" class="form-control" id="sdt" name="sdt" value="{{ $nhanVien->sdt }}" required>
+            <div class="form-group">
+                <label for="sdt">Số Điện Thoại</label>
+                <input type="number" name="sdt" id="sdt" class="form-control" required pattern="[0-9]{10}"
+                title="Số điện thoại phải có đúng 10 chữ số">
+                        @error('sdt')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
             </div>
             <div class="mb-3">
                 <label for="diaChi" class="form-label">Địa Chỉ</label>

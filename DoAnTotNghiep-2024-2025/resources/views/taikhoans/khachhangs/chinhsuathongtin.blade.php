@@ -7,7 +7,9 @@
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
+    @if(session('error'))
+        <p style="color: red;">{{ session('error') }}</p>
+    @endif
     <form action="{{ route('khachhang.update', $khachhang->id) }}" method="POST">
         @csrf
         @method('PATCH')
@@ -29,7 +31,7 @@
 
         <div class="mb-3">
             <label for="sdt" class="form-label">Số Điện Thoại</label>
-            <input type="text" class="form-control @error('sdt') is-invalid @enderror" id="sdt" name="sdt" value="{{ old('sdt', $khachhang->sdt) }}">
+            <input type="number" class="form-control @error('sdt') is-invalid @enderror" id="sdt" name="sdt" value="{{ old('sdt', $khachhang->sdt) }}">
             @error('sdt')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

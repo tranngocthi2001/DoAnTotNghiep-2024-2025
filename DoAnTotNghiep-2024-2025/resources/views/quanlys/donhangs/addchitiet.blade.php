@@ -56,7 +56,9 @@
         <label for="sanpham_id">Chọn sản phẩm:</label>
         <select name="sanpham_id" id="sanpham_id">
             @foreach($sanPhams as $sanPham)
-                <option value="{{ $sanPham->id }}">{{ $sanPham->tenSanPham }}</option>
+                @if ($sanPham->trangThai==1)
+                    <option value="{{ $sanPham->id }}">{{ $sanPham->tenSanPham }}</option>
+                @endif
             @endforeach
         </select>
 

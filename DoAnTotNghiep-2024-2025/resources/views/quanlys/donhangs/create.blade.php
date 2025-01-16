@@ -30,7 +30,11 @@
 
         <div class="form-group">
             <label for="sdt">Số Điện Thoại</label>
-            <input type="text" name="sdt" id="sdt" class="form-control" required>
+            <input type="number" name="sdt" id="sdt" class="form-control" required pattern="[0-9]{10}"
+            title="Số điện thoại phải có đúng 10 chữ số">
+                    @error('sdt')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
         </div>
 
         <div class="form-group">

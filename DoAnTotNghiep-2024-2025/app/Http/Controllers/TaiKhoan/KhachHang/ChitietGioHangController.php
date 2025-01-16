@@ -30,7 +30,7 @@ class ChiTietGioHangController extends Controller
 
         if ($sanpham->soLuong < $soLuongYeuCau) {
             // Nếu số lượng trong kho không đủ, trả về thông báo lỗi
-            return redirect()->route('khachhang.dashboard')
+            return redirect()->back()
             ->withErrors('Sản phẩm "' . $sanpham->tenSanPham  . '" không đủ số lượng, trong kho chỉ còn:'. $sanpham->soLuong);
         }
 

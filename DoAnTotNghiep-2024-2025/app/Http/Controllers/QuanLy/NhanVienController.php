@@ -59,7 +59,6 @@ class NhanVienController extends Controller
             'trangThai'   => 'required|boolean',
         ]);
 
-
         // Lưu dữ liệu
         Nhanvien::create([
             'tenTaiKhoan' => $request->tenTaiKhoan,
@@ -118,30 +117,22 @@ class NhanVienController extends Controller
             //dd($nhanVien);
             return redirect()->route('unauthorized');
         }
-
+        // Kiểm tra số điện thoại có quá lớn không (vượt quá giới hạn của kiểu INT)
+        $sdt = $request->sdt;
+        //dd(strlen($sdt));
+        if (strlen($sdt) >10  ||strlen($sdt) <9 ){
+            return back()->with('error', 'Số điện thoại không hợp lệ hoặc quá dài!');
+        }
         $nhanVien = NhanVien::findOrFail($id);
 
-        // Validate dữ liệu
-        $request->validate([
-            'tenTaiKhoan' => 'required|max:255|unique:nhanvien,tenTaiKhoan,' . $id,
-            'email'       => 'required|email|unique:nhanvien,email,' . $id,
-            'sdt'         => 'required|digits:10',
-            'diaChi'      => 'nullable|string',
-            'hoTen'       => 'required|string|max:255',
-            'vaiTro'      => 'required|string',
-        ]);
-
-        // Cập nhật thông tin nhân viên
-        $nhanvien = Nhanvien::findOrFail($id);
-        $nhanvien->update([
+        $nhanVien->update([
             'tenTaiKhoan' => $request->tenTaiKhoan,
             'email'       => $request->email,
-            'sdt'         => $request->sdt,
+            'sdt'         => $sdt,
             'diaChi'      => $request->diaChi,
             'hoTen'       => $request->hoTen,
             'vaiTro'      => $request->vaiTro,
         ]);
-
         return redirect()->route('quanlys.nhanvien.index')->with('success', 'Cập nhật nhân viên thành công!');
     }
 

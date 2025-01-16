@@ -11,7 +11,11 @@
             </ul>
         </div>
     @endif
-
+    @if (session('success'))
+        <div class="alert alert-warning">
+            {{ session('success') }}
+        </div>
+    @endif
 
     <div class="container mt-5">
         @if ($giohang && $giohang->chiTietGioHangs->count() > 0)

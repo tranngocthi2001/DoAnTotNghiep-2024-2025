@@ -4,6 +4,7 @@
 
 <div class="container">
     <h2>Danh Sách Danh Mục</h2>
+
     <a href="{{ route('quanlys.danhmuc.create') }}" class="btn btn-primary mb-3">Thêm Danh Mục</a>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
